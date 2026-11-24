@@ -1,0 +1,264 @@
+{
+  "schema_version": 1,
+  "errata": [
+    {
+      "id": "tb2-path-tracing-r1",
+      "benchmark": "terminal-bench-2.0",
+      "task_id": "path-tracing",
+      "status": "active",
+      "source": {
+        "url": "https://huggingface.co/datasets/harborframework/terminal-bench-2.0",
+        "revision": "f2e8c75e23add71613117eecc9498f53bcd7e04e",
+        "materializer": "The dataset's path-tracing/ directory, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "Apache-2.0"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/harborframework/terminal-bench-2.0",
+          "https://github.com/harbor-framework/terminal-bench-2/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-25",
+        "published": "patch",
+        "conclusion": "Apache-2.0 allows redistribution and modification. Only the patch is published: the task directory carries the reference renderer's source (environment/orig.c), which stays out."
+      },
+      "defect": {
+        "class": "image_residue",
+        "summary": "The prebuilt image compiles and runs the reference renderer at build time and deletes only its source file, so the compiled reference program stays in the agent's environment next to the image it drew.",
+        "evidence": [
+          {
+            "path": "environment/Dockerfile",
+            "lines": "7-10",
+            "fact": "copies the reference source, compiles it, runs it to render the target image, then removes only the source file"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/harbor-framework/terminal-bench-2/issues/61"
+        ]
+      },
+      "patch": {
+        "path": "patches/terminal-bench-2.0/path-tracing/tb2-path-tracing-r1.patch",
+        "sha256": "a9b77f015e3aaeda1f7bae66f600f8ec90bc6a977225b2427f8c2b597ffaaba2",
+        "origin": "Written for this erratum: a thin layer FROM the same prebuilt image that removes the program, with [environment].docker_image dropped so the layer is built."
+      },
+      "files": {
+        "environment/Dockerfile": {
+          "before": "7aca02e4e20b04ed2269d627a29dd4e7337a02764a9652b641452bf09836a3d5",
+          "after": "287f6b2bb689c56f704b86cfdff558e2d705f5836f099ff6c47a0d382739f3c3"
+        },
+        "task.toml": {
+          "before": "016873f8804418c8bd20bbba314c0ebdc304ad0beb621df07bb0ad6e5d721fdf",
+          "after": "9b7713f8f6f3476f759cea05270e1591adccd9249dc8728d171489a61c740166"
+        }
+      },
+      "depends_on": {
+        "environment/orig.c": "665c1bde0907740890ac114d6b36af1f3fd00449fa287583817f778bb5da200c",
+        "tests/test.sh": "a719dbb1ba7ae76df095e9d815941dfa4c55edaf11f173b9c3c3097afa838548",
+        "tests/test_outputs.py": "572e68b2843191d29592faf42a405861b7958d8e894868b74c5a8886b53eb879"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner; the patched image built from its Dockerfile",
+        "date": "2026-11-24",
+        "witness": {
+          "summary": "The reference program is present in the upstream prebuilt image and absent from the patched image; /app/image.ppm is byte-identical in both."
+        }
+      }
+    },
+    {
+      "id": "harbor-index-dacode-predict-essay-scores-r1",
+      "benchmark": "harbor-index",
+      "task_id": "dacode-predict-essay-scores",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/harbor-framework/harbor-index",
+        "revision": "5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+        "materializer": "tasks/dacode-predict-essay-scores/ at this commit, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "harbor-index: no license file",
+          "DA-Code: MIT",
+          "Kaggle competition learning-agency-lab-automated-essay-scoring-2: competition data terms"
+        ],
+        "redistribution": "unspecified",
+        "basis": [
+          "https://github.com/harbor-framework/harbor-index/tree/5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+          "https://github.com/harbor-framework/harbor-index/blob/5399ea1026fb2c7fc384cf8acd91a7d10fc943f3/tasks/dacode-predict-essay-scores/README.md",
+          "https://github.com/yiyihum/da-code"
+        ],
+        "checked_on": "2026-11-25",
+        "published": "patch",
+        "conclusion": "The repository grants no license and the task's data comes from a Kaggle competition, so neither the task files nor the data are published. The patch is published because it is the change already proposed in public upstream (harbor-framework/harbor-index#156); it carries no data."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The grader passes a submission only at QWK >= 0.80008, the reference solution's own score on this split. The instruction names neither the metric nor the bar, so a submission that meets every stated requirement can score 0.",
+        "evidence": [
+          {
+            "path": "tests/verify.py",
+            "lines": "14, 97",
+            "fact": "QWK_THRESHOLD = 0.80008; the reward is 1 only at or above it"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "2-9",
+            "fact": "asks for a trained model and integer 1-6 scores; no metric and no pass bar"
+          }
+        ]
+      },
+      "answer_review": "The patch lowers the pass bar in tests/verify.py from 0.80008 to 0.784 with a comment on its calibration, states the metric and the bar in instruction.md, and updates README.md. It adds no expected score, gold label or test data.",
+      "upstream": {
+        "reports": [
+          "https://github.com/harbor-framework/harbor-index/pull/156"
+        ]
+      },
+      "patch": {
+        "path": "patches/harbor-index/dacode-predict-essay-scores/harbor-index-dacode-predict-essay-scores-r1.patch",
+        "sha256": "73d623de157ca7ec8602ed562ad0552180c07b310d9535a77b8a5ddae14b9eeb",
+        "origin": "harbor-framework/harbor-index#156 at f8f5c1971ddb576d4db53da906dbf1fa794a3385, applied to the task directory."
+      },
+      "files": {
+        "README.md": {
+          "before": "db6aba461d1f9ecc9785ef2d4e4f97148332756536387213d070dcbfdb05ba14",
+          "after": "4197a0ebba2a9d8ad4b88f9467f1af4ea6b431547bd9a8cc9f3d87633e298171"
+        },
+        "instruction.md": {
+          "before": "f2766f15717d6be92168116a22a130cb67d85209f39d47069f869756405d3599",
+          "after": "d96dc348d90cd74ab6a9a3b3aafc71408196fb0bdac52572c9afa546f0656b5f"
+        },
+        "tests/verify.py": {
+          "before": "78f49f24bb69030d45da9004d713fb94a322b3cbf94faabf00195151af75b11e",
+          "after": "2e2169ba79775940cf9e971468fbd03232ad004a34f11f2ac86700f146cd7dee"
+        }
+      },
+      "depends_on": {
+        "solution/solve.py": "023fe0631df4f40cf51db54834a8a4b7dcce93c671e3e0d8cf070a25c1326c69",
+        "solution/solve.sh": "d1b53f3865ab1e70541162fd13b6936ea6b417fc12325f3553787c5aca841d1e",
+        "tests/test.sh": "9f7815ce48049c1592692ec4e61e13f2f7f47fc3c64b0103417bd31aa005ec88"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner; the task's images built from its Dockerfiles",
+        "date": "2026-11-24",
+        "witness": {
+          "summary": "At the upstream revision the bar 0.80008 appears only in tests/verify.py:14 and nowhere in instruction.md; after the patch the instruction states the metric and the bar 0.784, and the oracle (QWK 0.80008 on this split) passes with headroom."
+        }
+      }
+    },
+    {
+      "id": "aider-polyglot-go-octal-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_go_octal",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for go/exercises/practice/octal"
+      },
+      "license": {
+        "upstream": [
+          "Exercism Go track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/go/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-25",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the Go track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta/example.go and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "starter_mismatch",
+        "summary": "The stub declares ParseOctal(input, expectedNum, expectErr) with no results, but the tests call ParseOctal(input) and read a value and an error; the instruction says to treat invalid input as 0 without saying that an error is returned. A solution that keeps the stub's signature does not compile against the tests.",
+        "evidence": [
+          {
+            "path": "environment/workspace/octal.go",
+            "lines": "3",
+            "fact": "func ParseOctal(input string, expectedNum int64, expectErr bool) with no return values"
+          },
+          {
+            "path": "tests/octal_test.go",
+            "lines": "21, 28-29",
+            "fact": "actualNum, actualErr := ParseOctal(test.input); invalid inputs must return a non-nil error"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "14",
+            "fact": "Treat invalid input as octal 0."
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/Aider-AI/polyglot-benchmark/pull/26"
+        ]
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_go_octal/aider-polyglot-go-octal-r1.patch",
+        "sha256": "72ebc6001fbd49d16193548f6edc9a08994b4aed8d0417af42f4ba12be98dfd4",
+        "origin": "The octal part of Aider-AI/polyglot-benchmark#26 at f192eeb1ea35f24b0db3e29c9b4a7c1f1148f8c9 (octal.go and .docs/instructions.append.md), materialized by the same adapter."
+      },
+      "files": {
+        "environment/workspace/octal.go": {
+          "before": "7449abd52fcf4d56799e2f6fcab8e57f93328770f9c271e0cd68e9146b5ae01e",
+          "after": "45fc36ecd30a38218f3507dd48a803f78a9be9def4e4c6e3c4578efc610b5aed"
+        },
+        "instruction.md": {
+          "before": "7cfe96e566b313ba7d65dc0b5acf2c6bf9cae73b7db79612de452c5e78167994",
+          "after": "d56345deb21ba0e830c10d6d421f261be0012545ac9408cad61fc6b55b914fec"
+        }
+      },
+      "depends_on": {
+        "tests/octal_test.go": "95308401969a34f0341e5baa4742bc42b9f6dff830ef20b3b48851779bddd5be",
+        "tests/test.sh": "37c02216cb554f4c232a3fa857a00a746c5ebab8f3c4f53b14f1d8574c0cd848"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner; the task's images built from its Dockerfiles",
+        "date": "2026-11-24",
+        "witness": {
+          "summary": "In the task's image, the upstream stub with tests/octal_test.go does not compile (ParseOctal(test.input) (no value) used as value; not enough arguments in call to ParseOctal); the patched stub compiles with the same tests and fails only on its unimplemented panic."
+        }
+      }
+    }
+  ]
+}
