@@ -952,6 +952,96 @@
           "summary": "At 62dc0745 the test probes .webp and accepts .xml only as application/xml, outside what the instruction lists; the corrected row at b0c7fbf2 drops the probe and accepts text/xml. microsoft/SWE-bench-Live#116 verified the corrected row with evaluation/evaluation.py: the gold patch is resolved and the no-op is not on both rows, and a patch written to the statement alone is not resolved on the original row and is resolved on the corrected one."
         }
       }
+    },
+    {
+      "id": "swe-live-xroche__httrack-454-r1",
+      "benchmark": "swe-bench-live-multilang",
+      "task_id": "xroche__httrack-454",
+      "status": "upstream_fixed",
+      "source": {
+        "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+        "revision": "62dc0745c40f067fc366ae3eb1a26136e5928f85",
+        "materializer": "A SWE-bench-Live MultiLang adapter derived from the swebench_multilingual Harbor adapter, split c, source language c; it builds the task image from the row's eval image, removes the project's future and its published releases from package caches, and renders tests/test.sh from the row"
+      },
+      "license": {
+        "upstream": [
+          "SWE-bench-Live MultiLang dataset: MIT",
+          "microsoft/SWE-bench-Live: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+          "https://github.com/microsoft/SWE-bench-Live/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "MIT allows redistribution, but the patch rewrites tests/config.json and tests/test.sh, which hold the hidden test patch and the reference patch; this repository publishes neither, so the patch is kept outside it and the record keeps its SHA256 and its construction."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The hidden self-test asserts an application/manifest+json to webmanifest mapping that is not among the MIME pairs the instruction lists.",
+        "evidence": [
+          {
+            "path": "tests/config.json",
+            "lines": "10 (test_patch, decoded lines 13-14)",
+            "fact": "asserts application/manifest+json maps to webmanifest"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "7-8",
+            "fact": "lists the modern MIME pairs to add; manifest is not among them"
+          }
+        ]
+      },
+      "answer_review": "Upstream's corrected row: it drops that assertion pair. No expected answer is added and the gold patch is unchanged.",
+      "upstream": {
+        "reports": [
+          "https://github.com/microsoft/SWE-bench-Live/issues/116"
+        ],
+        "fixed_in": {
+          "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang/commit/b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2",
+          "revision": "b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2"
+        }
+      },
+      "patch": {
+        "storage": "external",
+        "sha256": "717bcfccb05e222d3298661e22ddda79855a9cd068592a94111305cb04834bd4",
+        "origin": "tests/config.json and tests/test.sh as the same materializer writes them from this row at b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2 (SWE-bench-Live/MultiLang 'Fix issues', 2026-11-24), which corrects the row as proposed in microsoft/SWE-bench-Live#116; instruction.md is unchanged at that revision.",
+        "construction": "Materialize the task at source.revision and at upstream.fixed_in.revision with source.materializer; copy tests/config.json and tests/test.sh of the second into the first; the patch is `git diff --no-index --no-renames --src-prefix= --dst-prefix= a b` between the two task directories (a: upstream, b: with the two files replaced)."
+      },
+      "files": {
+        "tests/config.json": {
+          "before": "5530ce3a1ed1627e3386db4d581da23c0e14a19c4a2c989e641f480b0c9da2f8",
+          "after": "967376526d00647005d99fc5f03307d23241b19caf41c9a1ed00562db298f3b0"
+        },
+        "tests/test.sh": {
+          "before": "1853594759b2388c3d292d3108791c7b667682b85a2bcabf697cd16cc98a1491",
+          "after": "c2b5ecc06b34306acac555c8eb1d3f19815769af7cb4109fd5de4f801e60b4ca"
+        }
+      },
+      "depends_on": {
+        "instruction.md": "ad1b9dc25a7cb0049962f167a94220ab7c502ecc1ae09b7e7ed11b9d54482079",
+        "solution/solve.sh": "28e91d134f0f220dba2424ef650152c02900ff559493bbdc987747a7e5abbddb"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 62dc0745 the hidden self-test asserts a manifest+json mapping the instruction does not list; the corrected row at b0c7fbf2 drops that pair. microsoft/SWE-bench-Live#116 verified the corrected row with evaluation/evaluation.py: the gold patch is resolved and the no-op is not on both rows, and a patch written to the statement alone is not resolved on the original row and is resolved on the corrected one."
+        }
+      }
     }
   ]
 }
