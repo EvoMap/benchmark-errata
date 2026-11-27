@@ -3077,6 +3077,85 @@
           "summary": "At 5399ea1 the grader's own solution returns an ndarray that the harness converts to a list inside the timed window, and a solver must stay within 1.05x of it, while the instruction requires a list and states a 1.01x bar over the reference; after the patch the instruction states the bar and that an ndarray may be returned. In our runs, changing only the returned list to an array turned most failing solvers within the margin into passes."
         }
       }
+    },
+    {
+      "id": "swe-live-xroche__httrack-482-r1",
+      "benchmark": "swe-bench-live-multilang",
+      "task_id": "xroche__httrack-482",
+      "status": "active",
+      "source": {
+        "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+        "revision": "62dc0745c40f067fc366ae3eb1a26136e5928f85",
+        "materializer": "A SWE-bench-Live MultiLang adapter derived from the swebench_multilingual Harbor adapter, split c, source language c; it builds the task image from the row's eval image, removes the project's future and its published releases from package caches, and renders tests/test.sh from the row"
+      },
+      "license": {
+        "upstream": [
+          "SWE-bench-Live MultiLang dataset: MIT",
+          "microsoft/SWE-bench-Live: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+          "https://github.com/microsoft/SWE-bench-Live/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "MIT allows redistribution. Only the patch is published; it changes instruction.md alone and carries no test content or reference patch."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The FAIL_TO_PASS test requires a crawl with -E2 to stop within 30 seconds, while the instruction asks only for a grace period past the deadline without bounding it; a fixed grace that suits the -E300 case it describes overruns the test's bound.",
+        "evidence": [
+          {
+            "path": "tests/config.json",
+            "lines": "10 (test_patch, decoded line 24)",
+            "fact": "the -E2 crawl fails when it takes 30 seconds or more"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "19",
+            "fact": "force-abort once a grace period past the deadline expires; no length"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [],
+        "not_reported": "Not reported yet; a note for microsoft/SWE-bench-Live is drafted."
+      },
+      "patch": {
+        "path": "patches/swe-bench-live-multilang/xroche__httrack-482/swe-live-xroche__httrack-482-r1.patch",
+        "sha256": "cfe0973dd09def9630dac4fd8d0d15190afba632c6f896824ac1da1883b749a4",
+        "origin": "Written for this erratum: one sentence after the instruction's fix direction stating the bound the test checks."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "285c3eb9e431d74801559e9e51733bb807e10bdb7601ab620f0ee759f7222dab",
+          "after": "6e38c587eef6986dd31b79c65330e3e94bc4f37cad1a748723cb7b1c95e446b2"
+        }
+      },
+      "depends_on": {
+        "tests/config.json": "0f4b3e3fcece77fbf925e871e742c27f312048c6b78e5455330900c36eabb384",
+        "tests/test.sh": "d838dc5dff815823fabe36a7b9f5b990ce153cd2d276b2a578a2dfa61743f1f8"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 62dc0745 the FAIL_TO_PASS test fails an -E2 crawl that takes 30 seconds or more, while the instruction leaves the grace period unbounded. In our runs, a patch with a fixed 30-second grace finished in 32 seconds and scored 0 upstream; with the bound raised to 45 seconds it scored 1 and the no-op still 0. After the patch the instruction states the bound."
+        }
+      }
     }
   ]
 }
