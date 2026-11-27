@@ -2002,6 +2002,87 @@
           "summary": "At 7e0611e7 the Rust-only camelcase test expects HTML for \"HyperText Markup Language\", which the instruction's rules do not give; after the patch the instruction states the rule. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
         }
       }
+    },
+    {
+      "id": "aider-polyglot-javascript-alphametics-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_javascript_alphametics",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for javascript/exercises/practice/alphametics"
+      },
+      "license": {
+        "upstream": [
+          "Exercism JavaScript track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/javascript/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the JavaScript track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The tests require solve() to return null when a puzzle has no solution and write every puzzle with ==; the instruction shows a single = and never says what an unsolvable puzzle returns.",
+        "evidence": [
+          {
+            "path": "tests/alphametics.spec.js",
+            "lines": "5, 15, 16, 21",
+            "fact": "puzzles use ==; toBeNull() for unsolvable ones"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "7",
+            "fact": "the example puzzle uses a single ="
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/Aider-AI/polyglot-benchmark/pull/26"
+        ]
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_javascript_alphametics/aider-polyglot-javascript-alphametics-r1.patch",
+        "sha256": "bd9e3d61f25a50f7fb9ef57a590dba321b4558dab188caca518d20de24fff97a",
+        "origin": "The alphametics part of Aider-AI/polyglot-benchmark#26 at f192eeb1ea35f24b0db3e29c9b4a7c1f1148f8c9, materialized by the same adapter."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "ae664a56e13771b8b4d0ed6b63f94d52a3cf002078a3545c7701fd9c87951c44",
+          "after": "f30de5bd315683eb0cae0eb582e1f78a66c433f6b3033541ce4d4982063cf156"
+        }
+      },
+      "depends_on": {
+        "tests/alphametics.spec.js": "d794958b8cebdb8a248947786d417c9184c2d06e327688a60f7ba5b74a2f1b70",
+        "environment/workspace/alphametics.js": "a92685d4f0ff6101044eec39a638822ed811823c3d3e6d1f812bc102c6c1e18e"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 7e0611e7 the tests require null for an unsolvable puzzle and write puzzles with ==, while the instruction shows a single = and says nothing about unsolvable puzzles; after the patch the instruction states both."
+        }
+      }
     }
   ]
 }
