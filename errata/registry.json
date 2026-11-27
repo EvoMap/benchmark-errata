@@ -1317,6 +1317,92 @@
           "summary": "At 62dc0745 the test finds the out-of-line definitions only among method nodes; the corrected row at b0c7fbf2 looks among method and function nodes. microsoft/SWE-bench-Live#116 verified the corrected row with evaluation/evaluation.py: the gold patch is resolved and the no-op is not on both rows, and a patch written to the statement alone is not resolved on the original row and is resolved on the corrected one."
         }
       }
+    },
+    {
+      "id": "swe-live-gsd-build__gsd-2-2643-r1",
+      "benchmark": "swe-bench-live-multilang",
+      "task_id": "gsd-build__gsd-2-2643",
+      "status": "active",
+      "source": {
+        "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+        "revision": "62dc0745c40f067fc366ae3eb1a26136e5928f85",
+        "materializer": "A SWE-bench-Live MultiLang adapter derived from the swebench_multilingual Harbor adapter, split ts, source language typescript; it builds the task image from the row's eval image, removes the project's future and its published releases from package caches, and renders tests/test.sh from the row"
+      },
+      "license": {
+        "upstream": [
+          "SWE-bench-Live MultiLang dataset: MIT",
+          "microsoft/SWE-bench-Live: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+          "https://github.com/microsoft/SWE-bench-Live/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "MIT allows redistribution, but the patch rewrites tests/config.json and tests/test.sh, which hold the hidden test patch and the reference patch; this repository publishes neither, so the patch is kept outside it and the record keeps its SHA256 and its construction."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The test requires the exact wording \"not in the known tier map\" in the returned reason, which the instruction never gives; the fix its own hint recommends fails the same test.",
+        "evidence": [
+          {
+            "path": "tests/config.json",
+            "lines": "10 (test_patch, decoded line 22)",
+            "fact": "result.reason must include a fixed phrase"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "9",
+            "fact": "describes the hardcoded capability tier map; the phrase does not appear"
+          }
+        ]
+      },
+      "answer_review": "The patch replaces the assertion on the exact reason text with a check that the reason is non-empty (the corrected test_patch of microsoft/SWE-bench-Live#116). FAIL_TO_PASS, PASS_TO_PASS and the gold patch are unchanged; no expected value is added.",
+      "upstream": {
+        "reports": [
+          "https://github.com/microsoft/SWE-bench-Live/issues/116"
+        ]
+      },
+      "patch": {
+        "storage": "external",
+        "sha256": "3f837603d59536546cd856b5b7f2e0738b8648a90642f427226200c56f9bbb91",
+        "origin": "The corrected test_patch posted in microsoft/SWE-bench-Live#116 (first comment), rendered by the same materializer. The issue was closed as fixed on 2026-11-24, but this row is unchanged at b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2.",
+        "construction": "Replace the row's test_patch with the corrected one from microsoft/SWE-bench-Live#116 and materialize the task with source.materializer; the patch is the diff of tests/config.json and tests/test.sh against the upstream task (`git diff --no-index --no-renames --src-prefix= --dst-prefix= a b`)."
+      },
+      "files": {
+        "tests/config.json": {
+          "before": "624f48ac125f778499e837d76c29d6a8f0bdf98e2628e98875a50d41f45d0ba8",
+          "after": "ca2236811c988904c2bbc880b5697ccbb72db933902a5293b459d9e6d57cc1fe"
+        },
+        "tests/test.sh": {
+          "before": "5bcbb5fc12dc7d223ba8f99ad7af9226a3bf4fe603f339eae1a3c438e4a7ed5f",
+          "after": "c5fb5eb7914703fd815e878f6cbe40c360b0ca1366f212ce79c498690fdc09ff"
+        }
+      },
+      "depends_on": {
+        "instruction.md": "ad86810f099eadeed0a2a45d2e1b9ecf9b2cd43ed4e9c9ef76bde1cd3b5d303e",
+        "solution/solve.sh": "d51a43ea5c0f360583e79fe83df40542e735170f599931e596ae370fc5ed742e"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 62dc0745, and unchanged at b0c7fbf2, the test asserts a reason phrase the instruction never gives; the patched test checks that a reason is given. microsoft/SWE-bench-Live#116 verified the corrected row with evaluation/evaluation.py: the gold patch is resolved and the no-op is not on both rows, and a patch written to the statement alone is not resolved on the original row and is resolved on the corrected one."
+        }
+      }
     }
   ]
 }
