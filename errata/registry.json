@@ -2327,6 +2327,90 @@
           "summary": "At 7e0611e7 the tests assert an exact exception message that neither the instruction nor the stub gives; after the patch the instruction states it. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
         }
       }
+    },
+    {
+      "id": "aider-polyglot-cpp-grade-school-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_cpp_grade-school",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for cpp/exercises/practice/grade-school"
+      },
+      "license": {
+        "upstream": [
+          "Exercism C++ track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/cpp/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the C++ track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "starter_mismatch",
+        "summary": "The header stub is an empty namespace, and the return shape the instruction describes does not match what the tests read from roster() and grade().",
+        "evidence": [
+          {
+            "path": "tests/grade_school_test.cpp",
+            "lines": "14, 21-23, 32",
+            "fact": "school_.roster(), school_.add(name, grade)"
+          },
+          {
+            "path": "environment/workspace/grade_school.h",
+            "lines": "1-7",
+            "fact": "empty namespace"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/Aider-AI/polyglot-benchmark/pull/26"
+        ]
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_cpp_grade-school/aider-polyglot-cpp-grade-school-r1.patch",
+        "sha256": "2b6127521ba716812d41c9f4afa4461a30902c57d9fba02a2ca67c2c4d458e04",
+        "origin": "The grade-school part of Aider-AI/polyglot-benchmark#26 at f192eeb1ea35f24b0db3e29c9b4a7c1f1148f8c9, materialized by the same adapter."
+      },
+      "files": {
+        "environment/workspace/grade_school.h": {
+          "before": "6f3ef5ce0e1d8c9b7d72d04e087e7979540194210c99468cf6dfafefc3ee7d46",
+          "after": "e001cbbe18a7bb53db12a1ddc5e61252cf51237b9d071c53275732987ec37278"
+        },
+        "instruction.md": {
+          "before": "1a9598a51eb0bbd5005a7993743e6b2a27380745a2863fa4d133d234b409daf2",
+          "after": "94789cc5524f8533d88da64867aae2d622ccaf60a54a44f35712ab0836be32f9"
+        }
+      },
+      "depends_on": {
+        "tests/grade_school_test.cpp": "3a6f4266831b6d31b022e764bed44d1c02cfa10f7629f91053c02e0d53b29871"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "In the task's image, the upstream header stub with tests/grade_school_test.cpp does not compile ('school' in namespace 'grade_school' does not name a type); with the patched stub the same tests compile, and the instruction states the return shapes the tests read. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
+        }
+      }
     }
   ]
 }
