@@ -23,4 +23,6 @@ uv run pytest -q
 uv run benchmark-errata verify
 ```
 
+After an erratum becomes `active` or `upstream_fixed`, cut the next release of its benchmark's clean version in `errata/emcv.json` (docs/design.md, section 7); `verify` fails until the newest version holds every released erratum of its upstream revision. To follow upstream, materialize the benchmark at a newer revision and run `benchmark-errata emcv diff` against the revision the errata were written for.
+
 When upstream fixes a task, set `upstream.fixed_in` and the status to `upstream_fixed`. Once runners have moved to the fixed revision, set it to `retired` with the date and reason; records and patches stay so earlier runs can be reproduced.

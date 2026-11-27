@@ -14,7 +14,7 @@ Only defects of the task or dataset itself are accepted. A fault of the evaluati
 | `harbor-index-dacode-predict-essay-scores-r1` | Harbor Index `dacode-predict-essay-scores` | The QWK pass bar exists only in the grader | [harbor-framework/harbor-index#156](https://github.com/harbor-framework/harbor-index/pull/156) | active |
 | `aider-polyglot-go-octal-r1` | Aider polyglot `go/octal` | The stub's signature does not match the tests | [Aider-AI/polyglot-benchmark#26](https://github.com/Aider-AI/polyglot-benchmark/pull/26) | active |
 
-The records are in [`errata/registry.json`](errata/registry.json) and the patches under [`errata/patches/`](errata/patches/). Releases are published as the Hugging Face dataset [`mike-7777777/benchmark-errata`](https://huggingface.co/datasets/mike-7777777/benchmark-errata), one tag per version.
+The records are in [`errata/registry.json`](errata/registry.json) and the patches under [`errata/patches/`](errata/patches/); a record whose patch would carry hidden test content or a reference patch keeps only the patch's SHA256 and construction (`patch.storage: "external"`). Releases are published as the Hugging Face dataset [`mike-7777777/benchmark-errata`](https://huggingface.co/datasets/mike-7777777/benchmark-errata), one tag per version.
 
 ## What is published
 
@@ -37,7 +37,28 @@ uv run benchmark-errata apply --tasks-root <root> \
   --benchmark-dir terminal-bench-2.0=<directory name your runner uses>
 ```
 
-`apply` checks every pinned file before and after patching and refuses the whole root on any mismatch. It adds `benchmark_erratum = "<id>"` to the `[metadata]` table of each patched `task.toml` and writes `benchmark-errata.json` at the root with what it applied or skipped. `--include-candidates` also applies errata that have not passed their release gates yet; use it for gate runs only.
+`apply` checks every pinned file before and after patching and refuses the whole root on any mismatch. It adds `benchmark_erratum = "<id>"` to the `[metadata]` table of each patched `task.toml` and writes `benchmark-errata.json` at the root with what it applied or skipped. `--include-candidates` also applies errata that have not passed their release gates yet; use it for gate runs only. An erratum whose patch would carry hidden test content or a reference patch keeps its patch outside this repository (`patch.storage: "external"`); pass the directory that holds such patches with `--patch-root`.
+
+## Clean versions
+
+A clean version (emcv) is an upstream revision plus a pinned set of released errata, named `<upstream repository name>_emcv` and versioned `emcv-<first 8 hex of the upstream revision>-r<N>`. The versions are listed in [`errata/emcv.json`](errata/emcv.json); `verify` checks them against the registry.
+
+```bash
+# apply exactly the errata a version was cut with
+uv run benchmark-errata apply --tasks-root <root> --source <benchmark>=<revision> \
+  --emcv <benchmark>=emcv-<8 hex>-r<N>
+
+# build one benchmark's clean version from its upstream tasks, with a record of every task's tree SHA256
+uv run benchmark-errata emcv build --benchmark <benchmark> --version emcv-<8 hex>-r<N> \
+  --tasks-root <upstream root> --output <dir>
+
+# compare our revision with a newer upstream one: which errata upstream adopted, touched or left alone,
+# and which other tasks changed upstream
+uv run benchmark-errata emcv diff --benchmark <benchmark> --old-root <tasks at our revision> \
+  --new-root <tasks at the new revision>
+```
+
+Whether a built version may be published whole is its `distribution` (`tasks` or `patches`), set from the upstream licenses; this repository publishes only patches and records either way. See [docs/design.md](docs/design.md), section 7.
 
 ## Release gates
 

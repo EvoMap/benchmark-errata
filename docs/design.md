@@ -38,6 +38,7 @@ An erratum closes the gap between the instruction and the grader, or removes wha
 7. The status matches its fields (section 2.3), and `active` and `upstream_fixed` errata carry passing gates (section 3).
 8. The patch's SHA256 matches the record, the patch changes exactly the files the record pins, and no patch file lacks a record.
 9. The license conclusion is recorded, and a patch whose upstream forbids redistribution is not stored here (section 5).
+10. The clean versions in `emcv.json` match the registry (section 7).
 
 ## 2 Records
 
@@ -108,8 +109,40 @@ For each erratum, the license is checked against upstream and the conclusion rec
 - `unspecified`: upstream grants no license; the patch is published only when it carries no upstream data and matches a change already proposed upstream in public, and the record says so.
 - `none`: upstream terms forbid redistribution (for example, gated datasets); the patch file stays out of this repository and the record keeps its SHA256 and how to construct it.
 
+Whatever the license, a patch whose bytes would carry a reference solution, an expected answer or hidden test content is kept out of this repository the same way (`storage: "external"`). This happens when the fix rewrites a file that embeds them, such as a SWE-bench-style `tests/config.json`, which holds the gold patch and the hidden test patch on single lines.
+
 Evidence is written so anyone can check it against the upstream task: file, lines and what they say. Exploit steps for a residue are not written down, only its kind and the fix.
 
 ## 6 Releases
 
 `benchmark-errata release --version vX.Y.Z --commit <git commit> --output <dir>` copies `registry.json`, the patches and the dataset card into a folder with `MANIFEST.json` (SHA256 of every file and the commit it was built from). That folder is uploaded to the Hugging Face dataset and tagged with the version.
+
+## 7 Clean versions (emcv)
+
+A clean version is an upstream revision plus a pinned set of released errata, so that an evaluation can name the exact task bytes it ran and does not have to wait for upstream to merge a fix.
+
+### 7.1 Names and records
+
+- Name: `<upstream repository name>_emcv`, for example `terminal-bench-2.0_emcv`, `harbor-index_emcv`, `polyglot-benchmark_emcv`. A Hugging Face dataset whose repository name alone is ambiguous keeps its owner: `SWE-bench-Live-MultiLang_emcv`.
+- Version: `emcv-<first 8 hex of the upstream revision>-r<N>`, numbered from `r1` for each upstream revision.
+- Record: `errata/emcv.json` lists every version with its benchmark id, upstream URL and revision, release date, the errata it was cut with (each with its patch SHA256), and its distribution (`tasks` when every included erratum's upstream allows redistribution of the whole tasks, otherwise `patches`) with the basis for it. The gate results of each erratum are in its record in `registry.json`.
+
+`benchmark-errata verify` checks `emcv.json` against the registry: every named erratum exists, was written for that benchmark and revision, is released (not `candidate`) and still has the patch SHA256 the version names; and the newest version of each revision holds every `active` or `upstream_fixed` erratum the registry has for it, so adding or changing an erratum means cutting the next release number.
+
+### 7.2 Building and using a version
+
+- `benchmark-errata apply --emcv <benchmark>=<version>` applies exactly the errata the version names. A newer erratum for the same benchmark is skipped (`skipped_not_in_version`); an erratum retired after the version was cut still applies, so a version always builds the same bytes. A version never includes candidates.
+- `benchmark-errata emcv build --benchmark <id> --version <version> --tasks-root <upstream root> --output <dir>` copies one benchmark's upstream tasks, applies the version and writes `EMCV.json` with the version record, the applied errata and the tree SHA256 of every task, so two builds can be compared task for task.
+- Whether a built version may be published whole follows `distribution`; this repository itself only ever publishes patches and records (section 5).
+
+### 7.3 Following upstream
+
+`benchmark-errata emcv diff --benchmark <id> --old-root <tasks at our revision> --new-root <tasks at a newer upstream revision>` compares two materializations of a benchmark. For each erratum that is not retired it reports one verdict on the new bytes:
+
+| Verdict | Meaning | Next step |
+|---|---|---|
+| `adopted` | every file the erratum changes has its after hash | upstream shipped the fix: set `upstream.fixed_in` and `upstream_fixed` |
+| `touched` | a file the erratum changes or depends on differs from the bytes it was written for | re-verify: upstream may have fixed the defect another way, or changed the tests |
+| `unchanged` | every pinned file is the same | the defect is still there; the erratum can be re-pinned to the new revision as it is |
+
+Tasks without an erratum whose files changed upstream are listed as `unreviewed`, with the changed paths, together with added and removed tasks. `--ignore <glob>` excludes paths that differ on every materialization (for example an oracle encrypted with a random salt).
