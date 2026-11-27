@@ -608,6 +608,95 @@
           "summary": "At 5399ea1 the bar R² > 0.990 appears only in tests/test.sh:40; after the patch the instruction states the metric and the bar. The upstream image keeps the verifier's test split in /root/.cache/huggingface (2 cached test-split files) and the patched image keeps none, with /app/data unchanged."
         }
       }
+    },
+    {
+      "id": "harbor-index-swebenchverified-fix-annotate-xy-array-copy-r1",
+      "benchmark": "harbor-index",
+      "task_id": "swebenchverified-fix-annotate-xy-array-copy",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/harbor-framework/harbor-index",
+        "revision": "5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+        "materializer": "tasks/swebenchverified-fix-annotate-xy-array-copy/ at this commit, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "harbor-index: no license file",
+          "SWE-bench Verified: MIT",
+          "matplotlib: matplotlib license"
+        ],
+        "redistribution": "unspecified",
+        "basis": [
+          "https://github.com/harbor-framework/harbor-index/tree/5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+          "https://github.com/SWE-bench/SWE-bench/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "The repository grants no license, so the task files are not published. The patch changes a line of tests/config.json that holds the hidden test patch, and its context holds the reference patch, so it stays out of this repository; the record keeps its SHA256 and its construction."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The only FAIL_TO_PASS test also requires OffsetFrom to copy its reference coordinate, a second behaviour the instruction does not ask for; a fix of the reported xy copy alone scores 0.",
+        "evidence": [
+          {
+            "path": "tests/config.json",
+            "lines": "5 (test_patch, decoded lines 20-31)",
+            "fact": "the injected test mutates the array passed to OffsetFrom as well as xy"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "4, 8",
+            "fact": "reports that annotate() keeps a reference to the xy array; nothing about OffsetFrom"
+          }
+        ]
+      },
+      "answer_review": "The patch narrows the injected test in test_patch to the behaviour the instruction reports (mutating the array passed as xy must not move the annotation) and updates README.md. FAIL_TO_PASS and PASS_TO_PASS names and the gold patch are unchanged; no expected value is added.",
+      "upstream": {
+        "reports": [
+          "https://github.com/harbor-framework/harbor-index/pull/154",
+          "https://github.com/SWE-bench/SWE-bench/issues/727"
+        ]
+      },
+      "patch": {
+        "storage": "external",
+        "sha256": "83f017ed620738b0ab94e1f7f96b0f6f148bee5162ae6f7d038eebecb1aaad2a",
+        "origin": "The swebenchverified-fix-annotate-xy-array-copy part of harbor-framework/harbor-index#154 at 3a320095855cdebe6d936ab224495bcf7d1dde62.",
+        "construction": "Apply the tasks/swebenchverified-fix-annotate-xy-array-copy/ hunks of harbor-framework/harbor-index#154 (head 3a320095) to the task directory with `git apply -p3`; that diff is the patch."
+      },
+      "files": {
+        "README.md": {
+          "before": "7d022de2037ea2daaa46f9068b1cae0249e88b716658e7e76b3a4782fde2b67e",
+          "after": "6cef47d9c56ffd99f2412c40557c85ce563153090958b0cbf2ddc7143656d1ee"
+        },
+        "tests/config.json": {
+          "before": "0addb762d50289cfd5a2e460169347d50d7b1c3cbe14e53b701820ff6921fcf7",
+          "after": "2cd6235e3ecbde736797f8927dbb92d1ebfa65d4d549b4acffdf5bf9d9c53f0b"
+        }
+      },
+      "depends_on": {
+        "instruction.md": "0a20b6865484f03dea687fc7440598abc4dd0ee93bd26cc87ae568225ad18d5b",
+        "tests/test.sh": "0a5dab01444af265b780e462620a1038dee51f66e1f45f97598be89f04a88d68",
+        "tests/parser.py": "d762378ea4f8f4e6e4ccab87a12b6783331593ff69d75965fe36b7d5ec07b81e"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 5399ea1 the injected FAIL_TO_PASS test also checks that OffsetFrom copies its reference coordinate, which the instruction does not report; after the patch it checks the reported xy copy only. In our runs, agent patches that copy only xy score 0 upstream and 1 patched, while the gold patch scores 1 and the empty patch 0 on both."
+        }
+      }
     }
   ]
 }
