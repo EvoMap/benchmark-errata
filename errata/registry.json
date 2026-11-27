@@ -259,6 +259,2903 @@
           "summary": "In the task's image, the upstream stub with tests/octal_test.go does not compile (ParseOctal(test.input) (no value) used as value; not enough arguments in call to ParseOctal); the patched stub compiles with the same tests and fails only on its unimplemented panic."
         }
       }
+    },
+    {
+      "id": "tb2-adaptive-rejection-sampler-r1",
+      "benchmark": "terminal-bench-2.0",
+      "task_id": "adaptive-rejection-sampler",
+      "status": "upstream_fixed",
+      "source": {
+        "url": "https://huggingface.co/datasets/harborframework/terminal-bench-2.0",
+        "revision": "f2e8c75e23add71613117eecc9498f53bcd7e04e",
+        "materializer": "The dataset's adaptive-rejection-sampler/ directory, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "Apache-2.0"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/harborframework/terminal-bench-2.0",
+          "https://github.com/harbor-framework/terminal-bench-2/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "Apache-2.0 allows redistribution and modification. Only the patch is published: the task directory also carries the reference solution, which stays out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The tests call ars(density, domain, n = count) with a fixed argument order, but the instruction only asks for a function named ars, so a sampler with any other signature fails every test that calls it.",
+        "evidence": [
+          {
+            "path": "tests/test_outputs.py",
+            "lines": "50",
+            "fact": "samples <- ars(normal_density, c(-5, 5), n = 1000)"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "19",
+            "fact": "asks for a primary function named \"ars\"; no signature"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [],
+        "not_reported": "Terminal-Bench 2.1 already states the signature in this task's instruction; its tests/test_outputs.py is byte-identical to this revision's.",
+        "fixed_in": {
+          "url": "https://github.com/harbor-framework/terminal-bench-2-1/tree/12b7565679ce5006230b820666353673a133db93/tasks/adaptive-rejection-sampler",
+          "revision": "12b7565679ce5006230b820666353673a133db93"
+        }
+      },
+      "patch": {
+        "path": "patches/terminal-bench-2.0/adaptive-rejection-sampler/tb2-adaptive-rejection-sampler-r1.patch",
+        "sha256": "ad0ca73626cfee639a1a7cb8dfe5f237e977cfd3da89cfd42e1efa5d75faef75",
+        "origin": "Line 19 of tasks/adaptive-rejection-sampler/instruction.md in harbor-framework/terminal-bench-2-1 at 12b7565679ce5006230b820666353673a133db93, which states the signature."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "3530999e72b651f260dabab69c2594cefae66e55123136b72663efe71546007e",
+          "after": "e6d28c28acd76bef61817427c74c2a29e3e8d75f535cbd708afcbfd02c54013f"
+        }
+      },
+      "depends_on": {
+        "tests/test_outputs.py": "547dc6e107f034f41703722aeceb6d0236e3fb69116fc3f2fbaba11884de352f"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At f2e8c75e, tests/test_outputs.py:50 calls ars(density, domain, n = count) and instruction.md line 19 gives no signature; after the patch line 19 states it, as in Terminal-Bench 2.1, whose tests/test_outputs.py is byte-identical."
+        }
+      }
+    },
+    {
+      "id": "tb2-raman-fitting-r1",
+      "benchmark": "terminal-bench-2.0",
+      "task_id": "raman-fitting",
+      "status": "active",
+      "source": {
+        "url": "https://huggingface.co/datasets/harborframework/terminal-bench-2.0",
+        "revision": "f2e8c75e23add71613117eecc9498f53bcd7e04e",
+        "materializer": "The dataset's raman-fitting/ directory, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "Apache-2.0"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/harborframework/terminal-bench-2.0",
+          "https://github.com/harbor-framework/terminal-bench-2/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "Apache-2.0 allows redistribution and modification. Only the patch is published: the task directory also carries the reference solution, which stays out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The grader accepts the 2D peak only when its fitted offset lies within 10% of the value one symmetric fit window gives, but the instruction names neither the fit window nor the background model, so a correct Lorentzian fit over another window scores 0.",
+        "evidence": [
+          {
+            "path": "tests/test_outputs.py",
+            "lines": "52, 63",
+            "fact": "the 2D peak's offset must be within 10% of a fixed expected value"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "1-18",
+            "fact": "asks for Lorentzian fits of the G and 2D peaks; no fit window, no background model"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/harbor-framework/terminal-bench-2-1/pull/259"
+        ]
+      },
+      "patch": {
+        "path": "patches/terminal-bench-2.0/raman-fitting/tb2-raman-fitting-r1.patch",
+        "sha256": "6b76f528afb45a681b0fb2bef748f0fd7d0ac5927c118f5a117614b5027e269d",
+        "origin": "harbor-framework/terminal-bench-2-1#259 at 3dd6db78848b2b3c76a260a527b7926df183730b, applied to the task directory."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "1fa59a89d88daf6a4b2d422955f53779b461880b527f40d79c71b16e0ee52433",
+          "after": "d984bc8c0be9e9fd6e17ffbb62086dc08bc2b14146b97f3a3cb9e89e7dc614e8"
+        }
+      },
+      "depends_on": {
+        "tests/test_outputs.py": "171fae772ccf262aec8ddac5bd2c6c731eed842421f5d8439a330b158c9f8c13"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At f2e8c75e the expected 2D-peak offset (tests/test_outputs.py:52, 63) is reached only with a symmetric fit window of roughly ±120 to ±190 cm^-1 and the instruction names no window or background; after the patch it states the model and both windows. In our runs, failing submissions reported the offsets that other windows give."
+        }
+      }
+    },
+    {
+      "id": "harbor-index-scicode-dna-binding-site-scanner-r1",
+      "benchmark": "harbor-index",
+      "task_id": "scicode-dna-binding-site-scanner",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/harbor-framework/harbor-index",
+        "revision": "5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+        "materializer": "tasks/scicode-dna-binding-site-scanner/ at this commit, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "harbor-index: no license file",
+          "SciCode: Apache-2.0"
+        ],
+        "redistribution": "unspecified",
+        "basis": [
+          "https://github.com/harbor-framework/harbor-index/tree/5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+          "https://github.com/scicode-bench/SciCode"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "The repository grants no license, so the task files are not published. The patch is published because it is the change already proposed in public upstream (harbor-framework/harbor-index#154); it carries no data, expected answer or test content."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The expected values of steps 76.2 and 76.4 depend on three conventions the adapted instruction does not state: the logarithm base of the divergence, whether it is normalized per row, and the order of the random draws after seeding.",
+        "evidence": [
+          {
+            "path": "tests/test_outputs.py",
+            "lines": "74-100",
+            "fact": "each step's test cases are run against the stored expected values"
+          },
+          {
+            "path": "tests/problem_data.json",
+            "lines": "sub_steps 76.2, 76.4",
+            "fact": "the test cases of the divergence step and of the scanner that seeds random"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "46, 65",
+            "fact": "no logarithm base for the divergence; no order of the draws for the insertion"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/harbor-framework/harbor-index/pull/154"
+        ]
+      },
+      "patch": {
+        "path": "patches/harbor-index/scicode-dna-binding-site-scanner/harbor-index-scicode-dna-binding-site-scanner-r1.patch",
+        "sha256": "9a40e240658418dfe31e4287a09196dd899bfcc77bf022bf8b15530df16dfa53",
+        "origin": "The scicode-dna-binding-site-scanner part of harbor-framework/harbor-index#154 at 3a320095855cdebe6d936ab224495bcf7d1dde62."
+      },
+      "files": {
+        "README.md": {
+          "before": "b5532b8eb266c820f99383e038b0cbd3c74cb6ef274be234472ce99527db36c5",
+          "after": "7e7d4b1f6c21f511a32ac354b11d642e242c1396f781d5bded4c78f297c8dbb2"
+        },
+        "instruction.md": {
+          "before": "53c716de78b1d2b101ccf27c4da5703f068586311795988c6ba87572dc45ec06",
+          "after": "ba05178fefac6c77fdfe409d754d5d909107b5c83abf098b77e75472051f4da4"
+        }
+      },
+      "depends_on": {
+        "tests/test_outputs.py": "2d517d642b7e5e67a0e17df48646e96aa07971ec786a70f260f7734b766b732e",
+        "tests/problem_data.json": "7f06d115188ba63048468fdb7826efa5ce3f73c3b591bfbd70fdd4648c93b5f8",
+        "tests/test_data.h5": "983cbaf9f47e9e0f1b075a24fb350d0d1357833edb91f1bc4a7bec9cc386fc54"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1,
+            1
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 5399ea1 the instruction gives no logarithm base (line 46) and no draw order (line 65), and the stored expected values of steps 76.2 and 76.4 depend on them; after the patch the instruction states the three conventions while the tests and expected values are unchanged. In our runs, single-convention variants of one solution located exactly these three."
+        }
+      }
+    },
+    {
+      "id": "harbor-index-sldbench-discover-vocab-scaling-law-r1",
+      "benchmark": "harbor-index",
+      "task_id": "sldbench-discover-vocab-scaling-law",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/harbor-framework/harbor-index",
+        "revision": "5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+        "materializer": "tasks/sldbench-discover-vocab-scaling-law/ at this commit, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "harbor-index: no license file",
+          "SLDBench dataset pkuHaowei/sldbench: see its dataset card"
+        ],
+        "redistribution": "unspecified",
+        "basis": [
+          "https://github.com/harbor-framework/harbor-index/tree/5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+          "https://huggingface.co/datasets/pkuHaowei/sldbench"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "The repository grants no license, so the task files are not published. The patch is published because it is the change already proposed in public upstream (harbor-framework/harbor-index#157 and #158); it carries no data, expected answer or test content."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The grader passes a law only at R² above 0.990 on hidden data, a bar the instruction never states; and the image build caches every split of the dataset, so the hidden test split ships in the agent's environment. Both are fixed together.",
+        "evidence": [
+          {
+            "path": "tests/test.sh",
+            "lines": "40",
+            "fact": "THRESHOLD=0.990"
+          },
+          {
+            "path": "tests/test_outputs.py",
+            "lines": "88-90",
+            "fact": "R² = 1 - NMSE over the hidden points"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "35",
+            "fact": "says only that the law is tested on a hidden dataset for extrapolation"
+          },
+          {
+            "path": "environment/Dockerfile",
+            "lines": "9",
+            "fact": "load_dataset(...)['train'] downloads and caches every split, including the verifier's test split"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/harbor-framework/harbor-index/pull/158",
+          "https://github.com/harbor-framework/harbor-index/pull/157",
+          "https://github.com/harbor-framework/adapters/pull/134"
+        ]
+      },
+      "patch": {
+        "path": "patches/harbor-index/sldbench-discover-vocab-scaling-law/harbor-index-sldbench-discover-vocab-scaling-law-r1.patch",
+        "sha256": "4d81593955d5147cd0e0a2b769ed179859b4d9b7b4b8d226f0c02eed400f42e7",
+        "origin": "harbor-framework/harbor-index#158 at 39232b2322782027803dc628f481f90c3e768b6b (instruction.md, README.md) and #157 at 37c1465e96235625f4cd7ca6e43268cf9ac1a5d8 (environment/Dockerfile), applied to the task directory."
+      },
+      "files": {
+        "README.md": {
+          "before": "2020331a75bb6d891a978fa97730d6e36569019a18650124f21790d52e3e9073",
+          "after": "e48d942480fca30fe03b5f45abf428da4ff3584fa1c887c62e35bf4579c94a49"
+        },
+        "environment/Dockerfile": {
+          "before": "98a7a4dbd3f08b70845835348ec6cea69a2fd5a4ff68080e3f9cd686c0ac89bc",
+          "after": "9dc2e46f779a2cb16dc23004a369695586ad46d4c3acb836f795abfd0472ef1f"
+        },
+        "instruction.md": {
+          "before": "74e02f533f714b48a888f4ae27c00784aa2871c5fd1de4170fdafc2bf9a34968",
+          "after": "be2b6f938e081b52285bb5d4302c0d360437d4bf01d0839a59c70e0129f14a23"
+        }
+      },
+      "depends_on": {
+        "tests/test.sh": "e5df42760f0bf2cd43baaaae888c7c6647676227e12dd3a98a45e68bb6c9c694",
+        "tests/test_outputs.py": "548bc94b39f2b6f7c3cc5199d97410c54dc358e14c4d18e380d15626ae116e72"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1,
+            1
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0,
+            0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 5399ea1 the bar R² > 0.990 appears only in tests/test.sh:40; after the patch the instruction states the metric and the bar. The upstream image keeps the verifier's test split in /root/.cache/huggingface (2 cached test-split files) and the patched image keeps none, with /app/data unchanged."
+        }
+      }
+    },
+    {
+      "id": "harbor-index-swebenchverified-fix-annotate-xy-array-copy-r1",
+      "benchmark": "harbor-index",
+      "task_id": "swebenchverified-fix-annotate-xy-array-copy",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/harbor-framework/harbor-index",
+        "revision": "5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+        "materializer": "tasks/swebenchverified-fix-annotate-xy-array-copy/ at this commit, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "harbor-index: no license file",
+          "SWE-bench Verified: MIT",
+          "matplotlib: matplotlib license"
+        ],
+        "redistribution": "unspecified",
+        "basis": [
+          "https://github.com/harbor-framework/harbor-index/tree/5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+          "https://github.com/SWE-bench/SWE-bench/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "The repository grants no license, so the task files are not published. The patch changes a line of tests/config.json that holds the hidden test patch, and its context holds the reference patch, so it stays out of this repository; the record keeps its SHA256 and its construction."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The only FAIL_TO_PASS test also requires OffsetFrom to copy its reference coordinate, a second behaviour the instruction does not ask for; a fix of the reported xy copy alone scores 0.",
+        "evidence": [
+          {
+            "path": "tests/config.json",
+            "lines": "5 (test_patch, decoded lines 20-31)",
+            "fact": "the injected test mutates the array passed to OffsetFrom as well as xy"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "4, 8",
+            "fact": "reports that annotate() keeps a reference to the xy array; nothing about OffsetFrom"
+          }
+        ]
+      },
+      "answer_review": "The patch narrows the injected test in test_patch to the behaviour the instruction reports (mutating the array passed as xy must not move the annotation) and updates README.md. FAIL_TO_PASS and PASS_TO_PASS names and the gold patch are unchanged; no expected value is added.",
+      "upstream": {
+        "reports": [
+          "https://github.com/harbor-framework/harbor-index/pull/154",
+          "https://github.com/SWE-bench/SWE-bench/issues/727"
+        ]
+      },
+      "patch": {
+        "storage": "external",
+        "sha256": "83f017ed620738b0ab94e1f7f96b0f6f148bee5162ae6f7d038eebecb1aaad2a",
+        "origin": "The swebenchverified-fix-annotate-xy-array-copy part of harbor-framework/harbor-index#154 at 3a320095855cdebe6d936ab224495bcf7d1dde62.",
+        "construction": "Apply the tasks/swebenchverified-fix-annotate-xy-array-copy/ hunks of harbor-framework/harbor-index#154 (head 3a320095) to the task directory with `git apply -p3`; that diff is the patch."
+      },
+      "files": {
+        "README.md": {
+          "before": "7d022de2037ea2daaa46f9068b1cae0249e88b716658e7e76b3a4782fde2b67e",
+          "after": "6cef47d9c56ffd99f2412c40557c85ce563153090958b0cbf2ddc7143656d1ee"
+        },
+        "tests/config.json": {
+          "before": "0addb762d50289cfd5a2e460169347d50d7b1c3cbe14e53b701820ff6921fcf7",
+          "after": "2cd6235e3ecbde736797f8927dbb92d1ebfa65d4d549b4acffdf5bf9d9c53f0b"
+        }
+      },
+      "depends_on": {
+        "instruction.md": "0a20b6865484f03dea687fc7440598abc4dd0ee93bd26cc87ae568225ad18d5b",
+        "tests/test.sh": "0a5dab01444af265b780e462620a1038dee51f66e1f45f97598be89f04a88d68",
+        "tests/parser.py": "d762378ea4f8f4e6e4ccab87a12b6783331593ff69d75965fe36b7d5ec07b81e"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 5399ea1 the injected FAIL_TO_PASS test also checks that OffsetFrom copies its reference coordinate, which the instruction does not report; after the patch it checks the reported xy copy only. In our runs, agent patches that copy only xy score 0 upstream and 1 patched, while the gold patch scores 1 and the empty patch 0 on both."
+        }
+      }
+    },
+    {
+      "id": "harbor-index-swebenchverified-fix-sphinx-literal-nitpick-r1",
+      "benchmark": "harbor-index",
+      "task_id": "swebenchverified-fix-sphinx-literal-nitpick",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/harbor-framework/harbor-index",
+        "revision": "5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+        "materializer": "tasks/swebenchverified-fix-sphinx-literal-nitpick/ at this commit, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "harbor-index: no license file",
+          "SWE-bench Verified: MIT",
+          "Sphinx: BSD-2-Clause"
+        ],
+        "redistribution": "unspecified",
+        "basis": [
+          "https://github.com/harbor-framework/harbor-index/tree/5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+          "https://github.com/SWE-bench/SWE-bench/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "The repository grants no license, so the task files are not published. The patch changes a line of tests/config.json that holds the hidden test patch, and its context holds the reference patch, so it stays out of this repository; the record keeps its SHA256 and its construction."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The FAIL_TO_PASS test pins the exact node shape of the parsed Literal values (bare text nodes), while the instruction asks only that the values stop producing nitpick warnings; Sphinx's own later fix uses another node type and fails the test.",
+        "evidence": [
+          {
+            "path": "tests/config.json",
+            "lines": "5 (test_patch, decoded lines 9-27)",
+            "fact": "assert_node over the full node tuple with bare text values"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "7, 29",
+            "fact": "asks only that Literal values no longer trigger nitpick warnings"
+          }
+        ]
+      },
+      "answer_review": "The patch replaces the node-shape assertions in test_patch with the two requirements the instruction states (the values are not cross-references, the rendered text is unchanged) and updates README.md. FAIL_TO_PASS and PASS_TO_PASS names and the gold patch are unchanged; no expected value is added.",
+      "upstream": {
+        "reports": [
+          "https://github.com/harbor-framework/harbor-index/pull/154",
+          "https://github.com/SWE-bench/SWE-bench/issues/727"
+        ]
+      },
+      "patch": {
+        "storage": "external",
+        "sha256": "8fa177c7a1d35b088e620bcc0f891563b323791992b41bb2e4e7b2cd168e3e2f",
+        "origin": "The swebenchverified-fix-sphinx-literal-nitpick part of harbor-framework/harbor-index#154 at 3a320095855cdebe6d936ab224495bcf7d1dde62.",
+        "construction": "Apply the tasks/swebenchverified-fix-sphinx-literal-nitpick/ hunks of harbor-framework/harbor-index#154 (head 3a320095) to the task directory with `git apply -p3`; that diff is the patch."
+      },
+      "files": {
+        "README.md": {
+          "before": "086c06af2ba8a08711936a4e56aebac5d4c6281a247a1059aeff89f317bf9a9c",
+          "after": "9f6a4ee0919ce8f5de48e40e6fefbad46e02cdc50b5e603f8612289237ed4c22"
+        },
+        "tests/config.json": {
+          "before": "74bd969069d7d9b757865156aa4a703596bf9cfcc586365d8c7c9d024f3e99df",
+          "after": "5776d5f290618591a232db884bacb6717bf3510e57b420eb1913f0f3b72eadec"
+        }
+      },
+      "depends_on": {
+        "instruction.md": "98118cb2ef4a50a43a2db85b3a7dbb00e4296d9d7a986bed5908c4026a9684f2",
+        "tests/test.sh": "f69a1fb9d0e43e6f2eaad89383dbd9ddd65f4b69539942c7bdb1b6775c90759e",
+        "tests/parser.py": "2423337127158ebecf104af50ef5c67b9c9a56304389424e54932b869c280b0f"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 5399ea1 the FAIL_TO_PASS test pins bare text nodes for Literal values; after the patch it checks the two requirements the instruction states. In our runs, a patch with the node type Sphinx itself later used scores 0 upstream and 1 patched, while the gold patch scores 1 and the empty patch 0 on both."
+        }
+      }
+    },
+    {
+      "id": "harbor-index-swebenchverified-fix-span-selector-axes-limits-r1",
+      "benchmark": "harbor-index",
+      "task_id": "swebenchverified-fix-span-selector-axes-limits",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/harbor-framework/harbor-index",
+        "revision": "5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+        "materializer": "tasks/swebenchverified-fix-span-selector-axes-limits/ at this commit, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "harbor-index: no license file",
+          "SWE-bench Verified: MIT",
+          "matplotlib: matplotlib license"
+        ],
+        "redistribution": "unspecified",
+        "basis": [
+          "https://github.com/harbor-framework/harbor-index/tree/5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+          "https://github.com/SWE-bench/SWE-bench/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "The repository grants no license, so the task files are not published. The patch is published because it is the change already proposed in public upstream (harbor-framework/harbor-index#152); it carries no data, expected answer or test content."
+      },
+      "defect": {
+        "class": "image_residue",
+        "summary": "The image build leaves pip's HTTP cache in /root/.cache/pip, and one cached body is a later matplotlib wheel that already contains this instance's fix and its test, readable without network access.",
+        "evidence": [
+          {
+            "path": "environment/Dockerfile",
+            "lines": "226",
+            "fact": "pip installs the project and its build requirements with the HTTP cache on; no later step clears /root/.cache/pip"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/harbor-framework/harbor-index/issues/152"
+        ]
+      },
+      "patch": {
+        "path": "patches/harbor-index/swebenchverified-fix-span-selector-axes-limits/harbor-index-swebenchverified-fix-span-selector-axes-limits-r1.patch",
+        "sha256": "252bf2329adcf6744d0002f18ad11b2b99d2ee8f93569616f499280dea04887e",
+        "origin": "Written for this erratum: the fix harbor-framework/harbor-index#152 proposes, a final RUN that removes /root/.cache/pip."
+      },
+      "files": {
+        "environment/Dockerfile": {
+          "before": "303b76e626d25b4330cfe754b4a2ee88ab05c106dec1f784b5208aa2db28e4b5",
+          "after": "9e2c23c9f0d1a60f520e6b62a8282c46495f2564f64e5d5fd571d4a143a427c6"
+        }
+      },
+      "depends_on": {
+        "tests/config.json": "cca29e7fc12f13fff3ead0eb79ebc2c8f3c6a648380d5019e6175d702935bedb",
+        "tests/test.sh": "c4684f96fb667022f4e32ac4cee78b00ff28d2f86d0a87b68f39734585ce85cd"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "The upstream image (built from the upstream Dockerfile) holds a matplotlib 3.7.5 wheel in /root/.cache/pip; the patched image holds no matplotlib wheel there."
+        }
+      }
+    },
+    {
+      "id": "swe-live-xroche__httrack-876-r1",
+      "benchmark": "swe-bench-live-multilang",
+      "task_id": "xroche__httrack-876",
+      "status": "upstream_fixed",
+      "source": {
+        "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+        "revision": "62dc0745c40f067fc366ae3eb1a26136e5928f85",
+        "materializer": "A SWE-bench-Live MultiLang adapter derived from the swebench_multilingual Harbor adapter, split c, source language c; it builds the task image from the row's eval image, removes the project's future and its published releases from package caches, and renders tests/test.sh from the row"
+      },
+      "license": {
+        "upstream": [
+          "SWE-bench-Live MultiLang dataset: MIT",
+          "microsoft/SWE-bench-Live: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+          "https://github.com/microsoft/SWE-bench-Live/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "MIT allows redistribution, but the patch rewrites tests/config.json and tests/test.sh, which hold the hidden test patch and the reference patch; this repository publishes neither, so the patch is kept outside it and the record keeps its SHA256 and its construction."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The test also probes .webp, outside the file types the instruction lists, and accepts .xml only as application/xml, so an implementation of exactly the listed types fails.",
+        "evidence": [
+          {
+            "path": "tests/config.json",
+            "lines": "10 (test_patch, decoded lines 144, 184)",
+            "fact": "expects application/xml for .xml and image/webp for a .webp probe"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "7-14",
+            "fact": "lists gif, png, jpg/jpeg, svg, ico and xml"
+          }
+        ]
+      },
+      "answer_review": "Upstream's corrected row: it drops the .webp probe and accepts text/xml as well as application/xml. No expected answer is added and the gold patch is unchanged.",
+      "upstream": {
+        "reports": [
+          "https://github.com/microsoft/SWE-bench-Live/issues/116"
+        ],
+        "fixed_in": {
+          "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang/commit/b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2",
+          "revision": "b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2"
+        }
+      },
+      "patch": {
+        "storage": "external",
+        "sha256": "8307dba474c8a98d30f02acd2e89eb339168be45fbe13893318540b983cabc09",
+        "origin": "tests/config.json and tests/test.sh as the same materializer writes them from this row at b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2 (SWE-bench-Live/MultiLang 'Fix issues', 2026-11-24), which corrects the row as proposed in microsoft/SWE-bench-Live#116; instruction.md is unchanged at that revision.",
+        "construction": "Materialize the task at source.revision and at upstream.fixed_in.revision with source.materializer; copy tests/config.json and tests/test.sh of the second into the first; the patch is `git diff --no-index --no-renames --src-prefix= --dst-prefix= a b` between the two task directories (a: upstream, b: with the two files replaced)."
+      },
+      "files": {
+        "tests/config.json": {
+          "before": "10fde3d9ba95ca33748f410940ed4d143a9c09a7a70c9525e1c51accdbd249f4",
+          "after": "4e86dbdd2f55afe82d5c8ffce58139ca60d21eb902800100b0e76f117ba616ff"
+        },
+        "tests/test.sh": {
+          "before": "0c5078f1b9ef7423af60c4e908b4d65437b60b35f63e810555bf72b21cbca09e",
+          "after": "077e11e657077f1346d5cb57cb44e4978a3df793a846511c04cc6b803af5d6ac"
+        }
+      },
+      "depends_on": {
+        "instruction.md": "6db250d460c40962d2380828112fe7230d8caf8651d4761a3d2302909655fd22",
+        "solution/solve.sh": "77a4e10bb5df8809a007b1d58956a2a03fa34c5f0295b9e931194ec669920806"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 62dc0745 the test probes .webp and accepts .xml only as application/xml, outside what the instruction lists; the corrected row at b0c7fbf2 drops the probe and accepts text/xml. microsoft/SWE-bench-Live#116 verified the corrected row with evaluation/evaluation.py: the gold patch is resolved and the no-op is not on both rows, and a patch written to the statement alone is not resolved on the original row and is resolved on the corrected one."
+        }
+      }
+    },
+    {
+      "id": "swe-live-xroche__httrack-454-r1",
+      "benchmark": "swe-bench-live-multilang",
+      "task_id": "xroche__httrack-454",
+      "status": "upstream_fixed",
+      "source": {
+        "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+        "revision": "62dc0745c40f067fc366ae3eb1a26136e5928f85",
+        "materializer": "A SWE-bench-Live MultiLang adapter derived from the swebench_multilingual Harbor adapter, split c, source language c; it builds the task image from the row's eval image, removes the project's future and its published releases from package caches, and renders tests/test.sh from the row"
+      },
+      "license": {
+        "upstream": [
+          "SWE-bench-Live MultiLang dataset: MIT",
+          "microsoft/SWE-bench-Live: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+          "https://github.com/microsoft/SWE-bench-Live/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "MIT allows redistribution, but the patch rewrites tests/config.json and tests/test.sh, which hold the hidden test patch and the reference patch; this repository publishes neither, so the patch is kept outside it and the record keeps its SHA256 and its construction."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The hidden self-test asserts an application/manifest+json to webmanifest mapping that is not among the MIME pairs the instruction lists.",
+        "evidence": [
+          {
+            "path": "tests/config.json",
+            "lines": "10 (test_patch, decoded lines 13-14)",
+            "fact": "asserts application/manifest+json maps to webmanifest"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "7-8",
+            "fact": "lists the modern MIME pairs to add; manifest is not among them"
+          }
+        ]
+      },
+      "answer_review": "Upstream's corrected row: it drops that assertion pair. No expected answer is added and the gold patch is unchanged.",
+      "upstream": {
+        "reports": [
+          "https://github.com/microsoft/SWE-bench-Live/issues/116"
+        ],
+        "fixed_in": {
+          "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang/commit/b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2",
+          "revision": "b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2"
+        }
+      },
+      "patch": {
+        "storage": "external",
+        "sha256": "717bcfccb05e222d3298661e22ddda79855a9cd068592a94111305cb04834bd4",
+        "origin": "tests/config.json and tests/test.sh as the same materializer writes them from this row at b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2 (SWE-bench-Live/MultiLang 'Fix issues', 2026-11-24), which corrects the row as proposed in microsoft/SWE-bench-Live#116; instruction.md is unchanged at that revision.",
+        "construction": "Materialize the task at source.revision and at upstream.fixed_in.revision with source.materializer; copy tests/config.json and tests/test.sh of the second into the first; the patch is `git diff --no-index --no-renames --src-prefix= --dst-prefix= a b` between the two task directories (a: upstream, b: with the two files replaced)."
+      },
+      "files": {
+        "tests/config.json": {
+          "before": "5530ce3a1ed1627e3386db4d581da23c0e14a19c4a2c989e641f480b0c9da2f8",
+          "after": "967376526d00647005d99fc5f03307d23241b19caf41c9a1ed00562db298f3b0"
+        },
+        "tests/test.sh": {
+          "before": "1853594759b2388c3d292d3108791c7b667682b85a2bcabf697cd16cc98a1491",
+          "after": "c2b5ecc06b34306acac555c8eb1d3f19815769af7cb4109fd5de4f801e60b4ca"
+        }
+      },
+      "depends_on": {
+        "instruction.md": "ad1b9dc25a7cb0049962f167a94220ab7c502ecc1ae09b7e7ed11b9d54482079",
+        "solution/solve.sh": "28e91d134f0f220dba2424ef650152c02900ff559493bbdc987747a7e5abbddb"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 62dc0745 the hidden self-test asserts a manifest+json mapping the instruction does not list; the corrected row at b0c7fbf2 drops that pair. microsoft/SWE-bench-Live#116 verified the corrected row with evaluation/evaluation.py: the gold patch is resolved and the no-op is not on both rows, and a patch written to the statement alone is not resolved on the original row and is resolved on the corrected one."
+        }
+      }
+    },
+    {
+      "id": "swe-live-aomediacodec__libavif-3273-r1",
+      "benchmark": "swe-bench-live-multilang",
+      "task_id": "AOMediaCodec__libavif-3273",
+      "status": "upstream_fixed",
+      "source": {
+        "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+        "revision": "62dc0745c40f067fc366ae3eb1a26136e5928f85",
+        "materializer": "A SWE-bench-Live MultiLang adapter derived from the swebench_multilingual Harbor adapter, split c, source language c; it builds the task image from the row's eval image, removes the project's future and its published releases from package caches, and renders tests/test.sh from the row"
+      },
+      "license": {
+        "upstream": [
+          "SWE-bench-Live MultiLang dataset: MIT",
+          "microsoft/SWE-bench-Live: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+          "https://github.com/microsoft/SWE-bench-Live/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "MIT allows redistribution, but the patch rewrites tests/config.json and tests/test.sh, which hold the hidden test patch and the reference patch; this repository publishes neither, so the patch is kept outside it and the record keeps its SHA256 and its construction."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The test greps the tool's pre-encode image dump for an absent alpha channel instead of reading the written file, so an implementation that writes a file without alpha fails.",
+        "evidence": [
+          {
+            "path": "tests/config.json",
+            "lines": "10 (test_patch, decoded lines 10-19)",
+            "fact": "checks the printed dump of the in-memory image, not the output file"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "7-8",
+            "fact": "asks to bring --ignore-alpha to avifgainmaputil as avifenc has it"
+          }
+        ]
+      },
+      "answer_review": "Upstream's corrected row: the test checks the written file with avifdec --info. No expected answer is added and the gold patch is unchanged.",
+      "upstream": {
+        "reports": [
+          "https://github.com/microsoft/SWE-bench-Live/issues/116"
+        ],
+        "fixed_in": {
+          "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang/commit/b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2",
+          "revision": "b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2"
+        }
+      },
+      "patch": {
+        "storage": "external",
+        "sha256": "41f7f058e7c18e4aa5e506a6d8fc70e61f77bd4f0cad2e3040c3a984ad339cf0",
+        "origin": "tests/config.json and tests/test.sh as the same materializer writes them from this row at b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2 (SWE-bench-Live/MultiLang 'Fix issues', 2026-11-24), which corrects the row as proposed in microsoft/SWE-bench-Live#116; instruction.md is unchanged at that revision.",
+        "construction": "Materialize the task at source.revision and at upstream.fixed_in.revision with source.materializer; copy tests/config.json and tests/test.sh of the second into the first; the patch is `git diff --no-index --no-renames --src-prefix= --dst-prefix= a b` between the two task directories (a: upstream, b: with the two files replaced)."
+      },
+      "files": {
+        "tests/config.json": {
+          "before": "7661ffc8b93b0992679fc68c2038d759d164d00bfae95112ad9c4de5a936e463",
+          "after": "5538b3049fb8f2f656cc8275cefabc7b441bc8866cff7fbee6de485d33254c22"
+        },
+        "tests/test.sh": {
+          "before": "f3bc82a7bb135ddec760e6f0ff2212a9a7ceee86019e384a02f13e8f2e11f559",
+          "after": "31b543884bc830e0d8c40885bf3858819192fbc15c90721b2d09f663cf81d129"
+        }
+      },
+      "depends_on": {
+        "instruction.md": "bc7e6adb2c9f5d2c0087972b5ea201037be603fbffbd9410d4b4669821e0a720",
+        "solution/solve.sh": "3df38923da5fa038528c77539544082796f79f0e271200f300dbfd1dcfdd6366"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 62dc0745 the test reads the tool's pre-encode dump rather than the written file; the corrected row at b0c7fbf2 checks the file with avifdec --info. microsoft/SWE-bench-Live#116 verified the corrected row with evaluation/evaluation.py: the gold patch is resolved and the no-op is not on both rows, and a patch written to the statement alone is not resolved on the original row and is resolved on the corrected one."
+        }
+      }
+    },
+    {
+      "id": "swe-live-varnishcache__varnish-cache-4370-r1",
+      "benchmark": "swe-bench-live-multilang",
+      "task_id": "varnishcache__varnish-cache-4370",
+      "status": "upstream_fixed",
+      "source": {
+        "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+        "revision": "62dc0745c40f067fc366ae3eb1a26136e5928f85",
+        "materializer": "A SWE-bench-Live MultiLang adapter derived from the swebench_multilingual Harbor adapter, split c, source language c; it builds the task image from the row's eval image, removes the project's future and its published releases from package caches, and renders tests/test.sh from the row"
+      },
+      "license": {
+        "upstream": [
+          "SWE-bench-Live MultiLang dataset: MIT",
+          "microsoft/SWE-bench-Live: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+          "https://github.com/microsoft/SWE-bench-Live/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "MIT allows redistribution, but the patch rewrites tests/config.json and tests/test.sh, which hold the hidden test patch and the reference patch; this repository publishes neither, so the patch is kept outside it and the record keeps its SHA256 and its construction."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The test also changes the handling of a request body over the std.cache_req_body() limit to a 400 response, which the instruction does not ask for; the row's log parser also reads automake summary counts as test names.",
+        "evidence": [
+          {
+            "path": "tests/config.json",
+            "lines": "10 (test_patch, decoded lines 1-23)",
+            "fact": "the c00055 and c00067 hunks require 400 for an over-limit body"
+          },
+          {
+            "path": "tests/config.json",
+            "lines": "29 (log_parser)",
+            "fact": "summary lines are parsed as test results"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "7, 10",
+            "fact": "asks only that a bad chunked body gets 400 instead of 503"
+          }
+        ]
+      },
+      "answer_review": "Upstream's corrected row: it drops the c00055 and c00067 hunks and those two tests from FAIL_TO_PASS, and stops parsing summary counts as tests. No expected answer is added and the gold patch is unchanged.",
+      "upstream": {
+        "reports": [
+          "https://github.com/microsoft/SWE-bench-Live/issues/116"
+        ],
+        "fixed_in": {
+          "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang/commit/b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2",
+          "revision": "b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2"
+        }
+      },
+      "patch": {
+        "storage": "external",
+        "sha256": "ce855e21f2a103f1e46219bde0c6828a113ac206875f51cdc8ae2f9b68ce2cfb",
+        "origin": "tests/config.json and tests/test.sh as the same materializer writes them from this row at b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2 (SWE-bench-Live/MultiLang 'Fix issues', 2026-11-24), which corrects the row as proposed in microsoft/SWE-bench-Live#116; instruction.md is unchanged at that revision.",
+        "construction": "Materialize the task at source.revision and at upstream.fixed_in.revision with source.materializer; copy tests/config.json and tests/test.sh of the second into the first; the patch is `git diff --no-index --no-renames --src-prefix= --dst-prefix= a b` between the two task directories (a: upstream, b: with the two files replaced)."
+      },
+      "files": {
+        "tests/config.json": {
+          "before": "78833ab30b894c4f94e0841690d851a5bbcc8f37a5fbf0dd16a893a88f632116",
+          "after": "f6fdb557e0f12d1dc00e3677a77039fdda8c1c1ba35dde62694e6d9400c22294"
+        },
+        "tests/test.sh": {
+          "before": "ff116688b040344e65289c24624b4a97dadace7f519e09b060d849afaae81091",
+          "after": "017bb576591e6e6b84132475ae7db3292426c5bf44c7e7ce3fdb5be2b21fd9d6"
+        }
+      },
+      "depends_on": {
+        "instruction.md": "4f0bd203991d72698d37d71c064de6c4d6b5d8777a3ba1e7561ee1cfd21ee48c",
+        "solution/solve.sh": "6d74eba441ca2b76ae72b44778dbbd56a4d91fa531d82af40a7e5af19b0ca8ac"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 62dc0745 the test also requires 400 for an over-limit request body and the log parser reads summary counts as tests; the corrected row at b0c7fbf2 drops both. microsoft/SWE-bench-Live#116 verified the corrected row with evaluation/evaluation.py: the gold patch is resolved and the no-op is not on both rows, and a patch written to the statement alone is not resolved on the original row and is resolved on the corrected one."
+        }
+      }
+    },
+    {
+      "id": "swe-live-colbymchenry__codegraph-454-r1",
+      "benchmark": "swe-bench-live-multilang",
+      "task_id": "colbymchenry__codegraph-454",
+      "status": "upstream_fixed",
+      "source": {
+        "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+        "revision": "62dc0745c40f067fc366ae3eb1a26136e5928f85",
+        "materializer": "A SWE-bench-Live MultiLang adapter derived from the swebench_multilingual Harbor adapter, split c, source language c; it builds the task image from the row's eval image, removes the project's future and its published releases from package caches, and renders tests/test.sh from the row"
+      },
+      "license": {
+        "upstream": [
+          "SWE-bench-Live MultiLang dataset: MIT",
+          "microsoft/SWE-bench-Live: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+          "https://github.com/microsoft/SWE-bench-Live/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "MIT allows redistribution, but the patch rewrites tests/config.json and tests/test.sh, which hold the hidden test patch and the reference patch; this repository publishes neither, so the patch is kept outside it and the record keeps its SHA256 and its construction."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The test looks the out-of-line C++ definitions up as nodes of kind method, a modelling choice the instruction does not ask for; the instruction asks only for the callers output.",
+        "evidence": [
+          {
+            "path": "tests/config.json",
+            "lines": "10 (test_patch, decoded lines 39, 48, 93, 96)",
+            "fact": "getNodesByKind('method') to find the out-of-line definitions"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "7, 10",
+            "fact": "asks that `codegraph callers` lists the two methods"
+          }
+        ]
+      },
+      "answer_review": "Upstream's corrected row: the test looks the definition up among method and function nodes. No expected answer is added and the gold patch is unchanged.",
+      "upstream": {
+        "reports": [
+          "https://github.com/microsoft/SWE-bench-Live/issues/116"
+        ],
+        "fixed_in": {
+          "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang/commit/b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2",
+          "revision": "b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2"
+        }
+      },
+      "patch": {
+        "storage": "external",
+        "sha256": "f85aba1b6769f78a25e76031793f4ea402547ba9a857bd2662255f61945d03b1",
+        "origin": "tests/config.json and tests/test.sh as the same materializer writes them from this row at b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2 (SWE-bench-Live/MultiLang 'Fix issues', 2026-11-24), which corrects the row as proposed in microsoft/SWE-bench-Live#116; instruction.md is unchanged at that revision.",
+        "construction": "Materialize the task at source.revision and at upstream.fixed_in.revision with source.materializer; copy tests/config.json and tests/test.sh of the second into the first; the patch is `git diff --no-index --no-renames --src-prefix= --dst-prefix= a b` between the two task directories (a: upstream, b: with the two files replaced)."
+      },
+      "files": {
+        "tests/config.json": {
+          "before": "8163bf7df9d3c4ded7056f2498120f3b8304dffbfd7e1f814d97e66121d55385",
+          "after": "f9b7ce4077a2ee9cd1fb172b3fd1f5b27036c0bde78ab4d45ceaacdb29611fc4"
+        },
+        "tests/test.sh": {
+          "before": "6ede962351944f08c2094575bc444e593f33a855351e25bf2992139ef2a5b4d8",
+          "after": "b052677a7516b3f0b4769a05684bf12150fa8992b2214216dd649013c046da7f"
+        }
+      },
+      "depends_on": {
+        "instruction.md": "efe6d61f7762ee1de5b5dc49ae402e0663d1106741ee11ade1afe95eca48f56b",
+        "solution/solve.sh": "60484699b0d8a68eb3f1e73ca2c483791872a2bbb2ca28264263deababe30e88"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 62dc0745 the test finds the out-of-line definitions only among method nodes; the corrected row at b0c7fbf2 looks among method and function nodes. microsoft/SWE-bench-Live#116 verified the corrected row with evaluation/evaluation.py: the gold patch is resolved and the no-op is not on both rows, and a patch written to the statement alone is not resolved on the original row and is resolved on the corrected one."
+        }
+      }
+    },
+    {
+      "id": "swe-live-gsd-build__gsd-2-2643-r1",
+      "benchmark": "swe-bench-live-multilang",
+      "task_id": "gsd-build__gsd-2-2643",
+      "status": "active",
+      "source": {
+        "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+        "revision": "62dc0745c40f067fc366ae3eb1a26136e5928f85",
+        "materializer": "A SWE-bench-Live MultiLang adapter derived from the swebench_multilingual Harbor adapter, split ts, source language typescript; it builds the task image from the row's eval image, removes the project's future and its published releases from package caches, and renders tests/test.sh from the row"
+      },
+      "license": {
+        "upstream": [
+          "SWE-bench-Live MultiLang dataset: MIT",
+          "microsoft/SWE-bench-Live: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+          "https://github.com/microsoft/SWE-bench-Live/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "MIT allows redistribution, but the patch rewrites tests/config.json and tests/test.sh, which hold the hidden test patch and the reference patch; this repository publishes neither, so the patch is kept outside it and the record keeps its SHA256 and its construction."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The test requires the exact wording \"not in the known tier map\" in the returned reason, which the instruction never gives; the fix its own hint recommends fails the same test.",
+        "evidence": [
+          {
+            "path": "tests/config.json",
+            "lines": "10 (test_patch, decoded line 22)",
+            "fact": "result.reason must include a fixed phrase"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "9",
+            "fact": "describes the hardcoded capability tier map; the phrase does not appear"
+          }
+        ]
+      },
+      "answer_review": "The patch replaces the assertion on the exact reason text with a check that the reason is non-empty (the corrected test_patch of microsoft/SWE-bench-Live#116). FAIL_TO_PASS, PASS_TO_PASS and the gold patch are unchanged; no expected value is added.",
+      "upstream": {
+        "reports": [
+          "https://github.com/microsoft/SWE-bench-Live/issues/116"
+        ]
+      },
+      "patch": {
+        "storage": "external",
+        "sha256": "3f837603d59536546cd856b5b7f2e0738b8648a90642f427226200c56f9bbb91",
+        "origin": "The corrected test_patch posted in microsoft/SWE-bench-Live#116 (first comment), rendered by the same materializer. The issue was closed as fixed on 2026-11-24, but this row is unchanged at b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2.",
+        "construction": "Replace the row's test_patch with the corrected one from microsoft/SWE-bench-Live#116 and materialize the task with source.materializer; the patch is the diff of tests/config.json and tests/test.sh against the upstream task (`git diff --no-index --no-renames --src-prefix= --dst-prefix= a b`)."
+      },
+      "files": {
+        "tests/config.json": {
+          "before": "624f48ac125f778499e837d76c29d6a8f0bdf98e2628e98875a50d41f45d0ba8",
+          "after": "ca2236811c988904c2bbc880b5697ccbb72db933902a5293b459d9e6d57cc1fe"
+        },
+        "tests/test.sh": {
+          "before": "5bcbb5fc12dc7d223ba8f99ad7af9226a3bf4fe603f339eae1a3c438e4a7ed5f",
+          "after": "c5fb5eb7914703fd815e878f6cbe40c360b0ca1366f212ce79c498690fdc09ff"
+        }
+      },
+      "depends_on": {
+        "instruction.md": "ad86810f099eadeed0a2a45d2e1b9ecf9b2cd43ed4e9c9ef76bde1cd3b5d303e",
+        "solution/solve.sh": "d51a43ea5c0f360583e79fe83df40542e735170f599931e596ae370fc5ed742e"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 62dc0745, and unchanged at b0c7fbf2, the test asserts a reason phrase the instruction never gives; the patched test checks that a reason is given. microsoft/SWE-bench-Live#116 verified the corrected row with evaluation/evaluation.py: the gold patch is resolved and the no-op is not on both rows, and a patch written to the statement alone is not resolved on the original row and is resolved on the corrected one."
+        }
+      }
+    },
+    {
+      "id": "swe-live-gsd-build__gsd-2-3258-r1",
+      "benchmark": "swe-bench-live-multilang",
+      "task_id": "gsd-build__gsd-2-3258",
+      "status": "active",
+      "source": {
+        "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+        "revision": "62dc0745c40f067fc366ae3eb1a26136e5928f85",
+        "materializer": "A SWE-bench-Live MultiLang adapter derived from the swebench_multilingual Harbor adapter, split ts, source language typescript; it builds the task image from the row's eval image, removes the project's future and its published releases from package caches, and renders tests/test.sh from the row"
+      },
+      "license": {
+        "upstream": [
+          "SWE-bench-Live MultiLang dataset: MIT",
+          "microsoft/SWE-bench-Live: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+          "https://github.com/microsoft/SWE-bench-Live/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "MIT allows redistribution. Only the patch is published; it changes instruction.md alone and carries no test content or reference patch."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The test imports web/lib/workspace-status.ts from the extensions tests, so the type-check that runs before every test checks that file under node16 rules; the instruction asks to change the file's logic but not to make it pass that check, and when the check fails no test runs.",
+        "evidence": [
+          {
+            "path": "tests/config.json",
+            "lines": "10 (test_patch, decoded line 17)",
+            "fact": "imports web/lib/workspace-status.ts from src/resources/extensions/gsd/tests/"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "16, 113",
+            "fact": "asks to change web/lib/workspace-status.ts; nothing about the extensions type-check"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/microsoft/SWE-bench-Live/issues/116"
+        ]
+      },
+      "patch": {
+        "path": "patches/swe-bench-live-multilang/gsd-build__gsd-2-3258/swe-live-gsd-build__gsd-2-3258-r1.patch",
+        "sha256": "b7e200db9f1b605d8a539b6178e9fb9c15a917247a5d43d5af71327542b2b226",
+        "origin": "The corrected problem_statement posted in microsoft/SWE-bench-Live#116 (first comment; it adds the test-setup constraints), rendered by the same materializer; only instruction.md changes. The issue was closed as fixed on 2026-11-24, but this row is unchanged at b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "e139fbc7b4b21d4c0884629d9dd8795b265bb21ff054f08ee3200c2fb5bf0c27",
+          "after": "02f2c5d986bdc80cbe3b8a02f8401d60a24bc1fd79c158d851e6c93061132676"
+        }
+      },
+      "depends_on": {
+        "tests/config.json": "b654f0e300bd42aaf1eb5d6b222c48754dbaab80159aec7789d8a0ba14b4396a",
+        "tests/test.sh": "e2ba622f160c61731edfd51515772a07f316ded11f6e55a5b678d2e0725aaae4"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 62dc0745, and unchanged at b0c7fbf2, the type-check that precedes every test checks web/lib/workspace-status.ts, which the instruction does not mention; the patched instruction states the constraints. microsoft/SWE-bench-Live#116 verified the corrected row with evaluation/evaluation.py: the gold patch is resolved and the no-op is not on both rows, and a patch written to the statement alone is not resolved on the original row and is resolved on the corrected one."
+        }
+      }
+    },
+    {
+      "id": "swe-live-yvgude__lean-ctx-1164-r1",
+      "benchmark": "swe-bench-live-multilang",
+      "task_id": "yvgude__lean-ctx-1164",
+      "status": "active",
+      "source": {
+        "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+        "revision": "b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2",
+        "materializer": "A SWE-bench-Live MultiLang adapter derived from the swebench_multilingual Harbor adapter, split rust, source language rust; it builds the task image from the row's eval image, removes the project's future and its published releases from package caches, and renders tests/test.sh from the row"
+      },
+      "license": {
+        "upstream": [
+          "SWE-bench-Live MultiLang dataset: MIT",
+          "microsoft/SWE-bench-Live: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+          "https://github.com/microsoft/SWE-bench-Live/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "MIT allows redistribution, but the patch rewrites tests/config.json and tests/test.sh, which hold the hidden test patch and the reference patch; this repository publishes neither, so the patch is kept outside it and the record keeps its SHA256 and its construction."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The new test calls three names only the reference patch defines and expects HTTP 402, none of which the instruction gives; in Rust one unresolved name stops the whole --lib test target from compiling, and all 8,560 tests are FAIL_TO_PASS, so any other naming scores 0. The test command also sends stderr to a file named 1, so the compile error never reaches the log.",
+        "evidence": [
+          {
+            "path": "tests/config.json",
+            "lines": "10 (test_patch, decoded lines 13, 22, 24, 26)",
+            "fact": "uses OCLA_BUDGET_SCOPE_HEADER, set_test_budget_limit, apply_ocla_budget_admission and StatusCode::PAYMENT_REQUIRED"
+          },
+          {
+            "path": "tests/config.json",
+            "lines": "29 (FAIL_TO_PASS)",
+            "fact": "8,560 tests, PASS_TO_PASS empty"
+          },
+          {
+            "path": "tests/config.json",
+            "lines": "22 (test_cmds)",
+            "fact": "cargo test ... 2>1 | tee test-output.log"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "1-30",
+            "fact": "no interface names and no status code for the budget rejection"
+          }
+        ]
+      },
+      "answer_review": "The patch keeps the new test as the only FAIL_TO_PASS and moves the other 8,559 names to PASS_TO_PASS (they pass at the base commit and with the gold patch), and corrects 2>1 to 2>&1 in test_cmds. No test, expected value or gold-patch content is added; the interface sentence in instruction.md names what the tests call.",
+      "upstream": {
+        "reports": [
+          "https://github.com/microsoft/SWE-bench-Live/issues/118"
+        ]
+      },
+      "patch": {
+        "storage": "external",
+        "sha256": "04ad4ec162c3dae6c17dc68eebf04f46918ac88fb5c957c278535df574325592",
+        "origin": "The three changes proposed in microsoft/SWE-bench-Live#118 section 4, rendered by the same materializer.",
+        "construction": "In the row, append the interface sentence of microsoft/SWE-bench-Live#118 section 4 to problem_statement, set FAIL_TO_PASS to ['proxy::forward::tests::ocla_budget_admission_rejects_over_limit_scope'] and PASS_TO_PASS to the other 8,559 FAIL_TO_PASS names in their order, replace ' 2>1 ' with ' 2>&1 ' in test_cmds, and materialize the task with source.materializer; the patch is the diff against the upstream task (`git diff --no-index --no-renames --src-prefix= --dst-prefix= a b`)."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "b8dcb6d0856c930ce87c02094bbb8775eb4cb3b4763070eab809861a95a80cd4",
+          "after": "1d9bbc1be342c5637182a52a48fb1e1375c55cba37d28b75f2de0ed6069d630c"
+        },
+        "tests/config.json": {
+          "before": "f89e243222f4f1a15e4f24ba83a493f0730fc833ded44a626ce23aa522060c5e",
+          "after": "560863ba81088eda9d3738de260f92f8ed2edff6832dbe4974d3e35443af9396"
+        },
+        "tests/test.sh": {
+          "before": "509e8e7ff45e58d46e05fe83716a1a74e1800f80a7bd1118a7b03e11691e7b13",
+          "after": "abbd8cba1d9302fd4da1899a0c4bb22c80158a30bbe4266b9e201e8c7be87275"
+        }
+      },
+      "depends_on": {
+        "solution/solve.sh": "bf474734c762de7036dc6c3bbcd97653f082343ac3cbeb3c6b9189fa73acb432"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "In our runs with the dataset's evaluation scripts at b0c7fbf2, the gold patch with its three names renamed fails all 8,560 FAIL_TO_PASS tests and the compile error never reaches the log; with test_cmds corrected the error is in the log. The patched row keeps the new test as its only FAIL_TO_PASS and the instruction names the interface it calls."
+        }
+      }
+    },
+    {
+      "id": "aider-polyglot-javascript-two-bucket-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_javascript_two-bucket",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for javascript/exercises/practice/two-bucket"
+      },
+      "license": {
+        "upstream": [
+          "Exercism JavaScript track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/javascript/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the JavaScript track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The tests require the constructor itself to throw when the goal cannot be reached; the instruction defines only what solve() returns and never mentions an unreachable goal.",
+        "evidence": [
+          {
+            "path": "tests/two-bucket.spec.js",
+            "lines": "81, 85, 101",
+            "fact": "expect(() => new TwoBucket(...)).toThrow() for unreachable goals"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "52-67",
+            "fact": "describes solve()'s return value; no unreachable goal, no error"
+          }
+        ]
+      },
+      "answer_review": "The patch states in instruction.md that an unreachable goal raises an error, and widens the three unreachable-goal assertions from the constructor call to the constructor followed by solve(), so a solution may raise in either. No expected value is added.",
+      "upstream": {
+        "reports": [
+          "https://github.com/Aider-AI/polyglot-benchmark/pull/26"
+        ]
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_javascript_two-bucket/aider-polyglot-javascript-two-bucket-r1.patch",
+        "sha256": "4fa0ed9c0ceed48ace04c16fc7a5797da2a9576e5144591eebebe332abafbb03",
+        "origin": "The two-bucket part of Aider-AI/polyglot-benchmark#26 at f192eeb1ea35f24b0db3e29c9b4a7c1f1148f8c9, materialized by the same adapter."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "8b6dc7e58009a02ad48120f7d71a410e468b91a8913de46e22ae28eb8220f56c",
+          "after": "c90d61154ec096937877a3426a7344422047dd6bc3b1a0f4f6317f2c6420609c"
+        },
+        "tests/two-bucket.spec.js": {
+          "before": "657458e17a7b037a87a54b6ddee9b32072a86c993c4cc915a1fba174f66fde0a",
+          "after": "5edd4f55a1ff6cd75c3159c3fce9dc322f41213d90d665a0ec0d3647109a3d36"
+        }
+      },
+      "depends_on": {
+        "environment/workspace/two-bucket.js": "047a8ead7a78bc4d2fc21e5995701847d77ac032146cfacdff6460714521ae67"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 7e0611e7, tests/two-bucket.spec.js:81, 85 and 101 require the constructor to throw for an unreachable goal and the instruction never mentions one; after the patch the instruction states it and the tests accept the error from the constructor or from solve(). In our runs, solutions that raise in solve() fail upstream and pass patched. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
+        }
+      }
+    },
+    {
+      "id": "aider-polyglot-java-all-your-base-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_java_all-your-base",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for java/exercises/practice/all-your-base"
+      },
+      "license": {
+        "upstream": [
+          "Exercism Java track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/java/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the Java track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "Eight tests assert exact IllegalArgumentException messages, and others require an empty digit array to convert to [0] and leading zeros to be accepted; the instruction and the stub state none of this.",
+        "evidence": [
+          {
+            "path": "tests/src/test/java/BaseConverterTest.java",
+            "lines": "121, 129, 137, 145, 153, 164, 174, 184",
+            "fact": "withMessage(...) with exact texts"
+          },
+          {
+            "path": "tests/src/test/java/BaseConverterTest.java",
+            "lines": "83, 101",
+            "fact": "empty input and leading zeros"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "1-42",
+            "fact": "no invalid input, exception, message, empty input or leading zeros"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/Aider-AI/polyglot-benchmark/pull/26"
+        ]
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_java_all-your-base/aider-polyglot-java-all-your-base-r1.patch",
+        "sha256": "b5c55768e572fbd61df07eaff5121f39255d98749f0c77857e21bdaba23eba3b",
+        "origin": "The all-your-base part of Aider-AI/polyglot-benchmark#26 at f192eeb1ea35f24b0db3e29c9b4a7c1f1148f8c9, materialized by the same adapter."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "328a0752149b87f1974b444c5d61ea47275b29e784f9e0ffa6ccc6aadd54aae0",
+          "after": "bab608b384fd7381b7568c638a0d025515f687fac159816a1b751a275fe59da4"
+        }
+      },
+      "depends_on": {
+        "tests/src/test/java/BaseConverterTest.java": "1c0205b27ad44733bc30a5c94eecef65a904961004629ac7703be3288ffcf76e",
+        "environment/workspace/src/main/java/BaseConverter.java": "fe366c96669a1ad0267b44d19982dc57d7abac0ba78bde26cc0ad11f3d8b0184"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 7e0611e7 eight tests assert exact exception messages and two require empty-input and leading-zero handling that neither the instruction nor the stub states; after the patch the instruction states them. In our runs, solutions written to the patched instruction score full marks. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
+        }
+      }
+    },
+    {
+      "id": "aider-polyglot-cpp-yacht-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_cpp_yacht",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for cpp/exercises/practice/yacht"
+      },
+      "license": {
+        "upstream": [
+          "Exercism C++ track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/cpp/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the C++ track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "starter_mismatch",
+        "summary": "The header stub is an empty namespace, while the tests call yacht::score with a braced list of dice and a lower-case category string; neither the stub nor the instruction gives that interface.",
+        "evidence": [
+          {
+            "path": "tests/yacht_test.cpp",
+            "lines": "22, 28",
+            "fact": "yacht::score({5, 5, 5, 5, 5}, \"yacht\")"
+          },
+          {
+            "path": "environment/workspace/yacht.h",
+            "lines": "1-5",
+            "fact": "namespace yacht {} with no declaration"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/Aider-AI/polyglot-benchmark/pull/26"
+        ]
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_cpp_yacht/aider-polyglot-cpp-yacht-r1.patch",
+        "sha256": "266cb8abed9b6a107bbb2b7c0809783812f5f030315a126ab16ab9ec019889d6",
+        "origin": "The yacht part of Aider-AI/polyglot-benchmark#26 at f192eeb1ea35f24b0db3e29c9b4a7c1f1148f8c9, materialized by the same adapter."
+      },
+      "files": {
+        "environment/workspace/yacht.h": {
+          "before": "9dd2b28a5efd65ecac214dc5d3461a475ec1153df5d87d7bc72bb701d117d111",
+          "after": "2f238335f96a7c7ff20602e7254ff6470c79d2e7b34aa9b6e361912970e8c344"
+        },
+        "instruction.md": {
+          "before": "ecc9d2b10abc286357c2d42cccbef62c65bd0cb13ce9b2d2bde427b94d004cee",
+          "after": "d1816bd31f6a7eff3d5465e057fda37ddeb541e28c083a38cc4e11947944dc7b"
+        }
+      },
+      "depends_on": {
+        "tests/yacht_test.cpp": "45af93cc50b53cddf26115d4bbf0c03e3e61939b4c7979d0eb670f8937bbacbb"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "In the task's image, the upstream header stub with tests/yacht_test.cpp does not compile ('score' is not a member of 'yacht'); with the patched stub the same tests compile. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
+        }
+      }
+    },
+    {
+      "id": "aider-polyglot-cpp-sublist-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_cpp_sublist",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for cpp/exercises/practice/sublist"
+      },
+      "license": {
+        "upstream": [
+          "Exercism C++ track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/cpp/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the C++ track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "starter_mismatch",
+        "summary": "The header stub is an empty namespace, while the tests use sublist::List_comparison (equal, sublist, superlist, unequal) and a non-template sublist::sublist taking braced lists; the stub and the instruction give none of it.",
+        "evidence": [
+          {
+            "path": "tests/sublist_test.cpp",
+            "lines": "23-27",
+            "fact": "registers sublist::List_comparison and its four values"
+          },
+          {
+            "path": "environment/workspace/sublist.h",
+            "lines": "1-5",
+            "fact": "empty namespace"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/Aider-AI/polyglot-benchmark/pull/26"
+        ]
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_cpp_sublist/aider-polyglot-cpp-sublist-r1.patch",
+        "sha256": "6b5d8ac16dec5c90f6d5b2811cf01e5b3487691b7587e045214233c49b3e1510",
+        "origin": "The sublist part of Aider-AI/polyglot-benchmark#26 at f192eeb1ea35f24b0db3e29c9b4a7c1f1148f8c9, materialized by the same adapter."
+      },
+      "files": {
+        "environment/workspace/sublist.h": {
+          "before": "c837b0ccaf42f7cfa0b900732dff0ed141d8f45431b906af61597f91e11f3f59",
+          "after": "b92f97ab4d6bf9e43c64434e87c6fba89ad6744f639d0b532256800de00d5a64"
+        },
+        "instruction.md": {
+          "before": "e3f0fa2a2ca0f68b73e679a1ff5ca0a079945a49e36954dae85b8d8408b7b428",
+          "after": "4a8a8a6dc35085ab2d8740bdc8842f0e08c78a087cfae573a1dcd3d973edfdfa"
+        }
+      },
+      "depends_on": {
+        "tests/sublist_test.cpp": "7120a4a2fa383db1f2f0184c5cb58c46960b39458d37bb3965dfb382ed4f0d00"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "In the task's image, the upstream header stub with tests/sublist_test.cpp does not compile ('List_comparison' is not a member of 'sublist'); with the patched stub the same tests compile. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
+        }
+      }
+    },
+    {
+      "id": "aider-polyglot-rust-acronym-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_rust_acronym",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for rust/exercises/practice/acronym"
+      },
+      "license": {
+        "upstream": [
+          "Exercism Rust track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/rust/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the Rust track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "A Rust-only test expects \"HyperText Markup Language\" to give \"HTML\", which the instruction's rules (split on whitespace and hyphens, drop other punctuation) do not yield.",
+        "evidence": [
+          {
+            "path": "tests/tests/acronym.rs",
+            "lines": "84-90",
+            "fact": "camelcase expects HTML"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "1-22",
+            "fact": "the splitting rules give HML for this input"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/Aider-AI/polyglot-benchmark/pull/26"
+        ]
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_rust_acronym/aider-polyglot-rust-acronym-r1.patch",
+        "sha256": "f2ccc009f6bc078a9ab2c6febb0e06eb307c1a11a357546afff04b4fa04f0cbc",
+        "origin": "The acronym part of Aider-AI/polyglot-benchmark#26 at f192eeb1ea35f24b0db3e29c9b4a7c1f1148f8c9, materialized by the same adapter."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "9e0d8a5cfd5f9fede4fe4d1ca5adde20236e00db71b4e92720eff4b3e8aee856",
+          "after": "d78f1866f5ca7e6b925286721ca9b005debb80be298bcb5191a4ca1c9cf28c2f"
+        }
+      },
+      "depends_on": {
+        "tests/tests/acronym.rs": "10fe86ae580478d725049c7a699f4a9c8cacab9fc7459fd5e13588938917809a",
+        "environment/workspace/src/lib.rs": "1c4804f2f6f8e2b658a003afa50fd72941f47d968b4cd136266cd35333d9e6ff"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 7e0611e7 the Rust-only camelcase test expects HTML for \"HyperText Markup Language\", which the instruction's rules do not give; after the patch the instruction states the rule. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
+        }
+      }
+    },
+    {
+      "id": "aider-polyglot-javascript-alphametics-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_javascript_alphametics",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for javascript/exercises/practice/alphametics"
+      },
+      "license": {
+        "upstream": [
+          "Exercism JavaScript track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/javascript/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the JavaScript track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The tests require solve() to return null when a puzzle has no solution and write every puzzle with ==; the instruction shows a single = and never says what an unsolvable puzzle returns.",
+        "evidence": [
+          {
+            "path": "tests/alphametics.spec.js",
+            "lines": "5, 15, 16, 21",
+            "fact": "puzzles use ==; toBeNull() for unsolvable ones"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "7",
+            "fact": "the example puzzle uses a single ="
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/Aider-AI/polyglot-benchmark/pull/26"
+        ]
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_javascript_alphametics/aider-polyglot-javascript-alphametics-r1.patch",
+        "sha256": "bd9e3d61f25a50f7fb9ef57a590dba321b4558dab188caca518d20de24fff97a",
+        "origin": "The alphametics part of Aider-AI/polyglot-benchmark#26 at f192eeb1ea35f24b0db3e29c9b4a7c1f1148f8c9, materialized by the same adapter."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "ae664a56e13771b8b4d0ed6b63f94d52a3cf002078a3545c7701fd9c87951c44",
+          "after": "f30de5bd315683eb0cae0eb582e1f78a66c433f6b3033541ce4d4982063cf156"
+        }
+      },
+      "depends_on": {
+        "tests/alphametics.spec.js": "d794958b8cebdb8a248947786d417c9184c2d06e327688a60f7ba5b74a2f1b70",
+        "environment/workspace/alphametics.js": "a92685d4f0ff6101044eec39a638822ed811823c3d3e6d1f812bc102c6c1e18e"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 7e0611e7 the tests require null for an unsolvable puzzle and write puzzles with ==, while the instruction shows a single = and says nothing about unsolvable puzzles; after the patch the instruction states both."
+        }
+      }
+    },
+    {
+      "id": "aider-polyglot-go-connect-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_go_connect",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for go/exercises/practice/connect"
+      },
+      "license": {
+        "upstream": [
+          "Exercism Go track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/go/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the Go track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The tests strip every space from the board rows before calling ResultOf, while the instruction shows boards with spaces between cells and indented rows.",
+        "evidence": [
+          {
+            "path": "tests/connect_test.go",
+            "lines": "10-13, 21",
+            "fact": "prepare() removes all spaces before ResultOf"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "14-22",
+            "fact": "the boards are shown with spaces and indentation"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/Aider-AI/polyglot-benchmark/pull/26"
+        ]
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_go_connect/aider-polyglot-go-connect-r1.patch",
+        "sha256": "b7cfac9cfd7357677336e500fa730b139e650c001d02d3c6497cd68bba8cfff1",
+        "origin": "The connect part of Aider-AI/polyglot-benchmark#26 at f192eeb1ea35f24b0db3e29c9b4a7c1f1148f8c9, materialized by the same adapter."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "f4c9676d0ee76760384875965df534c363f89d98ead93feec6301930f7965524",
+          "after": "b02b02aa08575fd464dfbf0c21933594621ff8a55969ed96b6bab4b99c05d2c9"
+        }
+      },
+      "depends_on": {
+        "tests/connect_test.go": "88fdb6caa841a77ca7b9b38ac999fa55ae5720a023a76d43b64fda7c2c9ef763",
+        "tests/cases_test.go": "08c20054a94cb7cf10ccb22bd0b93e60f2df3a6dbadc87468b3c6a6e3ec0379a",
+        "environment/workspace/connect.go": "16b8c58bcfe1133c1b665072ba20ca28e72ab07b15b0be5ecaa7d8303be27ddb"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 7e0611e7 the tests strip all spaces from the board rows before calling ResultOf, while the instruction shows boards with spaces; after the patch the instruction states the input format. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
+        }
+      }
+    },
+    {
+      "id": "aider-polyglot-python-food-chain-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_python_food-chain",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for python/exercises/practice/food-chain"
+      },
+      "license": {
+        "upstream": [
+          "Exercism Python track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/python/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the Python track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The tests compare recite() with a list of lines, one string per line and an empty string between verses; the instruction gives the lyrics and the stub a bare function, but neither states the return format.",
+        "evidence": [
+          {
+            "path": "tests/food_chain_test.py",
+            "lines": "13-184",
+            "fact": "expects a list of line strings with \"\" between verses"
+          },
+          {
+            "path": "environment/workspace/food_chain.py",
+            "lines": "1-2",
+            "fact": "def recite(start_verse, end_verse): pass"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/Aider-AI/polyglot-benchmark/pull/26"
+        ]
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_python_food-chain/aider-polyglot-python-food-chain-r1.patch",
+        "sha256": "e145b4a6487ae76342653104708c11a6da7a466e0aff0d1a04c874f5e7ec71b5",
+        "origin": "The food-chain part of Aider-AI/polyglot-benchmark#26 at f192eeb1ea35f24b0db3e29c9b4a7c1f1148f8c9, materialized by the same adapter."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "5585cc76b19000d11185767f8231bc74fa01997dc16226544cfe16d5e0805f94",
+          "after": "e20fdee378df114ca995971e68f7b7d8d4fff208a3865ca3196099a9a2e340fd"
+        }
+      },
+      "depends_on": {
+        "tests/food_chain_test.py": "8ff5c6c45bbcdee64f0e3c9d879d2a08e97c90594d00d15ee0f228b4e7eac548",
+        "environment/workspace/food_chain.py": "d7c1f854251ec4677ff36fdabbc87ef0ebcff8e8559fdee91b52fdeb8c3dc6b5"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 7e0611e7 the tests expect a list of line strings with an empty string between verses and neither the instruction nor the stub gives the return format; after the patch the instruction states it. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
+        }
+      }
+    },
+    {
+      "id": "aider-polyglot-java-wordy-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_java_wordy",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for java/exercises/practice/wordy"
+      },
+      "license": {
+        "upstream": [
+          "Exercism Java track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/java/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the Java track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The tests assert the exact IllegalArgumentException message for unsupported questions; neither the instruction nor the stub gives the text.",
+        "evidence": [
+          {
+            "path": "tests/src/test/java/WordProblemSolverTest.java",
+            "lines": "105-146",
+            "fact": "withMessage(\"I'm sorry, I don't understand the question!\")"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "1-64",
+            "fact": "no error message"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/Aider-AI/polyglot-benchmark/pull/26"
+        ]
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_java_wordy/aider-polyglot-java-wordy-r1.patch",
+        "sha256": "1e245c2a8e4633fae289c1e4dca7d204e365e3e7f32db69c81070e14e441440d",
+        "origin": "The wordy part of Aider-AI/polyglot-benchmark#26 at f192eeb1ea35f24b0db3e29c9b4a7c1f1148f8c9, materialized by the same adapter."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "669a97c9f51724fabd22c29e49c85d41ca50258d09fb4f783aeb8f694133cea5",
+          "after": "603918d49a28d07381544ec69f3c905540b48b127405e2f0e7f5e902f818f722"
+        }
+      },
+      "depends_on": {
+        "tests/src/test/java/WordProblemSolverTest.java": "6df60c274c378f5b5ff9c8a442fc1cd6ec889865405014bdd491f191c9ee93d6",
+        "environment/workspace/src/main/java/WordProblemSolver.java": "23b0da8507b7750e427287cf9cf972cb554575541eba5ff88458d31d9afda5bc"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 7e0611e7 the tests assert an exact exception message that neither the instruction nor the stub gives; after the patch the instruction states it. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
+        }
+      }
+    },
+    {
+      "id": "aider-polyglot-cpp-grade-school-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_cpp_grade-school",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for cpp/exercises/practice/grade-school"
+      },
+      "license": {
+        "upstream": [
+          "Exercism C++ track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/cpp/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the C++ track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "starter_mismatch",
+        "summary": "The header stub is an empty namespace, and the return shape the instruction describes does not match what the tests read from roster() and grade().",
+        "evidence": [
+          {
+            "path": "tests/grade_school_test.cpp",
+            "lines": "14, 21-23, 32",
+            "fact": "school_.roster(), school_.add(name, grade)"
+          },
+          {
+            "path": "environment/workspace/grade_school.h",
+            "lines": "1-7",
+            "fact": "empty namespace"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/Aider-AI/polyglot-benchmark/pull/26"
+        ]
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_cpp_grade-school/aider-polyglot-cpp-grade-school-r1.patch",
+        "sha256": "2b6127521ba716812d41c9f4afa4461a30902c57d9fba02a2ca67c2c4d458e04",
+        "origin": "The grade-school part of Aider-AI/polyglot-benchmark#26 at f192eeb1ea35f24b0db3e29c9b4a7c1f1148f8c9, materialized by the same adapter."
+      },
+      "files": {
+        "environment/workspace/grade_school.h": {
+          "before": "6f3ef5ce0e1d8c9b7d72d04e087e7979540194210c99468cf6dfafefc3ee7d46",
+          "after": "e001cbbe18a7bb53db12a1ddc5e61252cf51237b9d071c53275732987ec37278"
+        },
+        "instruction.md": {
+          "before": "1a9598a51eb0bbd5005a7993743e6b2a27380745a2863fa4d133d234b409daf2",
+          "after": "94789cc5524f8533d88da64867aae2d622ccaf60a54a44f35712ab0836be32f9"
+        }
+      },
+      "depends_on": {
+        "tests/grade_school_test.cpp": "3a6f4266831b6d31b022e764bed44d1c02cfa10f7629f91053c02e0d53b29871"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "In the task's image, the upstream header stub with tests/grade_school_test.cpp does not compile ('school' in namespace 'grade_school' does not name a type); with the patched stub the same tests compile, and the instruction states the return shapes the tests read. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
+        }
+      }
+    },
+    {
+      "id": "aider-polyglot-java-alphametics-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_java_alphametics",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for java/exercises/practice/alphametics"
+      },
+      "license": {
+        "upstream": [
+          "Exercism Java track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/java/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the Java track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The tests write every puzzle with ==, while the instruction shows a single =, so a parser written to the instruction fails every test.",
+        "evidence": [
+          {
+            "path": "tests/src/test/java/AlphameticsTest.java",
+            "lines": "12, 22",
+            "fact": "puzzles written with =="
+          },
+          {
+            "path": "instruction.md",
+            "lines": "7",
+            "fact": "the example puzzle uses a single ="
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/Aider-AI/polyglot-benchmark/pull/26"
+        ]
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_java_alphametics/aider-polyglot-java-alphametics-r1.patch",
+        "sha256": "86088106826721a9840536485e27f5e3c66e3ea479bd6cf8ba73d945bf9a722a",
+        "origin": "The alphametics part of Aider-AI/polyglot-benchmark#26 at f192eeb1ea35f24b0db3e29c9b4a7c1f1148f8c9, materialized by the same adapter."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "467b2fa79be1dcde08cc68c69d16c09f36969de9dd08e40c55895005f3e4c5b4",
+          "after": "f53b2da8785cc02096519df2ac7188ed92ff44b75ff4507e7b31e605b9294a61"
+        }
+      },
+      "depends_on": {
+        "tests/src/test/java/AlphameticsTest.java": "8b4e2972688f415916230c36b557dc0bb9bd4d540db4d57ecdb18d2c012a0533",
+        "environment/workspace/src/main/java/Alphametics.java": "b0fbfedba85272c58b83ee66fd7dcc4cc65fe057b444b031a65ac0a1f7f3b912"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 7e0611e7 the tests write every puzzle with == while the instruction shows a single =; after the patch the instruction states the format. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
+        }
+      }
+    },
+    {
+      "id": "tb2-extract-elf-r1",
+      "benchmark": "terminal-bench-2.0",
+      "task_id": "extract-elf",
+      "status": "active",
+      "source": {
+        "url": "https://huggingface.co/datasets/harborframework/terminal-bench-2.0",
+        "revision": "f2e8c75e23add71613117eecc9498f53bcd7e04e",
+        "materializer": "The dataset's extract-elf/ directory, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "Apache-2.0"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/harborframework/terminal-bench-2.0",
+          "https://github.com/harbor-framework/terminal-bench-2/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "Apache-2.0 allows redistribution and modification. Only the patch is published: the task directory also carries the reference solution, which stays out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The grader keys each 4-byte word of .text, .data and .rodata by the section's link-time address and reads it as unsigned, but the instruction gives neither rule and its example uses non-PIE load addresses; a.out is position-independent, so output that follows the example can never match.",
+        "evidence": [
+          {
+            "path": "tests/test_outputs.py",
+            "lines": "61-88",
+            "fact": "only .text/.data/.rodata, sh_addr plus offset with no load base, unsigned little-endian words"
+          },
+          {
+            "path": "tests/test_outputs.py",
+            "lines": "374-391",
+            "fact": "every value must match and 75% of the reference addresses must be covered"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "3",
+            "fact": "the example keys start at 4194304 (0x400000); no section list, address rule or signedness"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/harbor-framework/terminal-bench-2-1/issues/194"
+        ]
+      },
+      "patch": {
+        "path": "patches/terminal-bench-2.0/extract-elf/tb2-extract-elf-r1.patch",
+        "sha256": "e470dd10b4505092c0a81308034c0a0154f9ee78c5ab246de4bde6f669f31d1a",
+        "origin": "Written for this erratum: the instruction states the sections, the address rule and the word format the grader uses, in place of the misleading example."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "f1dd8c8fd9f01101d2ecb65665bdedc33adc868abd853b3adf556f6aa4982073",
+          "after": "5c8706c1bcbb079984b9728db256be10306916f111f26f88eb4062a3ad0eb92d"
+        }
+      },
+      "depends_on": {
+        "tests/test_outputs.py": "825569115217f1cea7b0f3c7547d60d21e6ea36f587d82cc9dfdd5dd98c04570",
+        "tests/test.sh": "84ee50194effb4c72b9cbd0306cccaf0f855f3634227cd8359928722a53bbdaf"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At f2e8c75e the instruction's example keys start at 4194304, but a.out is position-independent and the grader's keys are its link-time section addresses, so output that follows the example covers 0%. After the patch the instruction states the sections, the address rule and unsigned words; in our runs a probe that follows the stated rule passes, one that adds the example's load base covers 0%, and one that reads signed words fails on values."
+        }
+      }
+    },
+    {
+      "id": "tb2-openssl-selfsigned-cert-r1",
+      "benchmark": "terminal-bench-2.0",
+      "task_id": "openssl-selfsigned-cert",
+      "status": "active",
+      "source": {
+        "url": "https://huggingface.co/datasets/harborframework/terminal-bench-2.0",
+        "revision": "f2e8c75e23add71613117eecc9498f53bcd7e04e",
+        "materializer": "The dataset's openssl-selfsigned-cert/ directory, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "Apache-2.0"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/harborframework/terminal-bench-2.0",
+          "https://github.com/harbor-framework/terminal-bench-2/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "Apache-2.0 allows redistribution and modification. Only the patch is published: the task directory also carries the reference solution, which stays out."
+      },
+      "defect": {
+        "class": "grader_bug",
+        "summary": "The grader runs the agent's verification script with a bare `python` from inside the verifier's isolated uvx environment, whose bin directory comes first on PATH, so a script that uses a package the agent installed in the task environment fails although it works there.",
+        "evidence": [
+          {
+            "path": "tests/test_outputs.py",
+            "lines": "144",
+            "fact": "subprocess.run([\"python\", script_path])"
+          },
+          {
+            "path": "tests/test.sh",
+            "lines": "18-22",
+            "fact": "pytest runs through uvx in a temporary environment"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "24-27",
+            "fact": "asks for a simple Python script; no interpreter or standard-library-only rule"
+          }
+        ]
+      },
+      "answer_review": "The patch changes only which interpreter runs the agent's own script; no expected value, certificate field or check is added or relaxed.",
+      "upstream": {
+        "reports": [],
+        "not_reported": "Not reported yet; an issue for harbor-framework/terminal-bench-2-1 (same bytes as 2.0) is drafted."
+      },
+      "patch": {
+        "path": "patches/terminal-bench-2.0/openssl-selfsigned-cert/tb2-openssl-selfsigned-cert-r1.patch",
+        "sha256": "5bca76e1967502ae206290e79cfec93fae5f9ccd893f7a83fc6da270f1b14416",
+        "origin": "Written for this erratum: the test runs the script with the task environment's interpreter, found on PATH without the verifier's own environment."
+      },
+      "files": {
+        "tests/test_outputs.py": {
+          "before": "90970bb3c372e8e7fb6bb9ac5f649ba73eb38e1a5ea2e922a9057a72b6b4192d",
+          "after": "5a85ea5cd5c644893519565f64ab4cbaf8d04eddba31ad000d42aa178a1e4a09"
+        }
+      },
+      "depends_on": {
+        "tests/test.sh": "4770437ea96c3cc84684b4f99d55fb148fcac09f9ea1e8ef49de487716e6c334",
+        "instruction.md": "38054a3371f7c2c853478a2f9af0bff858437d5b28a9a07483238f06e566921f"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "In our runs, a check_cert.py that imports cryptography installed with pip in the task environment fails the upstream test, whose bare python resolves to the verifier's uvx environment, and passes the patched one; a standard-library script passes both, and the patched test still fails the cryptography script when cryptography is not installed."
+        }
+      }
+    },
+    {
+      "id": "aider-polyglot-javascript-simple-linked-list-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_javascript_simple-linked-list",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for javascript/exercises/practice/simple-linked-list"
+      },
+      "license": {
+        "upstream": [
+          "Exercism JavaScript track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/javascript/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the JavaScript track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The tests fix an interface the instruction never gives and the stub points away from: add() takes an Element rather than a value, the constructor takes an array, the last array value becomes the head, reverse() returns the list for chaining, and empty links are null.",
+        "evidence": [
+          {
+            "path": "tests/simple-linked-list.spec.js",
+            "lines": "16, 31-130",
+            "fact": "add(new Element(...)), new List([...]), head order, chained reverse(), null links"
+          },
+          {
+            "path": "environment/workspace/simple-linked-list.js",
+            "lines": "25",
+            "fact": "add(nextValue)"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "11-14",
+            "fact": "build a singly linked list from numbers and reverse it; no interface"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [],
+        "not_reported": "Not reported yet; a follow-up to Aider-AI/polyglot-benchmark#26, which fixes the same kind of gap in other exercises, is drafted."
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_javascript_simple-linked-list/aider-polyglot-javascript-simple-linked-list-r1.patch",
+        "sha256": "f39913f46eb31adda01dba4a57a4fa34530426c15edc1f1fe7ce9cbb9d929119",
+        "origin": "Written for this erratum: a .docs/instructions.append.md for the exercise in the style of Aider-AI/polyglot-benchmark#26, materialized by the same adapter."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "3e4d663a162a157b66095d6b5b014c60a69ab361f4673032cffa744fd3fb5112",
+          "after": "fcc018585b1841642454e57f54438c5734657285b51149a9298ffce69eefdfec"
+        }
+      },
+      "depends_on": {
+        "tests/simple-linked-list.spec.js": "7a181633077ca3586a47961a00858f1071b90d12cca9f114284707fb82d30255",
+        "environment/workspace/simple-linked-list.js": "f305a2ba4fea7f8dd036989bd635f2466bd36c75d25bec049145a683dd22b8f1"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 7e0611e7 the tests fix an interface (Element arguments to add(), array constructor, head order, chained reverse(), null links) that the instruction never gives and the stub's add(nextValue) contradicts. In our runs, a solution written to the upstream instruction and stub fails exactly those tests, and one written to the patched instruction passes all 23. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
+        }
+      }
+    },
+    {
+      "id": "aider-polyglot-javascript-zipper-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_javascript_zipper",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for javascript/exercises/practice/zipper"
+      },
+      "license": {
+        "upstream": [
+          "Exercism JavaScript track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/javascript/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the JavaScript track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The tests require left(), right() and up() to return null when there is no such node; the instruction and the stub never say what a missing node returns, and undefined fails.",
+        "evidence": [
+          {
+            "path": "tests/zipper.spec.js",
+            "lines": "37, 45",
+            "fact": "toBe(null) / toEqual(null) for a missing child and for up() at the root"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "10-25",
+            "fact": "lists the operations; nothing about missing nodes"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [],
+        "not_reported": "Not reported yet; a follow-up to Aider-AI/polyglot-benchmark#26, which fixes the same kind of gap in other exercises, is drafted."
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_javascript_zipper/aider-polyglot-javascript-zipper-r1.patch",
+        "sha256": "cb3769451e7802d360631175dd62eb7a3a5be26230d5bdb588bb1e52c8e37c57",
+        "origin": "Written for this erratum: a .docs/instructions.append.md for the exercise in the style of Aider-AI/polyglot-benchmark#26, materialized by the same adapter."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "36ec7a3d4e50684057497581b61947d7ce9f19776efbf93e89f527929e77f646",
+          "after": "fe8af49e9d1a6d92a48f9d9b4f60440af9972fe0e859a643c74b09d6b6dc7b96"
+        }
+      },
+      "depends_on": {
+        "tests/zipper.spec.js": "af26625617bc05e23043c73226f215d8402fba7633d36fae62423a5e594d30b5",
+        "environment/workspace/zipper.js": "89313857b68ac2e98be20b7fab35b00bf9f72084b52e7bad423195667b5bc7dc"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 7e0611e7 the tests require null for a missing node and the instruction does not say what it returns; in our runs the same solution scores 17 of 19 returning undefined and 19 of 19 returning null, as the patched instruction states. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
+        }
+      }
+    },
+    {
+      "id": "aider-polyglot-java-food-chain-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_java_food-chain",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for java/exercises/practice/food-chain"
+      },
+      "license": {
+        "upstream": [
+          "Exercism Java track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/java/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the Java track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The tests compare verse() and verses() with strings that have no trailing newline and one empty line between verses; the instruction gives only the lyrics and the stub only the two method signatures.",
+        "evidence": [
+          {
+            "path": "tests/src/test/java/FoodChainTest.java",
+            "lines": "18-21, 130-148, 154-213",
+            "fact": "expected strings without a trailing newline, verses joined by an empty line"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "11-62",
+            "fact": "the lyrics only"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [],
+        "not_reported": "Not reported yet; a follow-up to Aider-AI/polyglot-benchmark#26, which fixes the same kind of gap in other exercises, is drafted."
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_java_food-chain/aider-polyglot-java-food-chain-r1.patch",
+        "sha256": "2a023223bf45db89cac90a4b38d0228ec1714933d7dc29f796e26434943622a1",
+        "origin": "Written for this erratum: a .docs/instructions.append.md for the exercise in the style of Aider-AI/polyglot-benchmark#26, materialized by the same adapter."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "d53b3662ad7b58d2dd6cb3ef741a6c20de09ed72244738ada7681858d873718b",
+          "after": "ebc5da6eb8e20fa7ff262b62eedd711560ccd8d6b3f7658510b331b4fcdfb1cd"
+        }
+      },
+      "depends_on": {
+        "tests/src/test/java/FoodChainTest.java": "25e76817da61179b1fbbef4ff4a745718bce5829002682127e7d1dfc116ad07d",
+        "environment/workspace/src/main/java/FoodChain.java": "4cae1f9adaa789669e7389f34a88b706f0904f3d27b163685ae73b4c03b98763"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 7e0611e7 the tests expect no trailing newline and an empty line between verses, which the instruction does not state; in our runs the same solution scores 0 of 10 with a trailing newline and 10 of 10 without, as the patched instruction states. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
+        }
+      }
+    },
+    {
+      "id": "harbor-index-algotune-simplex-projection-speedup-r1",
+      "benchmark": "harbor-index",
+      "task_id": "algotune-simplex-projection-speedup",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/harbor-framework/harbor-index",
+        "revision": "5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+        "materializer": "tasks/algotune-simplex-projection-speedup/ at this commit, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "harbor-index: no license file",
+          "AlgoTune: see its repository"
+        ],
+        "redistribution": "unspecified",
+        "basis": [
+          "https://github.com/harbor-framework/harbor-index/tree/5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+          "https://github.com/oripress/AlgoTune"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "The repository grants no license, so the task files are not published. The patch changes only instruction.md, but no matching change has been proposed upstream yet, so it stays out of this repository until it is; the record keeps its SHA256 and its construction."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The grader copies only /app/solver.py into its separate environment and passes a solver at most 1.05x the time of its own optimized solution; the instruction states neither, and asks for 2.50x over the reference instead, so a solver that loads a helper file it built next to solver.py falls back to slow code when graded.",
+        "evidence": [
+          {
+            "path": "task.toml",
+            "lines": "4, 18",
+            "fact": "artifacts = [\"/app/solver.py\"]; environment_mode = \"separate\""
+          },
+          {
+            "path": "tests/test.sh",
+            "lines": "33-40",
+            "fact": "pass iff t_agent <= 1.05 * t_oracle"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "10, 12",
+            "fact": "only that Solver goes in /app/solver.py, and a 2.50x bar over the reference"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [],
+        "not_reported": "Not reported yet; an issue for harbor-framework/harbor-index is drafted."
+      },
+      "patch": {
+        "storage": "external",
+        "sha256": "b07839bbeb65393020c9074db250d30d7264349afce1c32b83f6be9fa129849b",
+        "origin": "Written for this erratum: line 12 of instruction.md states the bar the grader applies and that only /app/solver.py reaches the grading environment.",
+        "construction": "In instruction.md, replace line 12 (\"Your solver's total runtime across the benchmark must be more than ...\") with: \"Your solver's total runtime across the benchmark must be at most **1.05x** that of the optimized solver the grader compares against (the grader's own solution, not the reference implementation below) to pass.\", then an empty line and: \"Only `/app/solver.py` is copied into the separate grading environment (same Python packages and compilers). Any other file you create under `/app` (C/C++/Cython sources, compiled extensions, helper modules, build scripts) will not exist there, so `solver.py` must be self-contained; building an extension in `__init__` from source embedded in `solver.py` is fine.\" The patch is that diff of instruction.md."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "702e5e9b9eeba651f2e8d1960be6024d47e530875db32e2977769123c2be7267",
+          "after": "5ced5575b789dd11fd5438efa3dace7a7679ba3d586cfe366d78672e62feb09d"
+        }
+      },
+      "depends_on": {
+        "task.toml": "a40f68323379e9eed66eab758d70c75194a37ed3606aeb7e22b8bf49225336a2",
+        "tests/test.sh": "eb4a80178874375bb1044c0f604debf0dbb89328336b2e2169efe88d3390604e",
+        "tests/test_outputs.py": "1bf42b20a5ced39352556a82b22a1f6bac191149d0b3bf7af2cea66825eeceeb",
+        "tests/oracle_solver.py": "7ea7784995eb871f2410311dc55d055137956711b4000ed71c0042f683b45a5c"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1,
+            1
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0,
+            0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 5399ea1 the grader copies only /app/solver.py (task.toml:4, 18) and passes at most 1.05x the time of its own solution (tests/test.sh:33-40), while the instruction asks for 2.50x over the reference and says nothing about the other files; after the patch the instruction states both. In our runs, solvers that load a helper they built next to solver.py fall back to slow code when graded and pass once the helper is present."
+        }
+      }
+    },
+    {
+      "id": "harbor-index-algotune-optimize-matrix-sqrt-r1",
+      "benchmark": "harbor-index",
+      "task_id": "algotune-optimize-matrix-sqrt",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/harbor-framework/harbor-index",
+        "revision": "5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+        "materializer": "tasks/algotune-optimize-matrix-sqrt/ at this commit, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "harbor-index: no license file",
+          "AlgoTune: see its repository"
+        ],
+        "redistribution": "unspecified",
+        "basis": [
+          "https://github.com/harbor-framework/harbor-index/tree/5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+          "https://github.com/oripress/AlgoTune"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "The repository grants no license, so the task files are not published. The patch changes only instruction.md, but no matching change has been proposed upstream yet, so it stays out of this repository until it is; the record keeps its SHA256 and its construction."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The grader times a solver against its own optimized solution, which returns a NumPy array that the harness converts inside the timed window, and passes at most 1.05x that time; the instruction requires X as a list and states a 1.01x bar over the reference, so a solver that follows it pays an extra conversion right at the margin.",
+        "evidence": [
+          {
+            "path": "tests/test_outputs.py",
+            "lines": "110, 113, 172-184, 218-219",
+            "fact": "RATIO_THRESHOLD = 1/1.05; the returned X is converted to a list inside the timed window"
+          },
+          {
+            "path": "tests/oracle_solver.py",
+            "lines": "12-13, 44",
+            "fact": "the grader's own solution returns X as an ndarray and leaves the conversion to the timed harness"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "12, 80, 142-144",
+            "fact": "a 1.01x bar over the reference; the reference and is_solution use a list"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [],
+        "not_reported": "Not reported yet; an issue for harbor-framework/harbor-index is drafted."
+      },
+      "patch": {
+        "storage": "external",
+        "sha256": "36e4d434edcd1f9640be969aa309654a6b5c7646a368a00c7d16235f41ecbe0e",
+        "origin": "Written for this erratum: line 12 of instruction.md states the bar the grader applies and that only /app/solver.py reaches the grading environment, and that X may be returned as a NumPy array.",
+        "construction": "In instruction.md, replace line 12 (\"Your solver's total runtime across the benchmark must be more than ...\") with: \"Your solver's total runtime across the benchmark must be at most **1.05x** that of the optimized solver the grader compares against (the grader's own solution, not the reference implementation below) to pass.\" followed by \" Timing includes the harness converting your returned `X` to a built-in list before `is_solution` runs, so you may return `X` as a NumPy array; it does not have to be a list.\", then an empty line and: \"Only `/app/solver.py` is copied into the separate grading environment (same Python packages and compilers). Any other file you create under `/app` (C/C++/Cython sources, compiled extensions, helper modules, build scripts) will not exist there, so `solver.py` must be self-contained; building an extension in `__init__` from source embedded in `solver.py` is fine.\" The patch is that diff of instruction.md."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "05db20eecd0a454bf2fbc5840671d381bf7c8c8574d32f749c4ef70c22aed2ac",
+          "after": "9d7dde99ec6452a38679c0462e44d7088df7ae62ceaa607de059031f78aeece9"
+        }
+      },
+      "depends_on": {
+        "task.toml": "61d5ecbccf9a7c628bbf70946083ba57045c8169ac2e8e7d0c0a56d8aff89a8e",
+        "tests/test.sh": "7f1eec95c08570993e9264671f981e709627cbb44adb21875e2b11067c646fdf",
+        "tests/test_outputs.py": "ea482adbe807cd3754fd68036c1ee39ad1dbdd8a655538a0a5f9ba8c291ac116",
+        "tests/oracle_solver.py": "074998580984446bc3cdbd737737825e192279da8e0ba09ddf0781ad1cf39bab"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1,
+            1
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0,
+            0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 5399ea1 the grader's own solution returns an ndarray that the harness converts to a list inside the timed window, and a solver must stay within 1.05x of it, while the instruction requires a list and states a 1.01x bar over the reference; after the patch the instruction states the bar and that an ndarray may be returned. In our runs, changing only the returned list to an array turned most failing solvers within the margin into passes."
+        }
+      }
+    },
+    {
+      "id": "swe-live-xroche__httrack-482-r1",
+      "benchmark": "swe-bench-live-multilang",
+      "task_id": "xroche__httrack-482",
+      "status": "active",
+      "source": {
+        "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+        "revision": "62dc0745c40f067fc366ae3eb1a26136e5928f85",
+        "materializer": "A SWE-bench-Live MultiLang adapter derived from the swebench_multilingual Harbor adapter, split c, source language c; it builds the task image from the row's eval image, removes the project's future and its published releases from package caches, and renders tests/test.sh from the row"
+      },
+      "license": {
+        "upstream": [
+          "SWE-bench-Live MultiLang dataset: MIT",
+          "microsoft/SWE-bench-Live: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+          "https://github.com/microsoft/SWE-bench-Live/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "MIT allows redistribution. Only the patch is published; it changes instruction.md alone and carries no test content or reference patch."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The FAIL_TO_PASS test requires a crawl with -E2 to stop within 30 seconds, while the instruction asks only for a grace period past the deadline without bounding it; a fixed grace that suits the -E300 case it describes overruns the test's bound.",
+        "evidence": [
+          {
+            "path": "tests/config.json",
+            "lines": "10 (test_patch, decoded line 24)",
+            "fact": "the -E2 crawl fails when it takes 30 seconds or more"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "19",
+            "fact": "force-abort once a grace period past the deadline expires; no length"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [],
+        "not_reported": "Not reported yet; a note for microsoft/SWE-bench-Live is drafted."
+      },
+      "patch": {
+        "path": "patches/swe-bench-live-multilang/xroche__httrack-482/swe-live-xroche__httrack-482-r1.patch",
+        "sha256": "cfe0973dd09def9630dac4fd8d0d15190afba632c6f896824ac1da1883b749a4",
+        "origin": "Written for this erratum: one sentence after the instruction's fix direction stating the bound the test checks."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "285c3eb9e431d74801559e9e51733bb807e10bdb7601ab620f0ee759f7222dab",
+          "after": "6e38c587eef6986dd31b79c65330e3e94bc4f37cad1a748723cb7b1c95e446b2"
+        }
+      },
+      "depends_on": {
+        "tests/config.json": "0f4b3e3fcece77fbf925e871e742c27f312048c6b78e5455330900c36eabb384",
+        "tests/test.sh": "d838dc5dff815823fabe36a7b9f5b990ce153cd2d276b2a578a2dfa61743f1f8"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 62dc0745 the FAIL_TO_PASS test fails an -E2 crawl that takes 30 seconds or more, while the instruction leaves the grace period unbounded. In our runs, a patch with a fixed 30-second grace finished in 32 seconds and scored 0 upstream; with the bound raised to 45 seconds it scored 1 and the no-op still 0. After the patch the instruction states the bound."
+        }
+      }
     }
   ]
 }

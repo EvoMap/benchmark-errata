@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "versions": [
+    {
+      "name": "polyglot-benchmark_emcv",
+      "version": "emcv-7e0611e7-r1",
+      "benchmark": "aider-polyglot",
+      "upstream": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f"
+      },
+      "released": "2026-11-28",
+      "distribution": "patches",
+      "basis": "polyglot-benchmark has no license file of its own (its exercises are Exercism's, MIT), so only the patches and the way to build the version are distributed.",
+      "errata": {
+        "aider-polyglot-cpp-grade-school-r1": "2b6127521ba716812d41c9f4afa4461a30902c57d9fba02a2ca67c2c4d458e04",
+        "aider-polyglot-cpp-sublist-r1": "6b5d8ac16dec5c90f6d5b2811cf01e5b3487691b7587e045214233c49b3e1510",
+        "aider-polyglot-cpp-yacht-r1": "266cb8abed9b6a107bbb2b7c0809783812f5f030315a126ab16ab9ec019889d6",
+        "aider-polyglot-go-connect-r1": "b7cfac9cfd7357677336e500fa730b139e650c001d02d3c6497cd68bba8cfff1",
+        "aider-polyglot-go-octal-r1": "72ebc6001fbd49d16193548f6edc9a08994b4aed8d0417af42f4ba12be98dfd4",
+        "aider-polyglot-java-all-your-base-r1": "b5c55768e572fbd61df07eaff5121f39255d98749f0c77857e21bdaba23eba3b",
+        "aider-polyglot-java-alphametics-r1": "86088106826721a9840536485e27f5e3c66e3ea479bd6cf8ba73d945bf9a722a",
+        "aider-polyglot-java-food-chain-r1": "2a023223bf45db89cac90a4b38d0228ec1714933d7dc29f796e26434943622a1",
+        "aider-polyglot-java-wordy-r1": "1e245c2a8e4633fae289c1e4dca7d204e365e3e7f32db69c81070e14e441440d",
+        "aider-polyglot-javascript-alphametics-r1": "bd9e3d61f25a50f7fb9ef57a590dba321b4558dab188caca518d20de24fff97a",
+        "aider-polyglot-javascript-simple-linked-list-r1": "f39913f46eb31adda01dba4a57a4fa34530426c15edc1f1fe7ce9cbb9d929119",
+        "aider-polyglot-javascript-two-bucket-r1": "4fa0ed9c0ceed48ace04c16fc7a5797da2a9576e5144591eebebe332abafbb03",
+        "aider-polyglot-javascript-zipper-r1": "cb3769451e7802d360631175dd62eb7a3a5be26230d5bdb588bb1e52c8e37c57",
+        "aider-polyglot-python-food-chain-r1": "e145b4a6487ae76342653104708c11a6da7a466e0aff0d1a04c874f5e7ec71b5",
+        "aider-polyglot-rust-acronym-r1": "f2ccc009f6bc078a9ab2c6febb0e06eb307c1a11a357546afff04b4fa04f0cbc"
+      }
+    },
+    {
+      "name": "harbor-index_emcv",
+      "version": "emcv-5399ea10-r1",
+      "benchmark": "harbor-index",
+      "upstream": {
+        "url": "https://github.com/harbor-framework/harbor-index",
+        "revision": "5399ea1026fb2c7fc384cf8acd91a7d10fc943f3"
+      },
+      "released": "2026-11-28",
+      "distribution": "patches",
+      "basis": "harbor-index has no license file, so only the patches and the way to build the version are distributed.",
+      "errata": {
+        "harbor-index-algotune-optimize-matrix-sqrt-r1": "36e4d434edcd1f9640be969aa309654a6b5c7646a368a00c7d16235f41ecbe0e",
+        "harbor-index-algotune-simplex-projection-speedup-r1": "b07839bbeb65393020c9074db250d30d7264349afce1c32b83f6be9fa129849b",
+        "harbor-index-dacode-predict-essay-scores-r1": "73d623de157ca7ec8602ed562ad0552180c07b310d9535a77b8a5ddae14b9eeb",
+        "harbor-index-scicode-dna-binding-site-scanner-r1": "9a40e240658418dfe31e4287a09196dd899bfcc77bf022bf8b15530df16dfa53",
+        "harbor-index-sldbench-discover-vocab-scaling-law-r1": "4d81593955d5147cd0e0a2b769ed179859b4d9b7b4b8d226f0c02eed400f42e7",
+        "harbor-index-swebenchverified-fix-annotate-xy-array-copy-r1": "83f017ed620738b0ab94e1f7f96b0f6f148bee5162ae6f7d038eebecb1aaad2a",
+        "harbor-index-swebenchverified-fix-span-selector-axes-limits-r1": "252bf2329adcf6744d0002f18ad11b2b99d2ee8f93569616f499280dea04887e",
+        "harbor-index-swebenchverified-fix-sphinx-literal-nitpick-r1": "8fa177c7a1d35b088e620bcc0f891563b323791992b41bb2e4e7b2cd168e3e2f"
+      }
+    },
+    {
+      "name": "SWE-bench-Live-MultiLang_emcv",
+      "version": "emcv-62dc0745-r1",
+      "benchmark": "swe-bench-live-multilang",
+      "upstream": {
+        "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+        "revision": "62dc0745c40f067fc366ae3eb1a26136e5928f85"
+      },
+      "released": "2026-11-28",
+      "distribution": "tasks",
+      "basis": "SWE-bench-Live MultiLang (dataset and repository) is MIT, which allows redistributing the whole tasks with the errata applied.",
+      "errata": {
+        "swe-live-aomediacodec__libavif-3273-r1": "41f7f058e7c18e4aa5e506a6d8fc70e61f77bd4f0cad2e3040c3a984ad339cf0",
+        "swe-live-colbymchenry__codegraph-454-r1": "f85aba1b6769f78a25e76031793f4ea402547ba9a857bd2662255f61945d03b1",
+        "swe-live-gsd-build__gsd-2-2643-r1": "3f837603d59536546cd856b5b7f2e0738b8648a90642f427226200c56f9bbb91",
+        "swe-live-gsd-build__gsd-2-3258-r1": "b7e200db9f1b605d8a539b6178e9fb9c15a917247a5d43d5af71327542b2b226",
+        "swe-live-varnishcache__varnish-cache-4370-r1": "ce855e21f2a103f1e46219bde0c6828a113ac206875f51cdc8ae2f9b68ce2cfb",
+        "swe-live-xroche__httrack-454-r1": "717bcfccb05e222d3298661e22ddda79855a9cd068592a94111305cb04834bd4",
+        "swe-live-xroche__httrack-482-r1": "cfe0973dd09def9630dac4fd8d0d15190afba632c6f896824ac1da1883b749a4",
+        "swe-live-xroche__httrack-876-r1": "8307dba474c8a98d30f02acd2e89eb339168be45fbe13893318540b983cabc09"
+      }
+    },
+    {
+      "name": "SWE-bench-Live-MultiLang_emcv",
+      "version": "emcv-b0c7fbf2-r1",
+      "benchmark": "swe-bench-live-multilang",
+      "upstream": {
+        "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+        "revision": "b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2"
+      },
+      "released": "2026-11-28",
+      "distribution": "tasks",
+      "basis": "SWE-bench-Live MultiLang (dataset and repository) is MIT, which allows redistributing the whole tasks with the errata applied.",
+      "errata": {
+        "swe-live-yvgude__lean-ctx-1164-r1": "04ad4ec162c3dae6c17dc68eebf04f46918ac88fb5c957c278535df574325592"
+      }
+    },
+    {
+      "name": "terminal-bench-2.0_emcv",
+      "version": "emcv-f2e8c75e-r1",
+      "benchmark": "terminal-bench-2.0",
+      "upstream": {
+        "url": "https://huggingface.co/datasets/harborframework/terminal-bench-2.0",
+        "revision": "f2e8c75e23add71613117eecc9498f53bcd7e04e"
+      },
+      "released": "2026-11-28",
+      "distribution": "tasks",
+      "basis": "Terminal-Bench 2.0 is Apache-2.0, which allows redistributing the whole tasks with the errata applied.",
+      "errata": {
+        "tb2-adaptive-rejection-sampler-r1": "ad0ca73626cfee639a1a7cb8dfe5f237e977cfd3da89cfd42e1efa5d75faef75",
+        "tb2-extract-elf-r1": "e470dd10b4505092c0a81308034c0a0154f9ee78c5ab246de4bde6f669f31d1a",
+        "tb2-openssl-selfsigned-cert-r1": "5bca76e1967502ae206290e79cfec93fae5f9ccd893f7a83fc6da270f1b14416",
+        "tb2-path-tracing-r1": "a9b77f015e3aaeda1f7bae66f600f8ec90bc6a977225b2427f8c2b597ffaaba2",
+        "tb2-raman-fitting-r1": "6b76f528afb45a681b0fb2bef748f0fd7d0ac5927c118f5a117614b5027e269d"
+      }
+    }
+  ]
+}

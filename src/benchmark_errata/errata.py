@@ -440,7 +440,9 @@ def verify_registry(path: Path | str) -> dict[str, Any]:
     counts = {status: 0 for status in STATUSES}
     for erratum in errata:
         counts[erratum.status] += 1
-    return {"errata": len(errata), **counts}
+    from benchmark_errata.emcv import load_versions  # noqa: PLC0415 (emcv imports this module)
+
+    return {"errata": len(errata), **counts, "emcv_versions": len(load_versions(registry_path))}
 
 
 def _file_sha256(task_dir: Path, relative: str) -> str | None:
@@ -565,6 +567,7 @@ def apply_errata(
     patch_root: Path | str | None = None,
     include_candidates: bool = False,
     benchmark_dirs: dict[str, str] | None = None,
+    versions: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     """Apply every live erratum whose ``<benchmark>/<task_id>`` exists under ``tasks_root``.
 
@@ -576,6 +579,11 @@ def apply_errata(
     erratum applied, and ``benchmark-errata.json`` records what was applied or skipped.
     ``include_candidates`` also applies errata still under their release gates; it is
     for the gate runs themselves, never for a scored run.
+
+    ``versions`` pins a benchmark to a clean version (``emcv.json``): exactly the
+    errata that version was cut with are applied, a newer erratum for the same
+    benchmark is skipped (``skipped_not_in_version``), and an erratum retired after
+    the version was cut still applies, so a version always builds the same bytes.
     """
     registry_path = Path(registry)
     root = Path(tasks_root)
@@ -587,13 +595,42 @@ def apply_errata(
     for benchmark, value in sources.items():
         if SOURCE_REVISION.fullmatch(value) is None:
             raise ErrataError(f"source revision for {benchmark} is invalid: {value!r}")
+    pinned: dict[str, Any] = {}
+    if versions:
+        from benchmark_errata.emcv import find_version  # noqa: PLC0415 (emcv imports this module)
+
+        for benchmark, version in sorted(versions.items()):
+            found = find_version(registry_path, benchmark, version)
+            if sources.get(benchmark) != found.revision:
+                raise ErrataError(
+                    f"clean version {found.name} {version} is {benchmark} at {found.revision}; "
+                    f"the tasks come from {sources.get(benchmark)}"
+                )
+            pinned[benchmark] = found
     plan: list[tuple[Erratum, Path, Path]] = []
     entries: list[dict[str, Any]] = []
     wanted = APPLIED_STATUSES + (("candidate",) if include_candidates else ())
     for erratum in errata:
         local = (benchmark_dirs or {}).get(erratum.benchmark, erratum.benchmark)
         task_dir = root / local / erratum.task_id
-        if erratum.status not in wanted or not (task_dir / "task.toml").is_file():
+        version = pinned.get(erratum.benchmark)
+        if not (task_dir / "task.toml").is_file():
+            continue
+        if version is not None and erratum.id not in version.errata:
+            if erratum.status in wanted:
+                entries.append(
+                    {
+                        "benchmark": erratum.benchmark,
+                        "benchmark_dir": local,
+                        "task_id": erratum.task_id,
+                        "erratum": erratum.id,
+                        "status": erratum.status,
+                        "patch_sha256": erratum.patch_sha256,
+                        "action": "skipped_not_in_version",
+                    }
+                )
+            continue
+        if version is None and erratum.status not in wanted:
             continue
         source = sources.get(erratum.benchmark)
         if source is None:
@@ -654,6 +691,10 @@ def apply_errata(
         "sources": dict(sorted(sources.items())),
         "benchmark_dirs": dict(sorted((benchmark_dirs or {}).items())),
         "include_candidates": include_candidates,
+        "emcv": {
+            benchmark: {"name": found.name, "version": found.version}
+            for benchmark, found in sorted(pinned.items())
+        },
         "tasks": entries,
     }
     record_path.write_text(json.dumps(document, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -670,8 +711,9 @@ def build_release(
 ) -> dict[str, Any]:
     """Copy the registry and its patches into ``output`` with a SHA256 manifest.
 
-    This is the Hugging Face release layout: ``registry.json``, ``patches/`` and
-    ``MANIFEST.json`` naming the version and the Git commit it was built from.
+    This is the Hugging Face release layout: ``registry.json``, ``emcv.json`` (when the
+    repository has clean versions), ``patches/`` and ``MANIFEST.json`` naming the version and
+    the Git commit it was built from.
     """
     registry_path = Path(registry)
     verify_registry(registry_path)
@@ -684,6 +726,9 @@ def build_release(
         raise ErrataError(f"release output is not empty: {out}")
     out.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(registry_path, out / "registry.json")
+    versions = registry_path.resolve().parent / "emcv.json"
+    if versions.exists():
+        shutil.copyfile(versions, out / "emcv.json")
     if card is not None:
         shutil.copyfile(card, out / "README.md")
     for erratum in load_registry(registry_path):

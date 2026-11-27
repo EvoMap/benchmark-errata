@@ -456,3 +456,186 @@ def test_a_runner_can_keep_its_own_directory_name_for_a_benchmark(tmp_path: Path
         ("local-bench", "applied")
     ]
     assert (root / "local-bench" / "task" / "environment" / "Dockerfile").read_text() == DOCKER_FIX
+
+
+# --- clean versions (emcv) -------------------------------------------------------------------
+
+from benchmark_errata.emcv import build_emcv, load_versions, upstream_diff  # noqa: E402
+
+VERSION = f"emcv-{SOURCE[:8]}-r1"
+
+
+def _versions(registry: Path, versions: list[dict[str, Any]]) -> Path:
+    path = registry.parent / "emcv.json"
+    path.write_text(json.dumps({"schema_version": 1, "versions": versions}, indent=2))
+    return path
+
+
+def _version(registry: Path, **overrides: Any) -> dict[str, Any]:
+    erratum = json.loads(registry.read_text())["errata"][0]
+    version: dict[str, Any] = {
+        "name": "bench_emcv",
+        "version": VERSION,
+        "benchmark": "bench",
+        "upstream": {"url": "https://example.com/bench", "revision": SOURCE},
+        "released": "2026-11-28",
+        "distribution": "tasks",
+        "basis": "Apache-2.0 allows redistribution of the whole tasks.",
+        "errata": {erratum["id"]: erratum["patch"]["sha256"]},
+    }
+    version.update(overrides)
+    return version
+
+
+def test_a_clean_version_pins_its_errata_and_builds_the_same_bytes(tmp_path: Path) -> None:
+    registry = _registry(tmp_path)
+    _versions(registry, [_version(registry)])
+    assert verify_registry(registry)["emcv_versions"] == 1
+    root = _tasks_root(tmp_path)
+    first = build_emcv(registry, root, tmp_path / "out1", benchmark="bench", version=VERSION)
+    second = build_emcv(registry, root, tmp_path / "out2", benchmark="bench", version=VERSION)
+    assert first["applied"] == ["bench-task-r1"]
+    assert first["tasks"] == second["tasks"]
+    assert (
+        tmp_path / "out1" / "bench" / "task" / "environment" / "Dockerfile"
+    ).read_text() == DOCKER_FIX
+    assert json.loads((tmp_path / "out1" / "EMCV.json").read_text()) == first
+    assert (root / "bench" / "task" / "environment" / "Dockerfile").read_text() == DOCKERFILE
+
+
+def test_a_version_must_name_its_upstream_revision_and_current_patches(tmp_path: Path) -> None:
+    registry = _registry(tmp_path)
+    _versions(registry, [_version(registry, version="emcv-bbbbbbbb-r1")])
+    with pytest.raises(ErrataError, match="must carry the upstream revision"):
+        load_versions(registry)
+    _versions(registry, [_version(registry, errata={"bench-task-r1": "f" * 64})])
+    with pytest.raises(ErrataError, match="a changed patch is a new erratum"):
+        load_versions(registry)
+
+
+def test_a_released_erratum_missing_from_the_newest_version_needs_a_new_release(
+    tmp_path: Path,
+) -> None:
+    registry = _registry(tmp_path)
+    _versions(registry, [_version(registry, errata={})])
+    with pytest.raises(ErrataError, match="cut r2"):
+        load_versions(registry)
+
+
+def test_whole_tasks_are_distributed_only_when_every_upstream_allows_it(tmp_path: Path) -> None:
+    record = _record()
+    record["license"]["redistribution"] = "unspecified"
+    registry = _registry(tmp_path, [record])
+    _versions(registry, [_version(registry)])
+    with pytest.raises(ErrataError, match="whole tasks may be distributed only"):
+        load_versions(registry)
+    _versions(registry, [_version(registry, distribution="patches")])
+    assert load_versions(registry)[0].distribution == "patches"
+
+
+def test_a_version_skips_a_newer_erratum_and_still_applies_a_retired_one(tmp_path: Path) -> None:
+    registry = _registry(tmp_path)
+    _versions(registry, [_version(registry)])
+    data = json.loads(registry.read_text())
+    data["errata"][0]["status"] = "retired"
+    data["errata"][0]["retired"] = {"date": "2026-11-29", "reason": "runners moved on"}
+    registry.write_text(json.dumps(data, indent=2))
+    root = _tasks_root(tmp_path)
+    document = apply_errata(registry, root, {"bench": SOURCE}, versions={"bench": VERSION})
+    assert [(e["erratum"], e["action"]) for e in document["tasks"]] == [
+        ("bench-task-r1", "applied")
+    ]
+    assert document["emcv"] == {"bench": {"name": "bench_emcv", "version": VERSION}}
+
+    (tmp_path / "second").mkdir()
+    fresh = _registry(tmp_path / "second")
+    _versions(fresh, [_version(fresh, errata={})])
+    data = json.loads(fresh.read_text())
+    data["errata"][0]["status"] = "candidate"
+    del data["errata"][0]["gates"]
+    fresh.write_text(json.dumps(data, indent=2))
+    root = _tasks_root(tmp_path / "second")
+    document = apply_errata(
+        fresh, root, {"bench": SOURCE}, include_candidates=True, versions={"bench": VERSION}
+    )
+    assert [e["action"] for e in document["tasks"]] == ["skipped_not_in_version"]
+    with pytest.raises(ErrataError, match="the tasks come from"):
+        apply_errata(
+            fresh, _tasks_root(tmp_path / "third"), {"bench": FIXED}, versions={"bench": VERSION}
+        )
+
+
+def test_upstream_diff_sorts_errata_by_what_upstream_did(tmp_path: Path) -> None:
+    registry = _registry(tmp_path)
+    old = _tasks_root(tmp_path / "old")
+    _write_task(old / "bench" / "plain")
+    adopted, touched, unchanged = (tmp_path / name for name in ("adopted", "touched", "unchanged"))
+    for root in (adopted, touched, unchanged):
+        _write_task(root / "bench" / "task")
+        _write_task(root / "bench" / "plain")
+    (adopted / "bench" / "task" / "environment" / "Dockerfile").write_text(DOCKER_FIX)
+    (adopted / "bench" / "task" / "task.toml").write_text(TOML_FIX)
+    (touched / "bench" / "task" / "tests" / "test.sh").write_text("new grader\n")
+    (unchanged / "bench" / "plain" / "instruction.md").write_text("reworded upstream\n")
+    _write_task(unchanged / "bench" / "added")
+
+    def verdict(root: Path) -> dict[str, Any]:
+        return upstream_diff(registry, "bench", old, root)
+
+    assert verdict(adopted)["errata"][0]["verdict"] == "adopted"
+    report = verdict(touched)
+    assert report["errata"][0]["verdict"] == "touched"
+    assert report["errata"][0]["pinned_files_changed"] == ["tests/test.sh"]
+    ignored = upstream_diff(registry, "bench", old, adopted, ignore=("task.toml",))["errata"][0]
+    assert (ignored["verdict"], ignored["pinned_files_ignored"]) == ("adopted", ["task.toml"])
+    report = verdict(unchanged)
+    assert report["errata"][0]["verdict"] == "unchanged"
+    assert report["unreviewed"] == [{"task_id": "plain", "changed": ["instruction.md"]}]
+    assert report["added"] == ["added"]
+
+
+def test_cli_builds_a_clean_version_and_diffs_upstream(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    registry = _registry(tmp_path)
+    _versions(registry, [_version(registry)])
+    root = _tasks_root(tmp_path)
+    argv = ["emcv", "build", "--registry", str(registry), "--tasks-root", str(root)]
+    assert (
+        main(
+            [*argv, "--benchmark", "bench", "--version", VERSION, "--output", str(tmp_path / "out")]
+        )
+        == 0
+    )
+    assert json.loads(capsys.readouterr().out)["version"] == VERSION
+    assert (
+        main(
+            [
+                "emcv",
+                "diff",
+                "--registry",
+                str(registry),
+                "--benchmark",
+                "bench",
+                "--old-root",
+                str(root),
+                "--new-root",
+                str(root),
+            ]
+        )
+        == 0
+    )
+    assert json.loads(capsys.readouterr().out)["summary"]["errata"] == {"unchanged": 1}
+    argv = ["apply", "--registry", str(registry), "--tasks-root", str(root)]
+    with pytest.raises(SystemExit):
+        main(
+            [
+                *argv,
+                "--source",
+                f"bench={SOURCE}",
+                "--emcv",
+                f"bench={VERSION}",
+                "--include-candidates",
+            ]
+        )
+    assert "never includes candidates" in capsys.readouterr().err
