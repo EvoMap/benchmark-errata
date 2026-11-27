@@ -2165,6 +2165,87 @@
           "summary": "At 7e0611e7 the tests strip all spaces from the board rows before calling ResultOf, while the instruction shows boards with spaces; after the patch the instruction states the input format. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
         }
       }
+    },
+    {
+      "id": "aider-polyglot-python-food-chain-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_python_food-chain",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for python/exercises/practice/food-chain"
+      },
+      "license": {
+        "upstream": [
+          "Exercism Python track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/python/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the Python track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The tests compare recite() with a list of lines, one string per line and an empty string between verses; the instruction gives the lyrics and the stub a bare function, but neither states the return format.",
+        "evidence": [
+          {
+            "path": "tests/food_chain_test.py",
+            "lines": "13-184",
+            "fact": "expects a list of line strings with \"\" between verses"
+          },
+          {
+            "path": "environment/workspace/food_chain.py",
+            "lines": "1-2",
+            "fact": "def recite(start_verse, end_verse): pass"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/Aider-AI/polyglot-benchmark/pull/26"
+        ]
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_python_food-chain/aider-polyglot-python-food-chain-r1.patch",
+        "sha256": "e145b4a6487ae76342653104708c11a6da7a466e0aff0d1a04c874f5e7ec71b5",
+        "origin": "The food-chain part of Aider-AI/polyglot-benchmark#26 at f192eeb1ea35f24b0db3e29c9b4a7c1f1148f8c9, materialized by the same adapter."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "5585cc76b19000d11185767f8231bc74fa01997dc16226544cfe16d5e0805f94",
+          "after": "e20fdee378df114ca995971e68f7b7d8d4fff208a3865ca3196099a9a2e340fd"
+        }
+      },
+      "depends_on": {
+        "tests/food_chain_test.py": "8ff5c6c45bbcdee64f0e3c9d879d2a08e97c90594d00d15ee0f228b4e7eac548",
+        "environment/workspace/food_chain.py": "d7c1f854251ec4677ff36fdabbc87ef0ebcff8e8559fdee91b52fdeb8c3dc6b5"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 7e0611e7 the tests expect a list of line strings with an empty string between verses and neither the instruction nor the stub gives the return format; after the patch the instruction states it. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
+        }
+      }
     }
   ]
 }
