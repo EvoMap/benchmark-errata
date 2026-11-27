@@ -418,6 +418,96 @@
           "summary": "At f2e8c75e the expected 2D-peak offset (tests/test_outputs.py:52, 63) is reached only with a symmetric fit window of roughly ±120 to ±190 cm^-1 and the instruction names no window or background; after the patch it states the model and both windows. In our runs, failing submissions reported the offsets that other windows give."
         }
       }
+    },
+    {
+      "id": "harbor-index-scicode-dna-binding-site-scanner-r1",
+      "benchmark": "harbor-index",
+      "task_id": "scicode-dna-binding-site-scanner",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/harbor-framework/harbor-index",
+        "revision": "5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+        "materializer": "tasks/scicode-dna-binding-site-scanner/ at this commit, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "harbor-index: no license file",
+          "SciCode: Apache-2.0"
+        ],
+        "redistribution": "unspecified",
+        "basis": [
+          "https://github.com/harbor-framework/harbor-index/tree/5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+          "https://github.com/scicode-bench/SciCode"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "The repository grants no license, so the task files are not published. The patch is published because it is the change already proposed in public upstream (harbor-framework/harbor-index#154); it carries no data, expected answer or test content."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The expected values of steps 76.2 and 76.4 depend on three conventions the adapted instruction does not state: the logarithm base of the divergence, whether it is normalized per row, and the order of the random draws after seeding.",
+        "evidence": [
+          {
+            "path": "tests/test_outputs.py",
+            "lines": "74-100",
+            "fact": "each step's test cases are run against the stored expected values"
+          },
+          {
+            "path": "tests/problem_data.json",
+            "lines": "sub_steps 76.2, 76.4",
+            "fact": "the test cases of the divergence step and of the scanner that seeds random"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "46, 65",
+            "fact": "no logarithm base for the divergence; no order of the draws for the insertion"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/harbor-framework/harbor-index/pull/154"
+        ]
+      },
+      "patch": {
+        "path": "patches/harbor-index/scicode-dna-binding-site-scanner/harbor-index-scicode-dna-binding-site-scanner-r1.patch",
+        "sha256": "9a40e240658418dfe31e4287a09196dd899bfcc77bf022bf8b15530df16dfa53",
+        "origin": "The scicode-dna-binding-site-scanner part of harbor-framework/harbor-index#154 at 3a320095855cdebe6d936ab224495bcf7d1dde62."
+      },
+      "files": {
+        "README.md": {
+          "before": "b5532b8eb266c820f99383e038b0cbd3c74cb6ef274be234472ce99527db36c5",
+          "after": "7e7d4b1f6c21f511a32ac354b11d642e242c1396f781d5bded4c78f297c8dbb2"
+        },
+        "instruction.md": {
+          "before": "53c716de78b1d2b101ccf27c4da5703f068586311795988c6ba87572dc45ec06",
+          "after": "ba05178fefac6c77fdfe409d754d5d909107b5c83abf098b77e75472051f4da4"
+        }
+      },
+      "depends_on": {
+        "tests/test_outputs.py": "2d517d642b7e5e67a0e17df48646e96aa07971ec786a70f260f7734b766b732e",
+        "tests/problem_data.json": "7f06d115188ba63048468fdb7826efa5ce3f73c3b591bfbd70fdd4648c93b5f8",
+        "tests/test_data.h5": "983cbaf9f47e9e0f1b075a24fb350d0d1357833edb91f1bc4a7bec9cc386fc54"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1,
+            1
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 5399ea1 the instruction gives no logarithm base (line 46) and no draw order (line 65), and the stored expected values of steps 76.2 and 76.4 depend on them; after the patch the instruction states the three conventions while the tests and expected values are unchanged. In our runs, single-convention variants of one solution located exactly these three."
+        }
+      }
     }
   ]
 }
