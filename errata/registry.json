@@ -1921,6 +1921,87 @@
           "summary": "In the task's image, the upstream header stub with tests/sublist_test.cpp does not compile ('List_comparison' is not a member of 'sublist'); with the patched stub the same tests compile. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
         }
       }
+    },
+    {
+      "id": "aider-polyglot-rust-acronym-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_rust_acronym",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for rust/exercises/practice/acronym"
+      },
+      "license": {
+        "upstream": [
+          "Exercism Rust track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/rust/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the Rust track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "A Rust-only test expects \"HyperText Markup Language\" to give \"HTML\", which the instruction's rules (split on whitespace and hyphens, drop other punctuation) do not yield.",
+        "evidence": [
+          {
+            "path": "tests/tests/acronym.rs",
+            "lines": "84-90",
+            "fact": "camelcase expects HTML"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "1-22",
+            "fact": "the splitting rules give HML for this input"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/Aider-AI/polyglot-benchmark/pull/26"
+        ]
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_rust_acronym/aider-polyglot-rust-acronym-r1.patch",
+        "sha256": "f2ccc009f6bc078a9ab2c6febb0e06eb307c1a11a357546afff04b4fa04f0cbc",
+        "origin": "The acronym part of Aider-AI/polyglot-benchmark#26 at f192eeb1ea35f24b0db3e29c9b4a7c1f1148f8c9, materialized by the same adapter."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "9e0d8a5cfd5f9fede4fe4d1ca5adde20236e00db71b4e92720eff4b3e8aee856",
+          "after": "d78f1866f5ca7e6b925286721ca9b005debb80be298bcb5191a4ca1c9cf28c2f"
+        }
+      },
+      "depends_on": {
+        "tests/tests/acronym.rs": "10fe86ae580478d725049c7a699f4a9c8cacab9fc7459fd5e13588938917809a",
+        "environment/workspace/src/lib.rs": "1c4804f2f6f8e2b658a003afa50fd72941f47d968b4cd136266cd35333d9e6ff"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 7e0611e7 the Rust-only camelcase test expects HTML for \"HyperText Markup Language\", which the instruction's rules do not give; after the patch the instruction states the rule. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
+        }
+      }
     }
   ]
 }
