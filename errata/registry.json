@@ -2903,6 +2903,93 @@
           "summary": "At 7e0611e7 the tests expect no trailing newline and an empty line between verses, which the instruction does not state; in our runs the same solution scores 0 of 10 with a trailing newline and 10 of 10 without, as the patched instruction states. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
         }
       }
+    },
+    {
+      "id": "harbor-index-algotune-simplex-projection-speedup-r1",
+      "benchmark": "harbor-index",
+      "task_id": "algotune-simplex-projection-speedup",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/harbor-framework/harbor-index",
+        "revision": "5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+        "materializer": "tasks/algotune-simplex-projection-speedup/ at this commit, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "harbor-index: no license file",
+          "AlgoTune: see its repository"
+        ],
+        "redistribution": "unspecified",
+        "basis": [
+          "https://github.com/harbor-framework/harbor-index/tree/5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+          "https://github.com/oripress/AlgoTune"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "The repository grants no license, so the task files are not published. The patch changes only instruction.md, but no matching change has been proposed upstream yet, so it stays out of this repository until it is; the record keeps its SHA256 and its construction."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The grader copies only /app/solver.py into its separate environment and passes a solver at most 1.05x the time of its own optimized solution; the instruction states neither, and asks for 2.50x over the reference instead, so a solver that loads a helper file it built next to solver.py falls back to slow code when graded.",
+        "evidence": [
+          {
+            "path": "task.toml",
+            "lines": "4, 18",
+            "fact": "artifacts = [\"/app/solver.py\"]; environment_mode = \"separate\""
+          },
+          {
+            "path": "tests/test.sh",
+            "lines": "33-40",
+            "fact": "pass iff t_agent <= 1.05 * t_oracle"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "10, 12",
+            "fact": "only that Solver goes in /app/solver.py, and a 2.50x bar over the reference"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [],
+        "not_reported": "Not reported yet; an issue for harbor-framework/harbor-index is drafted."
+      },
+      "patch": {
+        "storage": "external",
+        "sha256": "b07839bbeb65393020c9074db250d30d7264349afce1c32b83f6be9fa129849b",
+        "origin": "Written for this erratum: line 12 of instruction.md states the bar the grader applies and that only /app/solver.py reaches the grading environment.",
+        "construction": "In instruction.md, replace line 12 (\"Your solver's total runtime across the benchmark must be more than ...\") with: \"Your solver's total runtime across the benchmark must be at most **1.05x** that of the optimized solver the grader compares against (the grader's own solution, not the reference implementation below) to pass.\", then an empty line and: \"Only `/app/solver.py` is copied into the separate grading environment (same Python packages and compilers). Any other file you create under `/app` (C/C++/Cython sources, compiled extensions, helper modules, build scripts) will not exist there, so `solver.py` must be self-contained; building an extension in `__init__` from source embedded in `solver.py` is fine.\" The patch is that diff of instruction.md."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "702e5e9b9eeba651f2e8d1960be6024d47e530875db32e2977769123c2be7267",
+          "after": "5ced5575b789dd11fd5438efa3dace7a7679ba3d586cfe366d78672e62feb09d"
+        }
+      },
+      "depends_on": {
+        "task.toml": "a40f68323379e9eed66eab758d70c75194a37ed3606aeb7e22b8bf49225336a2",
+        "tests/test.sh": "eb4a80178874375bb1044c0f604debf0dbb89328336b2e2169efe88d3390604e",
+        "tests/test_outputs.py": "1bf42b20a5ced39352556a82b22a1f6bac191149d0b3bf7af2cea66825eeceeb",
+        "tests/oracle_solver.py": "7ea7784995eb871f2410311dc55d055137956711b4000ed71c0042f683b45a5c"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1,
+            1
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0,
+            0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 5399ea1 the grader copies only /app/solver.py (task.toml:4, 18) and passes at most 1.05x the time of its own solution (tests/test.sh:33-40), while the instruction asks for 2.50x over the reference and says nothing about the other files; after the patch the instruction states both. In our runs, solvers that load a helper they built next to solver.py fall back to slow code when graded and pass once the helper is present."
+        }
+      }
     }
   ]
 }
