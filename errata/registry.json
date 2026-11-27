@@ -2745,6 +2745,84 @@
           "summary": "At 7e0611e7 the tests fix an interface (Element arguments to add(), array constructor, head order, chained reverse(), null links) that the instruction never gives and the stub's add(nextValue) contradicts. In our runs, a solution written to the upstream instruction and stub fails exactly those tests, and one written to the patched instruction passes all 23. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
         }
       }
+    },
+    {
+      "id": "aider-polyglot-javascript-zipper-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_javascript_zipper",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for javascript/exercises/practice/zipper"
+      },
+      "license": {
+        "upstream": [
+          "Exercism JavaScript track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/javascript/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the JavaScript track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The tests require left(), right() and up() to return null when there is no such node; the instruction and the stub never say what a missing node returns, and undefined fails.",
+        "evidence": [
+          {
+            "path": "tests/zipper.spec.js",
+            "lines": "37, 45",
+            "fact": "toBe(null) / toEqual(null) for a missing child and for up() at the root"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "10-25",
+            "fact": "lists the operations; nothing about missing nodes"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [],
+        "not_reported": "Not reported yet; a follow-up to Aider-AI/polyglot-benchmark#26, which fixes the same kind of gap in other exercises, is drafted."
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_javascript_zipper/aider-polyglot-javascript-zipper-r1.patch",
+        "sha256": "cb3769451e7802d360631175dd62eb7a3a5be26230d5bdb588bb1e52c8e37c57",
+        "origin": "Written for this erratum: a .docs/instructions.append.md for the exercise in the style of Aider-AI/polyglot-benchmark#26, materialized by the same adapter."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "36ec7a3d4e50684057497581b61947d7ce9f19776efbf93e89f527929e77f646",
+          "after": "fe8af49e9d1a6d92a48f9d9b4f60440af9972fe0e859a643c74b09d6b6dc7b96"
+        }
+      },
+      "depends_on": {
+        "tests/zipper.spec.js": "af26625617bc05e23043c73226f215d8402fba7633d36fae62423a5e594d30b5",
+        "environment/workspace/zipper.js": "89313857b68ac2e98be20b7fab35b00bf9f72084b52e7bad423195667b5bc7dc"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 7e0611e7 the tests require null for a missing node and the instruction does not say what it returns; in our runs the same solution scores 17 of 19 returning undefined and 19 of 19 returning null, as the patched instruction states. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
+        }
+      }
     }
   ]
 }
