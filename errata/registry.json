@@ -1753,6 +1753,90 @@
           "summary": "At 7e0611e7 eight tests assert exact exception messages and two require empty-input and leading-zero handling that neither the instruction nor the stub states; after the patch the instruction states them. In our runs, solutions written to the patched instruction score full marks. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
         }
       }
+    },
+    {
+      "id": "aider-polyglot-cpp-yacht-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_cpp_yacht",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for cpp/exercises/practice/yacht"
+      },
+      "license": {
+        "upstream": [
+          "Exercism C++ track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/cpp/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the C++ track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "starter_mismatch",
+        "summary": "The header stub is an empty namespace, while the tests call yacht::score with a braced list of dice and a lower-case category string; neither the stub nor the instruction gives that interface.",
+        "evidence": [
+          {
+            "path": "tests/yacht_test.cpp",
+            "lines": "22, 28",
+            "fact": "yacht::score({5, 5, 5, 5, 5}, \"yacht\")"
+          },
+          {
+            "path": "environment/workspace/yacht.h",
+            "lines": "1-5",
+            "fact": "namespace yacht {} with no declaration"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/Aider-AI/polyglot-benchmark/pull/26"
+        ]
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_cpp_yacht/aider-polyglot-cpp-yacht-r1.patch",
+        "sha256": "266cb8abed9b6a107bbb2b7c0809783812f5f030315a126ab16ab9ec019889d6",
+        "origin": "The yacht part of Aider-AI/polyglot-benchmark#26 at f192eeb1ea35f24b0db3e29c9b4a7c1f1148f8c9, materialized by the same adapter."
+      },
+      "files": {
+        "environment/workspace/yacht.h": {
+          "before": "9dd2b28a5efd65ecac214dc5d3461a475ec1153df5d87d7bc72bb701d117d111",
+          "after": "2f238335f96a7c7ff20602e7254ff6470c79d2e7b34aa9b6e361912970e8c344"
+        },
+        "instruction.md": {
+          "before": "ecc9d2b10abc286357c2d42cccbef62c65bd0cb13ce9b2d2bde427b94d004cee",
+          "after": "d1816bd31f6a7eff3d5465e057fda37ddeb541e28c083a38cc4e11947944dc7b"
+        }
+      },
+      "depends_on": {
+        "tests/yacht_test.cpp": "45af93cc50b53cddf26115d4bbf0c03e3e61939b4c7979d0eb670f8937bbacbb"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "In the task's image, the upstream header stub with tests/yacht_test.cpp does not compile ('score' is not a member of 'yacht'); with the patched stub the same tests compile. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
+        }
+      }
     }
   ]
 }
