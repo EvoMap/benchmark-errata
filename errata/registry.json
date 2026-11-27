@@ -259,6 +259,87 @@
           "summary": "In the task's image, the upstream stub with tests/octal_test.go does not compile (ParseOctal(test.input) (no value) used as value; not enough arguments in call to ParseOctal); the patched stub compiles with the same tests and fails only on its unimplemented panic."
         }
       }
+    },
+    {
+      "id": "tb2-adaptive-rejection-sampler-r1",
+      "benchmark": "terminal-bench-2.0",
+      "task_id": "adaptive-rejection-sampler",
+      "status": "upstream_fixed",
+      "source": {
+        "url": "https://huggingface.co/datasets/harborframework/terminal-bench-2.0",
+        "revision": "f2e8c75e23add71613117eecc9498f53bcd7e04e",
+        "materializer": "The dataset's adaptive-rejection-sampler/ directory, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "Apache-2.0"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/harborframework/terminal-bench-2.0",
+          "https://github.com/harbor-framework/terminal-bench-2/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "Apache-2.0 allows redistribution and modification. Only the patch is published: the task directory also carries the reference solution, which stays out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The tests call ars(density, domain, n = count) with a fixed argument order, but the instruction only asks for a function named ars, so a sampler with any other signature fails every test that calls it.",
+        "evidence": [
+          {
+            "path": "tests/test_outputs.py",
+            "lines": "50",
+            "fact": "samples <- ars(normal_density, c(-5, 5), n = 1000)"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "19",
+            "fact": "asks for a primary function named \"ars\"; no signature"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [],
+        "not_reported": "Terminal-Bench 2.1 already states the signature in this task's instruction; its tests/test_outputs.py is byte-identical to this revision's.",
+        "fixed_in": {
+          "url": "https://github.com/harbor-framework/terminal-bench-2-1/tree/12b7565679ce5006230b820666353673a133db93/tasks/adaptive-rejection-sampler",
+          "revision": "12b7565679ce5006230b820666353673a133db93"
+        }
+      },
+      "patch": {
+        "path": "patches/terminal-bench-2.0/adaptive-rejection-sampler/tb2-adaptive-rejection-sampler-r1.patch",
+        "sha256": "ad0ca73626cfee639a1a7cb8dfe5f237e977cfd3da89cfd42e1efa5d75faef75",
+        "origin": "Line 19 of tasks/adaptive-rejection-sampler/instruction.md in harbor-framework/terminal-bench-2-1 at 12b7565679ce5006230b820666353673a133db93, which states the signature."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "3530999e72b651f260dabab69c2594cefae66e55123136b72663efe71546007e",
+          "after": "e6d28c28acd76bef61817427c74c2a29e3e8d75f535cbd708afcbfd02c54013f"
+        }
+      },
+      "depends_on": {
+        "tests/test_outputs.py": "547dc6e107f034f41703722aeceb6d0236e3fb69116fc3f2fbaba11884de352f"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At f2e8c75e, tests/test_outputs.py:50 calls ars(density, domain, n = count) and instruction.md line 19 gives no signature; after the patch line 19 states it, as in Terminal-Bench 2.1, whose tests/test_outputs.py is byte-identical."
+        }
+      }
     }
   ]
 }
