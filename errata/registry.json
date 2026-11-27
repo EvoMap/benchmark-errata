@@ -2578,6 +2578,90 @@
           "summary": "At f2e8c75e the instruction's example keys start at 4194304, but a.out is position-independent and the grader's keys are its link-time section addresses, so output that follows the example covers 0%. After the patch the instruction states the sections, the address rule and unsigned words; in our runs a probe that follows the stated rule passes, one that adds the example's load base covers 0%, and one that reads signed words fails on values."
         }
       }
+    },
+    {
+      "id": "tb2-openssl-selfsigned-cert-r1",
+      "benchmark": "terminal-bench-2.0",
+      "task_id": "openssl-selfsigned-cert",
+      "status": "active",
+      "source": {
+        "url": "https://huggingface.co/datasets/harborframework/terminal-bench-2.0",
+        "revision": "f2e8c75e23add71613117eecc9498f53bcd7e04e",
+        "materializer": "The dataset's openssl-selfsigned-cert/ directory, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "Apache-2.0"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/harborframework/terminal-bench-2.0",
+          "https://github.com/harbor-framework/terminal-bench-2/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "Apache-2.0 allows redistribution and modification. Only the patch is published: the task directory also carries the reference solution, which stays out."
+      },
+      "defect": {
+        "class": "grader_bug",
+        "summary": "The grader runs the agent's verification script with a bare `python` from inside the verifier's isolated uvx environment, whose bin directory comes first on PATH, so a script that uses a package the agent installed in the task environment fails although it works there.",
+        "evidence": [
+          {
+            "path": "tests/test_outputs.py",
+            "lines": "144",
+            "fact": "subprocess.run([\"python\", script_path])"
+          },
+          {
+            "path": "tests/test.sh",
+            "lines": "18-22",
+            "fact": "pytest runs through uvx in a temporary environment"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "24-27",
+            "fact": "asks for a simple Python script; no interpreter or standard-library-only rule"
+          }
+        ]
+      },
+      "answer_review": "The patch changes only which interpreter runs the agent's own script; no expected value, certificate field or check is added or relaxed.",
+      "upstream": {
+        "reports": [],
+        "not_reported": "Not reported yet; an issue for harbor-framework/terminal-bench-2-1 (same bytes as 2.0) is drafted."
+      },
+      "patch": {
+        "path": "patches/terminal-bench-2.0/openssl-selfsigned-cert/tb2-openssl-selfsigned-cert-r1.patch",
+        "sha256": "5bca76e1967502ae206290e79cfec93fae5f9ccd893f7a83fc6da270f1b14416",
+        "origin": "Written for this erratum: the test runs the script with the task environment's interpreter, found on PATH without the verifier's own environment."
+      },
+      "files": {
+        "tests/test_outputs.py": {
+          "before": "90970bb3c372e8e7fb6bb9ac5f649ba73eb38e1a5ea2e922a9057a72b6b4192d",
+          "after": "5a85ea5cd5c644893519565f64ab4cbaf8d04eddba31ad000d42aa178a1e4a09"
+        }
+      },
+      "depends_on": {
+        "tests/test.sh": "4770437ea96c3cc84684b4f99d55fb148fcac09f9ea1e8ef49de487716e6c334",
+        "instruction.md": "38054a3371f7c2c853478a2f9af0bff858437d5b28a9a07483238f06e566921f"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "In our runs, a check_cert.py that imports cryptography installed with pip in the task environment fails the upstream test, whose bare python resolves to the verifier's uvx environment, and passes the patched one; a standard-library script passes both, and the patched test still fails the cryptography script when cryptography is not installed."
+        }
+      }
     }
   ]
 }
