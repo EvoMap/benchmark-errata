@@ -1403,6 +1403,86 @@
           "summary": "At 62dc0745, and unchanged at b0c7fbf2, the test asserts a reason phrase the instruction never gives; the patched test checks that a reason is given. microsoft/SWE-bench-Live#116 verified the corrected row with evaluation/evaluation.py: the gold patch is resolved and the no-op is not on both rows, and a patch written to the statement alone is not resolved on the original row and is resolved on the corrected one."
         }
       }
+    },
+    {
+      "id": "swe-live-gsd-build__gsd-2-3258-r1",
+      "benchmark": "swe-bench-live-multilang",
+      "task_id": "gsd-build__gsd-2-3258",
+      "status": "active",
+      "source": {
+        "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+        "revision": "62dc0745c40f067fc366ae3eb1a26136e5928f85",
+        "materializer": "A SWE-bench-Live MultiLang adapter derived from the swebench_multilingual Harbor adapter, split ts, source language typescript; it builds the task image from the row's eval image, removes the project's future and its published releases from package caches, and renders tests/test.sh from the row"
+      },
+      "license": {
+        "upstream": [
+          "SWE-bench-Live MultiLang dataset: MIT",
+          "microsoft/SWE-bench-Live: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+          "https://github.com/microsoft/SWE-bench-Live/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "MIT allows redistribution. Only the patch is published; it changes instruction.md alone and carries no test content or reference patch."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The test imports web/lib/workspace-status.ts from the extensions tests, so the type-check that runs before every test checks that file under node16 rules; the instruction asks to change the file's logic but not to make it pass that check, and when the check fails no test runs.",
+        "evidence": [
+          {
+            "path": "tests/config.json",
+            "lines": "10 (test_patch, decoded line 17)",
+            "fact": "imports web/lib/workspace-status.ts from src/resources/extensions/gsd/tests/"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "16, 113",
+            "fact": "asks to change web/lib/workspace-status.ts; nothing about the extensions type-check"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/microsoft/SWE-bench-Live/issues/116"
+        ]
+      },
+      "patch": {
+        "path": "patches/swe-bench-live-multilang/gsd-build__gsd-2-3258/swe-live-gsd-build__gsd-2-3258-r1.patch",
+        "sha256": "b7e200db9f1b605d8a539b6178e9fb9c15a917247a5d43d5af71327542b2b226",
+        "origin": "The corrected problem_statement posted in microsoft/SWE-bench-Live#116 (first comment; it adds the test-setup constraints), rendered by the same materializer; only instruction.md changes. The issue was closed as fixed on 2026-11-24, but this row is unchanged at b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "e139fbc7b4b21d4c0884629d9dd8795b265bb21ff054f08ee3200c2fb5bf0c27",
+          "after": "02f2c5d986bdc80cbe3b8a02f8401d60a24bc1fd79c158d851e6c93061132676"
+        }
+      },
+      "depends_on": {
+        "tests/config.json": "b654f0e300bd42aaf1eb5d6b222c48754dbaab80159aec7789d8a0ba14b4396a",
+        "tests/test.sh": "e2ba622f160c61731edfd51515772a07f316ded11f6e55a5b678d2e0725aaae4"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 62dc0745, and unchanged at b0c7fbf2, the type-check that precedes every test checks web/lib/workspace-status.ts, which the instruction does not mention; the patched instruction states the constraints. microsoft/SWE-bench-Live#116 verified the corrected row with evaluation/evaluation.py: the gold patch is resolved and the no-op is not on both rows, and a patch written to the statement alone is not resolved on the original row and is resolved on the corrected one."
+        }
+      }
     }
   ]
 }
