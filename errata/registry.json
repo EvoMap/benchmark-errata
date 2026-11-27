@@ -862,6 +862,96 @@
           "summary": "The upstream image (built from the upstream Dockerfile) holds a matplotlib 3.7.5 wheel in /root/.cache/pip; the patched image holds no matplotlib wheel there."
         }
       }
+    },
+    {
+      "id": "swe-live-xroche__httrack-876-r1",
+      "benchmark": "swe-bench-live-multilang",
+      "task_id": "xroche__httrack-876",
+      "status": "upstream_fixed",
+      "source": {
+        "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+        "revision": "62dc0745c40f067fc366ae3eb1a26136e5928f85",
+        "materializer": "A SWE-bench-Live MultiLang adapter derived from the swebench_multilingual Harbor adapter, split c, source language c; it builds the task image from the row's eval image, removes the project's future and its published releases from package caches, and renders tests/test.sh from the row"
+      },
+      "license": {
+        "upstream": [
+          "SWE-bench-Live MultiLang dataset: MIT",
+          "microsoft/SWE-bench-Live: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+          "https://github.com/microsoft/SWE-bench-Live/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "MIT allows redistribution, but the patch rewrites tests/config.json and tests/test.sh, which hold the hidden test patch and the reference patch; this repository publishes neither, so the patch is kept outside it and the record keeps its SHA256 and its construction."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The test also probes .webp, outside the file types the instruction lists, and accepts .xml only as application/xml, so an implementation of exactly the listed types fails.",
+        "evidence": [
+          {
+            "path": "tests/config.json",
+            "lines": "10 (test_patch, decoded lines 144, 184)",
+            "fact": "expects application/xml for .xml and image/webp for a .webp probe"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "7-14",
+            "fact": "lists gif, png, jpg/jpeg, svg, ico and xml"
+          }
+        ]
+      },
+      "answer_review": "Upstream's corrected row: it drops the .webp probe and accepts text/xml as well as application/xml. No expected answer is added and the gold patch is unchanged.",
+      "upstream": {
+        "reports": [
+          "https://github.com/microsoft/SWE-bench-Live/issues/116"
+        ],
+        "fixed_in": {
+          "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang/commit/b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2",
+          "revision": "b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2"
+        }
+      },
+      "patch": {
+        "storage": "external",
+        "sha256": "8307dba474c8a98d30f02acd2e89eb339168be45fbe13893318540b983cabc09",
+        "origin": "tests/config.json and tests/test.sh as the same materializer writes them from this row at b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2 (SWE-bench-Live/MultiLang 'Fix issues', 2026-11-24), which corrects the row as proposed in microsoft/SWE-bench-Live#116; instruction.md is unchanged at that revision.",
+        "construction": "Materialize the task at source.revision and at upstream.fixed_in.revision with source.materializer; copy tests/config.json and tests/test.sh of the second into the first; the patch is `git diff --no-index --no-renames --src-prefix= --dst-prefix= a b` between the two task directories (a: upstream, b: with the two files replaced)."
+      },
+      "files": {
+        "tests/config.json": {
+          "before": "10fde3d9ba95ca33748f410940ed4d143a9c09a7a70c9525e1c51accdbd249f4",
+          "after": "4e86dbdd2f55afe82d5c8ffce58139ca60d21eb902800100b0e76f117ba616ff"
+        },
+        "tests/test.sh": {
+          "before": "0c5078f1b9ef7423af60c4e908b4d65437b60b35f63e810555bf72b21cbca09e",
+          "after": "077e11e657077f1346d5cb57cb44e4978a3df793a846511c04cc6b803af5d6ac"
+        }
+      },
+      "depends_on": {
+        "instruction.md": "6db250d460c40962d2380828112fe7230d8caf8651d4761a3d2302909655fd22",
+        "solution/solve.sh": "77a4e10bb5df8809a007b1d58956a2a03fa34c5f0295b9e931194ec669920806"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 62dc0745 the test probes .webp and accepts .xml only as application/xml, outside what the instruction lists; the corrected row at b0c7fbf2 drops the probe and accepts text/xml. microsoft/SWE-bench-Live#116 verified the corrected row with evaluation/evaluation.py: the gold patch is resolved and the no-op is not on both rows, and a patch written to the statement alone is not resolved on the original row and is resolved on the corrected one."
+        }
+      }
     }
   ]
 }
