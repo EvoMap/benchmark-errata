@@ -2492,6 +2492,92 @@
           "summary": "At 7e0611e7 the tests write every puzzle with == while the instruction shows a single =; after the patch the instruction states the format. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
         }
       }
+    },
+    {
+      "id": "tb2-extract-elf-r1",
+      "benchmark": "terminal-bench-2.0",
+      "task_id": "extract-elf",
+      "status": "active",
+      "source": {
+        "url": "https://huggingface.co/datasets/harborframework/terminal-bench-2.0",
+        "revision": "f2e8c75e23add71613117eecc9498f53bcd7e04e",
+        "materializer": "The dataset's extract-elf/ directory, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "Apache-2.0"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/harborframework/terminal-bench-2.0",
+          "https://github.com/harbor-framework/terminal-bench-2/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "Apache-2.0 allows redistribution and modification. Only the patch is published: the task directory also carries the reference solution, which stays out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The grader keys each 4-byte word of .text, .data and .rodata by the section's link-time address and reads it as unsigned, but the instruction gives neither rule and its example uses non-PIE load addresses; a.out is position-independent, so output that follows the example can never match.",
+        "evidence": [
+          {
+            "path": "tests/test_outputs.py",
+            "lines": "61-88",
+            "fact": "only .text/.data/.rodata, sh_addr plus offset with no load base, unsigned little-endian words"
+          },
+          {
+            "path": "tests/test_outputs.py",
+            "lines": "374-391",
+            "fact": "every value must match and 75% of the reference addresses must be covered"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "3",
+            "fact": "the example keys start at 4194304 (0x400000); no section list, address rule or signedness"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/harbor-framework/terminal-bench-2-1/issues/194"
+        ]
+      },
+      "patch": {
+        "path": "patches/terminal-bench-2.0/extract-elf/tb2-extract-elf-r1.patch",
+        "sha256": "e470dd10b4505092c0a81308034c0a0154f9ee78c5ab246de4bde6f669f31d1a",
+        "origin": "Written for this erratum: the instruction states the sections, the address rule and the word format the grader uses, in place of the misleading example."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "f1dd8c8fd9f01101d2ecb65665bdedc33adc868abd853b3adf556f6aa4982073",
+          "after": "5c8706c1bcbb079984b9728db256be10306916f111f26f88eb4062a3ad0eb92d"
+        }
+      },
+      "depends_on": {
+        "tests/test_outputs.py": "825569115217f1cea7b0f3c7547d60d21e6ea36f587d82cc9dfdd5dd98c04570",
+        "tests/test.sh": "84ee50194effb4c72b9cbd0306cccaf0f855f3634227cd8359928722a53bbdaf"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At f2e8c75e the instruction's example keys start at 4194304, but a.out is position-independent and the grader's keys are its link-time section addresses, so output that follows the example covers 0%. After the patch the instruction states the sections, the address rule and unsigned words; in our runs a probe that follows the stated rule passes, one that adds the example's load base covers 0%, and one that reads signed words fails on values."
+        }
+      }
     }
   ]
 }
