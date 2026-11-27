@@ -2823,6 +2823,86 @@
           "summary": "At 7e0611e7 the tests require null for a missing node and the instruction does not say what it returns; in our runs the same solution scores 17 of 19 returning undefined and 19 of 19 returning null, as the patched instruction states. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
         }
       }
+    },
+    {
+      "id": "aider-polyglot-java-food-chain-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_java_food-chain",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for java/exercises/practice/food-chain"
+      },
+      "license": {
+        "upstream": [
+          "Exercism Java track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/java/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the Java track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The tests compare verse() and verses() with strings that have no trailing newline and one empty line between verses; the instruction gives only the lyrics and the stub only the two method signatures.",
+        "evidence": [
+          {
+            "path": "tests/src/test/java/FoodChainTest.java",
+            "lines": "18-21, 130-148, 154-213",
+            "fact": "expected strings without a trailing newline, verses joined by an empty line"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "11-62",
+            "fact": "the lyrics only"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [],
+        "not_reported": "Not reported yet; a follow-up to Aider-AI/polyglot-benchmark#26, which fixes the same kind of gap in other exercises, is drafted."
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_java_food-chain/aider-polyglot-java-food-chain-r1.patch",
+        "sha256": "2a023223bf45db89cac90a4b38d0228ec1714933d7dc29f796e26434943622a1",
+        "origin": "Written for this erratum: a .docs/instructions.append.md for the exercise in the style of Aider-AI/polyglot-benchmark#26, materialized by the same adapter."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "d53b3662ad7b58d2dd6cb3ef741a6c20de09ed72244738ada7681858d873718b",
+          "after": "ebc5da6eb8e20fa7ff262b62eedd711560ccd8d6b3f7658510b331b4fcdfb1cd"
+        }
+      },
+      "depends_on": {
+        "tests/src/test/java/FoodChainTest.java": "25e76817da61179b1fbbef4ff4a745718bce5829002682127e7d1dfc116ad07d",
+        "environment/workspace/src/main/java/FoodChain.java": "4cae1f9adaa789669e7389f34a88b706f0904f3d27b163685ae73b4c03b98763"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 7e0611e7 the tests expect no trailing newline and an empty line between verses, which the instruction does not state; in our runs the same solution scores 0 of 10 with a trailing newline and 10 of 10 without, as the patched instruction states. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
+        }
+      }
     }
   ]
 }
