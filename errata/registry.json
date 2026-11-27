@@ -508,6 +508,106 @@
           "summary": "At 5399ea1 the instruction gives no logarithm base (line 46) and no draw order (line 65), and the stored expected values of steps 76.2 and 76.4 depend on them; after the patch the instruction states the three conventions while the tests and expected values are unchanged. In our runs, single-convention variants of one solution located exactly these three."
         }
       }
+    },
+    {
+      "id": "harbor-index-sldbench-discover-vocab-scaling-law-r1",
+      "benchmark": "harbor-index",
+      "task_id": "sldbench-discover-vocab-scaling-law",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/harbor-framework/harbor-index",
+        "revision": "5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+        "materializer": "tasks/sldbench-discover-vocab-scaling-law/ at this commit, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "harbor-index: no license file",
+          "SLDBench dataset pkuHaowei/sldbench: see its dataset card"
+        ],
+        "redistribution": "unspecified",
+        "basis": [
+          "https://github.com/harbor-framework/harbor-index/tree/5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+          "https://huggingface.co/datasets/pkuHaowei/sldbench"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "The repository grants no license, so the task files are not published. The patch is published because it is the change already proposed in public upstream (harbor-framework/harbor-index#157 and #158); it carries no data, expected answer or test content."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The grader passes a law only at R² above 0.990 on hidden data, a bar the instruction never states; and the image build caches every split of the dataset, so the hidden test split ships in the agent's environment. Both are fixed together.",
+        "evidence": [
+          {
+            "path": "tests/test.sh",
+            "lines": "40",
+            "fact": "THRESHOLD=0.990"
+          },
+          {
+            "path": "tests/test_outputs.py",
+            "lines": "88-90",
+            "fact": "R² = 1 - NMSE over the hidden points"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "35",
+            "fact": "says only that the law is tested on a hidden dataset for extrapolation"
+          },
+          {
+            "path": "environment/Dockerfile",
+            "lines": "9",
+            "fact": "load_dataset(...)['train'] downloads and caches every split, including the verifier's test split"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/harbor-framework/harbor-index/pull/158",
+          "https://github.com/harbor-framework/harbor-index/pull/157",
+          "https://github.com/harbor-framework/adapters/pull/134"
+        ]
+      },
+      "patch": {
+        "path": "patches/harbor-index/sldbench-discover-vocab-scaling-law/harbor-index-sldbench-discover-vocab-scaling-law-r1.patch",
+        "sha256": "4d81593955d5147cd0e0a2b769ed179859b4d9b7b4b8d226f0c02eed400f42e7",
+        "origin": "harbor-framework/harbor-index#158 at 39232b2322782027803dc628f481f90c3e768b6b (instruction.md, README.md) and #157 at 37c1465e96235625f4cd7ca6e43268cf9ac1a5d8 (environment/Dockerfile), applied to the task directory."
+      },
+      "files": {
+        "README.md": {
+          "before": "2020331a75bb6d891a978fa97730d6e36569019a18650124f21790d52e3e9073",
+          "after": "e48d942480fca30fe03b5f45abf428da4ff3584fa1c887c62e35bf4579c94a49"
+        },
+        "environment/Dockerfile": {
+          "before": "98a7a4dbd3f08b70845835348ec6cea69a2fd5a4ff68080e3f9cd686c0ac89bc",
+          "after": "9dc2e46f779a2cb16dc23004a369695586ad46d4c3acb836f795abfd0472ef1f"
+        },
+        "instruction.md": {
+          "before": "74e02f533f714b48a888f4ae27c00784aa2871c5fd1de4170fdafc2bf9a34968",
+          "after": "be2b6f938e081b52285bb5d4302c0d360437d4bf01d0839a59c70e0129f14a23"
+        }
+      },
+      "depends_on": {
+        "tests/test.sh": "e5df42760f0bf2cd43baaaae888c7c6647676227e12dd3a98a45e68bb6c9c694",
+        "tests/test_outputs.py": "548bc94b39f2b6f7c3cc5199d97410c54dc358e14c4d18e380d15626ae116e72"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1,
+            1
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0,
+            0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 5399ea1 the bar R² > 0.990 appears only in tests/test.sh:40; after the patch the instruction states the metric and the bar. The upstream image keeps the verifier's test split in /root/.cache/huggingface (2 cached test-split files) and the patched image keeps none, with /app/data unchanged."
+        }
+      }
     }
   ]
 }
