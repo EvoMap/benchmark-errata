@@ -1667,6 +1667,92 @@
           "summary": "At 7e0611e7, tests/two-bucket.spec.js:81, 85 and 101 require the constructor to throw for an unreachable goal and the instruction never mentions one; after the patch the instruction states it and the tests accept the error from the constructor or from solve(). In our runs, solutions that raise in solve() fail upstream and pass patched. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
         }
       }
+    },
+    {
+      "id": "aider-polyglot-java-all-your-base-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_java_all-your-base",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for java/exercises/practice/all-your-base"
+      },
+      "license": {
+        "upstream": [
+          "Exercism Java track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/java/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the Java track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "Eight tests assert exact IllegalArgumentException messages, and others require an empty digit array to convert to [0] and leading zeros to be accepted; the instruction and the stub state none of this.",
+        "evidence": [
+          {
+            "path": "tests/src/test/java/BaseConverterTest.java",
+            "lines": "121, 129, 137, 145, 153, 164, 174, 184",
+            "fact": "withMessage(...) with exact texts"
+          },
+          {
+            "path": "tests/src/test/java/BaseConverterTest.java",
+            "lines": "83, 101",
+            "fact": "empty input and leading zeros"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "1-42",
+            "fact": "no invalid input, exception, message, empty input or leading zeros"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/Aider-AI/polyglot-benchmark/pull/26"
+        ]
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_java_all-your-base/aider-polyglot-java-all-your-base-r1.patch",
+        "sha256": "b5c55768e572fbd61df07eaff5121f39255d98749f0c77857e21bdaba23eba3b",
+        "origin": "The all-your-base part of Aider-AI/polyglot-benchmark#26 at f192eeb1ea35f24b0db3e29c9b4a7c1f1148f8c9, materialized by the same adapter."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "328a0752149b87f1974b444c5d61ea47275b29e784f9e0ffa6ccc6aadd54aae0",
+          "after": "bab608b384fd7381b7568c638a0d025515f687fac159816a1b751a275fe59da4"
+        }
+      },
+      "depends_on": {
+        "tests/src/test/java/BaseConverterTest.java": "1c0205b27ad44733bc30a5c94eecef65a904961004629ac7703be3288ffcf76e",
+        "environment/workspace/src/main/java/BaseConverter.java": "fe366c96669a1ad0267b44d19982dc57d7abac0ba78bde26cc0ad11f3d8b0184"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 7e0611e7 eight tests assert exact exception messages and two require empty-input and leading-zero handling that neither the instruction nor the stub states; after the patch the instruction states them. In our runs, solutions written to the patched instruction score full marks. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
+        }
+      }
     }
   ]
 }
