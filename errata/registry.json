@@ -786,6 +786,82 @@
           "summary": "At 5399ea1 the FAIL_TO_PASS test pins bare text nodes for Literal values; after the patch it checks the two requirements the instruction states. In our runs, a patch with the node type Sphinx itself later used scores 0 upstream and 1 patched, while the gold patch scores 1 and the empty patch 0 on both."
         }
       }
+    },
+    {
+      "id": "harbor-index-swebenchverified-fix-span-selector-axes-limits-r1",
+      "benchmark": "harbor-index",
+      "task_id": "swebenchverified-fix-span-selector-axes-limits",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/harbor-framework/harbor-index",
+        "revision": "5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+        "materializer": "tasks/swebenchverified-fix-span-selector-axes-limits/ at this commit, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "harbor-index: no license file",
+          "SWE-bench Verified: MIT",
+          "matplotlib: matplotlib license"
+        ],
+        "redistribution": "unspecified",
+        "basis": [
+          "https://github.com/harbor-framework/harbor-index/tree/5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+          "https://github.com/SWE-bench/SWE-bench/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "The repository grants no license, so the task files are not published. The patch is published because it is the change already proposed in public upstream (harbor-framework/harbor-index#152); it carries no data, expected answer or test content."
+      },
+      "defect": {
+        "class": "image_residue",
+        "summary": "The image build leaves pip's HTTP cache in /root/.cache/pip, and one cached body is a later matplotlib wheel that already contains this instance's fix and its test, readable without network access.",
+        "evidence": [
+          {
+            "path": "environment/Dockerfile",
+            "lines": "226",
+            "fact": "pip installs the project and its build requirements with the HTTP cache on; no later step clears /root/.cache/pip"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/harbor-framework/harbor-index/issues/152"
+        ]
+      },
+      "patch": {
+        "path": "patches/harbor-index/swebenchverified-fix-span-selector-axes-limits/harbor-index-swebenchverified-fix-span-selector-axes-limits-r1.patch",
+        "sha256": "252bf2329adcf6744d0002f18ad11b2b99d2ee8f93569616f499280dea04887e",
+        "origin": "Written for this erratum: the fix harbor-framework/harbor-index#152 proposes, a final RUN that removes /root/.cache/pip."
+      },
+      "files": {
+        "environment/Dockerfile": {
+          "before": "303b76e626d25b4330cfe754b4a2ee88ab05c106dec1f784b5208aa2db28e4b5",
+          "after": "9e2c23c9f0d1a60f520e6b62a8282c46495f2564f64e5d5fd571d4a143a427c6"
+        }
+      },
+      "depends_on": {
+        "tests/config.json": "cca29e7fc12f13fff3ead0eb79ebc2c8f3c6a648380d5019e6175d702935bedb",
+        "tests/test.sh": "c4684f96fb667022f4e32ac4cee78b00ff28d2f86d0a87b68f39734585ce85cd"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "The upstream image (built from the upstream Dockerfile) holds a matplotlib 3.7.5 wheel in /root/.cache/pip; the patched image holds no matplotlib wheel there."
+        }
+      }
     }
   ]
 }
