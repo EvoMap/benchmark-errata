@@ -1227,6 +1227,96 @@
           "summary": "At 62dc0745 the test also requires 400 for an over-limit request body and the log parser reads summary counts as tests; the corrected row at b0c7fbf2 drops both. microsoft/SWE-bench-Live#116 verified the corrected row with evaluation/evaluation.py: the gold patch is resolved and the no-op is not on both rows, and a patch written to the statement alone is not resolved on the original row and is resolved on the corrected one."
         }
       }
+    },
+    {
+      "id": "swe-live-colbymchenry__codegraph-454-r1",
+      "benchmark": "swe-bench-live-multilang",
+      "task_id": "colbymchenry__codegraph-454",
+      "status": "upstream_fixed",
+      "source": {
+        "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+        "revision": "62dc0745c40f067fc366ae3eb1a26136e5928f85",
+        "materializer": "A SWE-bench-Live MultiLang adapter derived from the swebench_multilingual Harbor adapter, split c, source language c; it builds the task image from the row's eval image, removes the project's future and its published releases from package caches, and renders tests/test.sh from the row"
+      },
+      "license": {
+        "upstream": [
+          "SWE-bench-Live MultiLang dataset: MIT",
+          "microsoft/SWE-bench-Live: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+          "https://github.com/microsoft/SWE-bench-Live/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "MIT allows redistribution, but the patch rewrites tests/config.json and tests/test.sh, which hold the hidden test patch and the reference patch; this repository publishes neither, so the patch is kept outside it and the record keeps its SHA256 and its construction."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The test looks the out-of-line C++ definitions up as nodes of kind method, a modelling choice the instruction does not ask for; the instruction asks only for the callers output.",
+        "evidence": [
+          {
+            "path": "tests/config.json",
+            "lines": "10 (test_patch, decoded lines 39, 48, 93, 96)",
+            "fact": "getNodesByKind('method') to find the out-of-line definitions"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "7, 10",
+            "fact": "asks that `codegraph callers` lists the two methods"
+          }
+        ]
+      },
+      "answer_review": "Upstream's corrected row: the test looks the definition up among method and function nodes. No expected answer is added and the gold patch is unchanged.",
+      "upstream": {
+        "reports": [
+          "https://github.com/microsoft/SWE-bench-Live/issues/116"
+        ],
+        "fixed_in": {
+          "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang/commit/b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2",
+          "revision": "b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2"
+        }
+      },
+      "patch": {
+        "storage": "external",
+        "sha256": "f85aba1b6769f78a25e76031793f4ea402547ba9a857bd2662255f61945d03b1",
+        "origin": "tests/config.json and tests/test.sh as the same materializer writes them from this row at b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2 (SWE-bench-Live/MultiLang 'Fix issues', 2026-11-24), which corrects the row as proposed in microsoft/SWE-bench-Live#116; instruction.md is unchanged at that revision.",
+        "construction": "Materialize the task at source.revision and at upstream.fixed_in.revision with source.materializer; copy tests/config.json and tests/test.sh of the second into the first; the patch is `git diff --no-index --no-renames --src-prefix= --dst-prefix= a b` between the two task directories (a: upstream, b: with the two files replaced)."
+      },
+      "files": {
+        "tests/config.json": {
+          "before": "8163bf7df9d3c4ded7056f2498120f3b8304dffbfd7e1f814d97e66121d55385",
+          "after": "f9b7ce4077a2ee9cd1fb172b3fd1f5b27036c0bde78ab4d45ceaacdb29611fc4"
+        },
+        "tests/test.sh": {
+          "before": "6ede962351944f08c2094575bc444e593f33a855351e25bf2992139ef2a5b4d8",
+          "after": "b052677a7516b3f0b4769a05684bf12150fa8992b2214216dd649013c046da7f"
+        }
+      },
+      "depends_on": {
+        "instruction.md": "efe6d61f7762ee1de5b5dc49ae402e0663d1106741ee11ade1afe95eca48f56b",
+        "solution/solve.sh": "60484699b0d8a68eb3f1e73ca2c483791872a2bbb2ca28264263deababe30e88"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 62dc0745 the test finds the out-of-line definitions only among method nodes; the corrected row at b0c7fbf2 looks among method and function nodes. microsoft/SWE-bench-Live#116 verified the corrected row with evaluation/evaluation.py: the gold patch is resolved and the no-op is not on both rows, and a patch written to the statement alone is not resolved on the original row and is resolved on the corrected one."
+        }
+      }
     }
   ]
 }
