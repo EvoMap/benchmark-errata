@@ -1132,6 +1132,101 @@
           "summary": "At 62dc0745 the test reads the tool's pre-encode dump rather than the written file; the corrected row at b0c7fbf2 checks the file with avifdec --info. microsoft/SWE-bench-Live#116 verified the corrected row with evaluation/evaluation.py: the gold patch is resolved and the no-op is not on both rows, and a patch written to the statement alone is not resolved on the original row and is resolved on the corrected one."
         }
       }
+    },
+    {
+      "id": "swe-live-varnishcache__varnish-cache-4370-r1",
+      "benchmark": "swe-bench-live-multilang",
+      "task_id": "varnishcache__varnish-cache-4370",
+      "status": "upstream_fixed",
+      "source": {
+        "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+        "revision": "62dc0745c40f067fc366ae3eb1a26136e5928f85",
+        "materializer": "A SWE-bench-Live MultiLang adapter derived from the swebench_multilingual Harbor adapter, split c, source language c; it builds the task image from the row's eval image, removes the project's future and its published releases from package caches, and renders tests/test.sh from the row"
+      },
+      "license": {
+        "upstream": [
+          "SWE-bench-Live MultiLang dataset: MIT",
+          "microsoft/SWE-bench-Live: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+          "https://github.com/microsoft/SWE-bench-Live/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "MIT allows redistribution, but the patch rewrites tests/config.json and tests/test.sh, which hold the hidden test patch and the reference patch; this repository publishes neither, so the patch is kept outside it and the record keeps its SHA256 and its construction."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The test also changes the handling of a request body over the std.cache_req_body() limit to a 400 response, which the instruction does not ask for; the row's log parser also reads automake summary counts as test names.",
+        "evidence": [
+          {
+            "path": "tests/config.json",
+            "lines": "10 (test_patch, decoded lines 1-23)",
+            "fact": "the c00055 and c00067 hunks require 400 for an over-limit body"
+          },
+          {
+            "path": "tests/config.json",
+            "lines": "29 (log_parser)",
+            "fact": "summary lines are parsed as test results"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "7, 10",
+            "fact": "asks only that a bad chunked body gets 400 instead of 503"
+          }
+        ]
+      },
+      "answer_review": "Upstream's corrected row: it drops the c00055 and c00067 hunks and those two tests from FAIL_TO_PASS, and stops parsing summary counts as tests. No expected answer is added and the gold patch is unchanged.",
+      "upstream": {
+        "reports": [
+          "https://github.com/microsoft/SWE-bench-Live/issues/116"
+        ],
+        "fixed_in": {
+          "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang/commit/b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2",
+          "revision": "b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2"
+        }
+      },
+      "patch": {
+        "storage": "external",
+        "sha256": "ce855e21f2a103f1e46219bde0c6828a113ac206875f51cdc8ae2f9b68ce2cfb",
+        "origin": "tests/config.json and tests/test.sh as the same materializer writes them from this row at b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2 (SWE-bench-Live/MultiLang 'Fix issues', 2026-11-24), which corrects the row as proposed in microsoft/SWE-bench-Live#116; instruction.md is unchanged at that revision.",
+        "construction": "Materialize the task at source.revision and at upstream.fixed_in.revision with source.materializer; copy tests/config.json and tests/test.sh of the second into the first; the patch is `git diff --no-index --no-renames --src-prefix= --dst-prefix= a b` between the two task directories (a: upstream, b: with the two files replaced)."
+      },
+      "files": {
+        "tests/config.json": {
+          "before": "78833ab30b894c4f94e0841690d851a5bbcc8f37a5fbf0dd16a893a88f632116",
+          "after": "f6fdb557e0f12d1dc00e3677a77039fdda8c1c1ba35dde62694e6d9400c22294"
+        },
+        "tests/test.sh": {
+          "before": "ff116688b040344e65289c24624b4a97dadace7f519e09b060d849afaae81091",
+          "after": "017bb576591e6e6b84132475ae7db3292426c5bf44c7e7ce3fdb5be2b21fd9d6"
+        }
+      },
+      "depends_on": {
+        "instruction.md": "4f0bd203991d72698d37d71c064de6c4d6b5d8777a3ba1e7561ee1cfd21ee48c",
+        "solution/solve.sh": "6d74eba441ca2b76ae72b44778dbbd56a4d91fa531d82af40a7e5af19b0ca8ac"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 62dc0745 the test also requires 400 for an over-limit request body and the log parser reads summary counts as tests; the corrected row at b0c7fbf2 drops both. microsoft/SWE-bench-Live#116 verified the corrected row with evaluation/evaluation.py: the gold patch is resolved and the no-op is not on both rows, and a patch written to the statement alone is not resolved on the original row and is resolved on the corrected one."
+        }
+      }
     }
   ]
 }
