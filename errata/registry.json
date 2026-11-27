@@ -2990,6 +2990,93 @@
           "summary": "At 5399ea1 the grader copies only /app/solver.py (task.toml:4, 18) and passes at most 1.05x the time of its own solution (tests/test.sh:33-40), while the instruction asks for 2.50x over the reference and says nothing about the other files; after the patch the instruction states both. In our runs, solvers that load a helper they built next to solver.py fall back to slow code when graded and pass once the helper is present."
         }
       }
+    },
+    {
+      "id": "harbor-index-algotune-optimize-matrix-sqrt-r1",
+      "benchmark": "harbor-index",
+      "task_id": "algotune-optimize-matrix-sqrt",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/harbor-framework/harbor-index",
+        "revision": "5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+        "materializer": "tasks/algotune-optimize-matrix-sqrt/ at this commit, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "harbor-index: no license file",
+          "AlgoTune: see its repository"
+        ],
+        "redistribution": "unspecified",
+        "basis": [
+          "https://github.com/harbor-framework/harbor-index/tree/5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+          "https://github.com/oripress/AlgoTune"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "The repository grants no license, so the task files are not published. The patch changes only instruction.md, but no matching change has been proposed upstream yet, so it stays out of this repository until it is; the record keeps its SHA256 and its construction."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The grader times a solver against its own optimized solution, which returns a NumPy array that the harness converts inside the timed window, and passes at most 1.05x that time; the instruction requires X as a list and states a 1.01x bar over the reference, so a solver that follows it pays an extra conversion right at the margin.",
+        "evidence": [
+          {
+            "path": "tests/test_outputs.py",
+            "lines": "110, 113, 172-184, 218-219",
+            "fact": "RATIO_THRESHOLD = 1/1.05; the returned X is converted to a list inside the timed window"
+          },
+          {
+            "path": "tests/oracle_solver.py",
+            "lines": "12-13, 44",
+            "fact": "the grader's own solution returns X as an ndarray and leaves the conversion to the timed harness"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "12, 80, 142-144",
+            "fact": "a 1.01x bar over the reference; the reference and is_solution use a list"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [],
+        "not_reported": "Not reported yet; an issue for harbor-framework/harbor-index is drafted."
+      },
+      "patch": {
+        "storage": "external",
+        "sha256": "36e4d434edcd1f9640be969aa309654a6b5c7646a368a00c7d16235f41ecbe0e",
+        "origin": "Written for this erratum: line 12 of instruction.md states the bar the grader applies and that only /app/solver.py reaches the grading environment, and that X may be returned as a NumPy array.",
+        "construction": "In instruction.md, replace line 12 (\"Your solver's total runtime across the benchmark must be more than ...\") with: \"Your solver's total runtime across the benchmark must be at most **1.05x** that of the optimized solver the grader compares against (the grader's own solution, not the reference implementation below) to pass.\" followed by \" Timing includes the harness converting your returned `X` to a built-in list before `is_solution` runs, so you may return `X` as a NumPy array; it does not have to be a list.\", then an empty line and: \"Only `/app/solver.py` is copied into the separate grading environment (same Python packages and compilers). Any other file you create under `/app` (C/C++/Cython sources, compiled extensions, helper modules, build scripts) will not exist there, so `solver.py` must be self-contained; building an extension in `__init__` from source embedded in `solver.py` is fine.\" The patch is that diff of instruction.md."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "05db20eecd0a454bf2fbc5840671d381bf7c8c8574d32f749c4ef70c22aed2ac",
+          "after": "9d7dde99ec6452a38679c0462e44d7088df7ae62ceaa607de059031f78aeece9"
+        }
+      },
+      "depends_on": {
+        "task.toml": "61d5ecbccf9a7c628bbf70946083ba57045c8169ac2e8e7d0c0a56d8aff89a8e",
+        "tests/test.sh": "7f1eec95c08570993e9264671f981e709627cbb44adb21875e2b11067c646fdf",
+        "tests/test_outputs.py": "ea482adbe807cd3754fd68036c1ee39ad1dbdd8a655538a0a5f9ba8c291ac116",
+        "tests/oracle_solver.py": "074998580984446bc3cdbd737737825e192279da8e0ba09ddf0781ad1cf39bab"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1,
+            1
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0,
+            0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 5399ea1 the grader's own solution returns an ndarray that the harness converts to a list inside the timed window, and a solver must stay within 1.05x of it, while the instruction requires a list and states a 1.01x bar over the reference; after the patch the instruction states the bar and that an ndarray may be returned. In our runs, changing only the returned list to an array turned most failing solvers within the margin into passes."
+        }
+      }
     }
   ]
 }
