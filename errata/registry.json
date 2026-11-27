@@ -340,6 +340,84 @@
           "summary": "At f2e8c75e, tests/test_outputs.py:50 calls ars(density, domain, n = count) and instruction.md line 19 gives no signature; after the patch line 19 states it, as in Terminal-Bench 2.1, whose tests/test_outputs.py is byte-identical."
         }
       }
+    },
+    {
+      "id": "tb2-raman-fitting-r1",
+      "benchmark": "terminal-bench-2.0",
+      "task_id": "raman-fitting",
+      "status": "active",
+      "source": {
+        "url": "https://huggingface.co/datasets/harborframework/terminal-bench-2.0",
+        "revision": "f2e8c75e23add71613117eecc9498f53bcd7e04e",
+        "materializer": "The dataset's raman-fitting/ directory, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "Apache-2.0"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/harborframework/terminal-bench-2.0",
+          "https://github.com/harbor-framework/terminal-bench-2/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "Apache-2.0 allows redistribution and modification. Only the patch is published: the task directory also carries the reference solution, which stays out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The grader accepts the 2D peak only when its fitted offset lies within 10% of the value one symmetric fit window gives, but the instruction names neither the fit window nor the background model, so a correct Lorentzian fit over another window scores 0.",
+        "evidence": [
+          {
+            "path": "tests/test_outputs.py",
+            "lines": "52, 63",
+            "fact": "the 2D peak's offset must be within 10% of a fixed expected value"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "1-18",
+            "fact": "asks for Lorentzian fits of the G and 2D peaks; no fit window, no background model"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/harbor-framework/terminal-bench-2-1/pull/259"
+        ]
+      },
+      "patch": {
+        "path": "patches/terminal-bench-2.0/raman-fitting/tb2-raman-fitting-r1.patch",
+        "sha256": "6b76f528afb45a681b0fb2bef748f0fd7d0ac5927c118f5a117614b5027e269d",
+        "origin": "harbor-framework/terminal-bench-2-1#259 at 3dd6db78848b2b3c76a260a527b7926df183730b, applied to the task directory."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "1fa59a89d88daf6a4b2d422955f53779b461880b527f40d79c71b16e0ee52433",
+          "after": "d984bc8c0be9e9fd6e17ffbb62086dc08bc2b14146b97f3a3cb9e89e7dc614e8"
+        }
+      },
+      "depends_on": {
+        "tests/test_outputs.py": "171fae772ccf262aec8ddac5bd2c6c731eed842421f5d8439a330b158c9f8c13"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At f2e8c75e the expected 2D-peak offset (tests/test_outputs.py:52, 63) is reached only with a symmetric fit window of roughly ±120 to ±190 cm^-1 and the instruction names no window or background; after the patch it states the model and both windows. In our runs, failing submissions reported the offsets that other windows give."
+        }
+      }
     }
   ]
 }
