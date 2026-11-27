@@ -1483,6 +1483,105 @@
           "summary": "At 62dc0745, and unchanged at b0c7fbf2, the type-check that precedes every test checks web/lib/workspace-status.ts, which the instruction does not mention; the patched instruction states the constraints. microsoft/SWE-bench-Live#116 verified the corrected row with evaluation/evaluation.py: the gold patch is resolved and the no-op is not on both rows, and a patch written to the statement alone is not resolved on the original row and is resolved on the corrected one."
         }
       }
+    },
+    {
+      "id": "swe-live-yvgude__lean-ctx-1164-r1",
+      "benchmark": "swe-bench-live-multilang",
+      "task_id": "yvgude__lean-ctx-1164",
+      "status": "active",
+      "source": {
+        "url": "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+        "revision": "b0c7fbf2a4b5c67823518c9a249cbdc4d61d67f2",
+        "materializer": "A SWE-bench-Live MultiLang adapter derived from the swebench_multilingual Harbor adapter, split rust, source language rust; it builds the task image from the row's eval image, removes the project's future and its published releases from package caches, and renders tests/test.sh from the row"
+      },
+      "license": {
+        "upstream": [
+          "SWE-bench-Live MultiLang dataset: MIT",
+          "microsoft/SWE-bench-Live: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/SWE-bench-Live/MultiLang",
+          "https://github.com/microsoft/SWE-bench-Live/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "MIT allows redistribution, but the patch rewrites tests/config.json and tests/test.sh, which hold the hidden test patch and the reference patch; this repository publishes neither, so the patch is kept outside it and the record keeps its SHA256 and its construction."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The new test calls three names only the reference patch defines and expects HTTP 402, none of which the instruction gives; in Rust one unresolved name stops the whole --lib test target from compiling, and all 8,560 tests are FAIL_TO_PASS, so any other naming scores 0. The test command also sends stderr to a file named 1, so the compile error never reaches the log.",
+        "evidence": [
+          {
+            "path": "tests/config.json",
+            "lines": "10 (test_patch, decoded lines 13, 22, 24, 26)",
+            "fact": "uses OCLA_BUDGET_SCOPE_HEADER, set_test_budget_limit, apply_ocla_budget_admission and StatusCode::PAYMENT_REQUIRED"
+          },
+          {
+            "path": "tests/config.json",
+            "lines": "29 (FAIL_TO_PASS)",
+            "fact": "8,560 tests, PASS_TO_PASS empty"
+          },
+          {
+            "path": "tests/config.json",
+            "lines": "22 (test_cmds)",
+            "fact": "cargo test ... 2>1 | tee test-output.log"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "1-30",
+            "fact": "no interface names and no status code for the budget rejection"
+          }
+        ]
+      },
+      "answer_review": "The patch keeps the new test as the only FAIL_TO_PASS and moves the other 8,559 names to PASS_TO_PASS (they pass at the base commit and with the gold patch), and corrects 2>1 to 2>&1 in test_cmds. No test, expected value or gold-patch content is added; the interface sentence in instruction.md names what the tests call.",
+      "upstream": {
+        "reports": [
+          "https://github.com/microsoft/SWE-bench-Live/issues/118"
+        ]
+      },
+      "patch": {
+        "storage": "external",
+        "sha256": "04ad4ec162c3dae6c17dc68eebf04f46918ac88fb5c957c278535df574325592",
+        "origin": "The three changes proposed in microsoft/SWE-bench-Live#118 section 4, rendered by the same materializer.",
+        "construction": "In the row, append the interface sentence of microsoft/SWE-bench-Live#118 section 4 to problem_statement, set FAIL_TO_PASS to ['proxy::forward::tests::ocla_budget_admission_rejects_over_limit_scope'] and PASS_TO_PASS to the other 8,559 FAIL_TO_PASS names in their order, replace ' 2>1 ' with ' 2>&1 ' in test_cmds, and materialize the task with source.materializer; the patch is the diff against the upstream task (`git diff --no-index --no-renames --src-prefix= --dst-prefix= a b`)."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "b8dcb6d0856c930ce87c02094bbb8775eb4cb3b4763070eab809861a95a80cd4",
+          "after": "1d9bbc1be342c5637182a52a48fb1e1375c55cba37d28b75f2de0ed6069d630c"
+        },
+        "tests/config.json": {
+          "before": "f89e243222f4f1a15e4f24ba83a493f0730fc833ded44a626ce23aa522060c5e",
+          "after": "560863ba81088eda9d3738de260f92f8ed2edff6832dbe4974d3e35443af9396"
+        },
+        "tests/test.sh": {
+          "before": "509e8e7ff45e58d46e05fe83716a1a74e1800f80a7bd1118a7b03e11691e7b13",
+          "after": "abbd8cba1d9302fd4da1899a0c4bb22c80158a30bbe4266b9e201e8c7be87275"
+        }
+      },
+      "depends_on": {
+        "solution/solve.sh": "bf474734c762de7036dc6c3bbcd97653f082343ac3cbeb3c6b9189fa73acb432"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "In our runs with the dataset's evaluation scripts at b0c7fbf2, the gold patch with its three names renamed fails all 8,560 FAIL_TO_PASS tests and the compile error never reaches the log; with test_cmds corrected the error is in the log. The patched row keeps the new test as its only FAIL_TO_PASS and the instruction names the interface it calls."
+        }
+      }
     }
   ]
 }
