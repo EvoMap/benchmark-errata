@@ -2246,6 +2246,87 @@
           "summary": "At 7e0611e7 the tests expect a list of line strings with an empty string between verses and neither the instruction nor the stub gives the return format; after the patch the instruction states it. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
         }
       }
+    },
+    {
+      "id": "aider-polyglot-java-wordy-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_java_wordy",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for java/exercises/practice/wordy"
+      },
+      "license": {
+        "upstream": [
+          "Exercism Java track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/java/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the Java track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The tests assert the exact IllegalArgumentException message for unsupported questions; neither the instruction nor the stub gives the text.",
+        "evidence": [
+          {
+            "path": "tests/src/test/java/WordProblemSolverTest.java",
+            "lines": "105-146",
+            "fact": "withMessage(\"I'm sorry, I don't understand the question!\")"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "1-64",
+            "fact": "no error message"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [
+          "https://github.com/Aider-AI/polyglot-benchmark/pull/26"
+        ]
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_java_wordy/aider-polyglot-java-wordy-r1.patch",
+        "sha256": "1e245c2a8e4633fae289c1e4dca7d204e365e3e7f32db69c81070e14e441440d",
+        "origin": "The wordy part of Aider-AI/polyglot-benchmark#26 at f192eeb1ea35f24b0db3e29c9b4a7c1f1148f8c9, materialized by the same adapter."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "669a97c9f51724fabd22c29e49c85d41ca50258d09fb4f783aeb8f694133cea5",
+          "after": "603918d49a28d07381544ec69f3c905540b48b127405e2f0e7f5e902f818f722"
+        }
+      },
+      "depends_on": {
+        "tests/src/test/java/WordProblemSolverTest.java": "6df60c274c378f5b5ff9c8a442fc1cd6ec889865405014bdd491f191c9ee93d6",
+        "environment/workspace/src/main/java/WordProblemSolver.java": "23b0da8507b7750e427287cf9cf972cb554575541eba5ff88458d31d9afda5bc"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 7e0611e7 the tests assert an exact exception message that neither the instruction nor the stub gives; after the patch the instruction states it. The gates pass as well with an aider adapter that runs every C++ case and puts the editor helper files in the workspace (ports of harbor-framework/adapters#42 and #133)."
+        }
+      }
     }
   ]
 }
