@@ -784,7 +784,7 @@
       "id": "harbor-index-swebenchverified-fix-sphinx-literal-nitpick-r1",
       "benchmark": "harbor-index",
       "task_id": "swebenchverified-fix-sphinx-literal-nitpick",
-      "status": "active",
+      "status": "retired",
       "source": {
         "url": "https://github.com/harbor-framework/harbor-index",
         "revision": "5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
@@ -866,6 +866,112 @@
         "date": "2026-11-28",
         "witness": {
           "summary": "At 5399ea1 the FAIL_TO_PASS test pins bare text nodes for Literal values; after the patch it checks the two requirements the instruction states. In our runs, a patch with the node type Sphinx itself later used scores 0 upstream and 1 patched, while the gold patch scores 1 and the empty patch 0 on both."
+        }
+      },
+      "retired": {
+        "date": "2026-11-29",
+        "reason": "Superseded by harbor-index-swebenchverified-fix-sphinx-literal-nitpick-r2, which keeps this fix and also makes tests/test.sh wait for its tee process before parsing the log."
+      }
+    },
+    {
+      "id": "harbor-index-swebenchverified-fix-sphinx-literal-nitpick-r2",
+      "benchmark": "harbor-index",
+      "task_id": "swebenchverified-fix-sphinx-literal-nitpick",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/harbor-framework/harbor-index",
+        "revision": "5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+        "materializer": "tasks/swebenchverified-fix-sphinx-literal-nitpick/ at this commit, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "harbor-index: no license file",
+          "SWE-bench Verified: MIT",
+          "Sphinx: BSD-2-Clause"
+        ],
+        "redistribution": "unspecified",
+        "basis": [
+          "https://github.com/harbor-framework/harbor-index/tree/5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+          "https://github.com/SWE-bench/SWE-bench/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "The repository grants no license, so the task files are not published. The patch changes a line of tests/config.json that holds the hidden test patch, and its context holds the reference patch, so it stays out of this repository; the record keeps its SHA256 and its construction."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The FAIL_TO_PASS test pins the exact node shape of the parsed Literal values (bare text nodes), while the instruction asks only that the values stop producing nitpick warnings; Sphinx's own later fix uses another node type and fails the test. The grader also parses its log before the log is complete: tests/test.sh writes the log through a process substitution (`exec > >(tee \"$LOG_FILE\")`) and runs parser.py right after restoring stdout, without waiting for tee, so the parser can read the log before tee has written the short test summary at its end, the only place this run prints the PASSED lines.",
+        "evidence": [
+          {
+            "path": "tests/config.json",
+            "lines": "5 (test_patch, decoded lines 9-27)",
+            "fact": "assert_node over the full node tuple with bare text values"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "7, 29",
+            "fact": "asks only that Literal values no longer trigger nitpick warnings"
+          },
+          {
+            "path": "tests/test.sh",
+            "lines": "96-107",
+            "fact": "LOG_FILE is filled by `tee` in a process substitution; after `exec 1>&3 2>&4` the script runs `python /tests/parser.py` with no wait for that tee process"
+          },
+          {
+            "path": "tests/parser.py",
+            "lines": "61-62, 84",
+            "fact": "reads LOG_FILE once; a log without the summary lines parses to no tests, so FAIL_TO_PASS is MISSING and the task scores 0"
+          }
+        ]
+      },
+      "answer_review": "The patch replaces the node-shape assertions in test_patch with the two requirements the instruction states (the values are not cross-references, the rendered text is unchanged) and updates README.md. FAIL_TO_PASS and PASS_TO_PASS names and the gold patch are unchanged; no expected value is added. The tests/test.sh change only records the tee process id and waits for it before the parser runs; it adds no test, no expected value and no ground truth.",
+      "upstream": {
+        "reports": [
+          "https://github.com/harbor-framework/harbor-index/pull/154",
+          "https://github.com/SWE-bench/SWE-bench/issues/727"
+        ]
+      },
+      "patch": {
+        "storage": "external",
+        "sha256": "c39eec90221370aefa42931909a5606942f360eb6771b84e5141a2cac847d18b",
+        "origin": "The swebenchverified-fix-sphinx-literal-nitpick part of harbor-framework/harbor-index#154 at 3a320095855cdebe6d936ab224495bcf7d1dde62. The tests/test.sh hunk is ours (2026-11-29).",
+        "construction": "Apply the tasks/swebenchverified-fix-sphinx-literal-nitpick/ hunks of harbor-framework/harbor-index#154 (head 3a320095) to the task directory with `git apply -p3`; that diff is the patch. Then, in tests/test.sh, add `TEE_PID=$!` after the line `exec > >(tee \"$LOG_FILE\") 2>&1` and `wait \"$TEE_PID\"` after the line `exec 1>&3 2>&4`; the diff of the three files against the task directory at the revision is the patch."
+      },
+      "files": {
+        "README.md": {
+          "before": "086c06af2ba8a08711936a4e56aebac5d4c6281a247a1059aeff89f317bf9a9c",
+          "after": "9f6a4ee0919ce8f5de48e40e6fefbad46e02cdc50b5e603f8612289237ed4c22"
+        },
+        "tests/config.json": {
+          "before": "74bd969069d7d9b757865156aa4a703596bf9cfcc586365d8c7c9d024f3e99df",
+          "after": "5776d5f290618591a232db884bacb6717bf3510e57b420eb1913f0f3b72eadec"
+        },
+        "tests/test.sh": {
+          "before": "f69a1fb9d0e43e6f2eaad89383dbd9ddd65f4b69539942c7bdb1b6775c90759e",
+          "after": "09d0ea569fd4b41a1bed27deef6e54eacd050a6c51aabdf71f1e94f8e874c8e3"
+        }
+      },
+      "depends_on": {
+        "instruction.md": "98118cb2ef4a50a43a2db85b3a7dbb00e4296d9d7a986bed5908c4026a9684f2",
+        "tests/parser.py": "2423337127158ebecf104af50ef5c67b9c9a56304389424e54932b869c280b0f"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-29",
+        "witness": {
+          "summary": "Race (tests/test.sh): in four oracle runs of another runner setup on the same host, the 5399ea1 test.sh printed all 46 tests as PASSED, the captured output parses to all 46 with the task's own parser, but the log the parser read parsed to 0 tests and the reward was 0; on this host the same bytes scored 1 twice, so the outcome depends on when tee writes. Replaying a captured output through the test.sh lines with tee started 2 s late: at 5399ea1 the log holds 0 bytes when the parser runs and the result is FAILED (2 of 2); patched, the parser runs after tee has written all 43,002 bytes and the result is PASSED (2 of 2). The instruction-gap part is unchanged from -r1: At 5399ea1 the FAIL_TO_PASS test pins bare text nodes for Literal values; after the patch it checks the two requirements the instruction states. In our runs, a patch with the node type Sphinx itself later used scores 0 upstream and 1 patched, while the gold patch scores 1 and the empty patch 0 on both."
         }
       }
     },
