@@ -49,6 +49,7 @@ Only defects of the task or dataset itself are accepted. A fault of the evaluati
 | `swe-live-xroche__httrack-482-r1` | SWE-bench-Live MultiLang `xroche__httrack-482` | The test bounds the grace period the instruction leaves open | [microsoft/SWE-bench-Live#124](https://github.com/microsoft/SWE-bench-Live/issues/124) | active |
 | `tb2-query-optimize-r1` | Terminal-Bench 2.0 `query-optimize` | The tests require the database file to stay unchanged; the instruction does not say so (stated in Terminal-Bench 2.1) | not needed: [fixed upstream](https://github.com/harbor-framework/terminal-bench-2-1/tree/12b7565679ce5006230b820666353673a133db93/tasks/query-optimize) | upstream_fixed |
 | `aider-polyglot-rust-fizzy-r1` | Aider polyglot `polyglot_rust_fizzy` | The tests pass the element to the matcher by value; the stub gives Matcher::new no bound | not yet | active |
+| `aider-polyglot-python-bottle-song-r1` | Aider polyglot `polyglot_python_bottle-song` | The return format of the verses is not stated | not yet | active |
 
 The records are in [`errata/registry.json`](errata/registry.json) and the patches under [`errata/patches/`](errata/patches/); a record whose patch would carry hidden test content or a reference patch keeps only the patch's SHA256 and construction (`patch.storage: "external"`). Releases are published as the Hugging Face dataset [`mike-7777777/benchmark-errata`](https://huggingface.co/datasets/mike-7777777/benchmark-errata), one tag per version.
 

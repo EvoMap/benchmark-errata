@@ -3072,6 +3072,84 @@
       }
     },
     {
+      "id": "aider-polyglot-python-bottle-song-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_python_bottle-song",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for python/exercises/practice/bottle-song"
+      },
+      "license": {
+        "upstream": [
+          "Exercism Python track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/python/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the Python track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The tests compare recite() with a list of lines, one string per line and an empty string between verses; the instruction gives the lyrics and the stub a bare function, but neither states the return format or what start and take count.",
+        "evidence": [
+          {
+            "path": "tests/bottle_song_test.py",
+            "lines": "49-61",
+            "fact": "expects a list of line strings with \"\" between verses"
+          },
+          {
+            "path": "environment/workspace/bottle_song.py",
+            "lines": "1-2",
+            "fact": "def recite(start, take=1): pass"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [],
+        "not_reported": "Not reported yet; a follow-up to Aider-AI/polyglot-benchmark#26, which fixes the same kind of gap in other exercises."
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_python_bottle-song/aider-polyglot-python-bottle-song-r1.patch",
+        "sha256": "c551ab1f4f4ef0465b78d9ab9ad0be75123e5b1a22545613833d2398c61bdde2",
+        "origin": "Written for this erratum: a .docs/instructions.append.md for the exercise in the style of Aider-AI/polyglot-benchmark#26, materialized by the same adapter."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "c926378e19f65be0e86eb749235ffacacce974d939bae9487bd1cdbef1a350a7",
+          "after": "65abfade7b80b889367985ff7be14398005e44e4e0019e46c9e984c7703fc8cb"
+        }
+      },
+      "depends_on": {
+        "tests/bottle_song_test.py": "c27aadffe3a14df3f04dfa65de1798d1ab7b4bf07126f8978808fbd25302b700",
+        "environment/workspace/bottle_song.py": "942234e1d907d3867f9eee8102573a8c398520a28ad1ca10cd23a0d9247134bc"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 7e0611e7 the tests expect a list of line strings with \"\" between verses and neither the instruction nor the stub gives the return format; after the patch the instruction states it. In our runs, all 8 failing results on this task fail the multi-verse tests."
+        }
+      }
+    },
+    {
       "id": "harbor-index-algotune-simplex-projection-speedup-r1",
       "benchmark": "harbor-index",
       "task_id": "algotune-simplex-projection-speedup",

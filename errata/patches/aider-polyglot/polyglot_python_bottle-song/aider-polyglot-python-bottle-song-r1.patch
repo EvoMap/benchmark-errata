@@ -1,0 +1,20 @@
+diff --git a/instruction.md b/instruction.md
+index c57ca3c..d985a4a 100644
+--- a/instruction.md
++++ b/instruction.md
+@@ -56,6 +56,15 @@ And if one green bottle should accidentally fall,
+ There'll be no green bottles hanging on the wall.
+ ```
+ 
++# Instructions append
++
++## Return value
++
++`recite(start, take=1)` returns `take` verses as a list of strings, one string per line of the song, beginning with the verse that starts with `start` green bottles and counting down by one bottle per verse.
++Consecutive verses are separated by an empty string `""`; there is no empty string before the first verse or after the last one.
++
++For example, `recite(start=4, take=2)` returns nine strings: the four lines of the verse that begins "Four green bottles hanging on the wall,", then `""`, then the four lines of the verse that begins "Three green bottles hanging on the wall,".
++
+ ----
+ Use the instructions above to modify the supplied files: bottle_song.py
+ Don't change the names of existing functions or classes, as they may be referenced from other code like unit tests.
