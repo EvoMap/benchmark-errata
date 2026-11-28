@@ -2625,8 +2625,9 @@
       },
       "answer_review": "The patch changes only which interpreter runs the agent's own script; no expected value, certificate field or check is added or relaxed.",
       "upstream": {
-        "reports": [],
-        "not_reported": "Not reported yet; an issue for harbor-framework/terminal-bench-2-1 (same bytes as 2.0) is drafted."
+        "reports": [
+          "https://github.com/harbor-framework/terminal-bench-2-1/issues/264"
+        ]
       },
       "patch": {
         "path": "patches/terminal-bench-2.0/openssl-selfsigned-cert/tb2-openssl-selfsigned-cert-r1.patch",
@@ -2708,8 +2709,9 @@
         ]
       },
       "upstream": {
-        "reports": [],
-        "not_reported": "Not reported yet; a follow-up to Aider-AI/polyglot-benchmark#26, which fixes the same kind of gap in other exercises, is drafted."
+        "reports": [
+          "https://github.com/Aider-AI/polyglot-benchmark/pull/26#issuecomment-7236899794"
+        ]
       },
       "patch": {
         "path": "patches/aider-polyglot/polyglot_javascript_simple-linked-list/aider-polyglot-javascript-simple-linked-list-r1.patch",
@@ -2786,8 +2788,9 @@
         ]
       },
       "upstream": {
-        "reports": [],
-        "not_reported": "Not reported yet; a follow-up to Aider-AI/polyglot-benchmark#26, which fixes the same kind of gap in other exercises, is drafted."
+        "reports": [
+          "https://github.com/Aider-AI/polyglot-benchmark/pull/26#issuecomment-7236899794"
+        ]
       },
       "patch": {
         "path": "patches/aider-polyglot/polyglot_javascript_zipper/aider-polyglot-javascript-zipper-r1.patch",
@@ -2864,8 +2867,9 @@
         ]
       },
       "upstream": {
-        "reports": [],
-        "not_reported": "Not reported yet; a follow-up to Aider-AI/polyglot-benchmark#26, which fixes the same kind of gap in other exercises, is drafted."
+        "reports": [
+          "https://github.com/Aider-AI/polyglot-benchmark/pull/26#issuecomment-7236899794"
+        ]
       },
       "patch": {
         "path": "patches/aider-polyglot/polyglot_java_food-chain/aider-polyglot-java-food-chain-r1.patch",
@@ -2950,8 +2954,9 @@
         ]
       },
       "upstream": {
-        "reports": [],
-        "not_reported": "Not reported yet; an issue for harbor-framework/harbor-index is drafted."
+        "reports": [
+          "https://github.com/harbor-framework/harbor-index/issues/161"
+        ]
       },
       "patch": {
         "storage": "external",
@@ -3037,8 +3042,9 @@
         ]
       },
       "upstream": {
-        "reports": [],
-        "not_reported": "Not reported yet; an issue for harbor-framework/harbor-index is drafted."
+        "reports": [
+          "https://github.com/harbor-framework/harbor-index/issues/161"
+        ]
       },
       "patch": {
         "storage": "external",
@@ -3119,8 +3125,9 @@
         ]
       },
       "upstream": {
-        "reports": [],
-        "not_reported": "Not reported yet; a note for microsoft/SWE-bench-Live is drafted."
+        "reports": [
+          "https://github.com/microsoft/SWE-bench-Live/issues/124"
+        ]
       },
       "patch": {
         "path": "patches/swe-bench-live-multilang/xroche__httrack-482/swe-live-xroche__httrack-482-r1.patch",
