@@ -1,0 +1,19 @@
+diff --git a/instruction.md b/instruction.md
+index b7b08d7..4b353e6 100644
+--- a/instruction.md
++++ b/instruction.md
+@@ -6,6 +6,14 @@ See [Wikipedia][poker-hands] for an overview of poker hands.
+ 
+ [poker-hands]: https://en.wikipedia.org/wiki/List_of_poker_hands
+ 
++# Instructions append
++
++## Hand format
++
++Each hand is one string of five cards separated by single spaces, for example `3D JC 10H 2S AS`.
++A card is its rank followed by its suit.
++The rank is one of `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `J`, `Q`, `K`, `A` (ten is written `10`), and the suit is one of `C`, `D`, `H`, `S`.
++
+ ----
+ Use the instructions above to modify the supplied files: Poker.java
+ Don't change the names of existing functions or classes, as they may be referenced from other code like unit tests.
