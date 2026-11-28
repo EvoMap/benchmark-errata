@@ -3150,6 +3150,83 @@
       }
     },
     {
+      "id": "aider-polyglot-java-poker-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_java_poker",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for java/exercises/practice/poker"
+      },
+      "license": {
+        "upstream": [
+          "Exercism Java track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/java/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the Java track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The tests write hands as five space-separated cards and the ten as \"10\", but the instruction only points to a list of poker hands and gives no card notation, so a parser for the common one-character ten (T) fails every case that holds a ten.",
+        "evidence": [
+          {
+            "path": "tests/src/test/java/PokerTest.java",
+            "lines": "21, 31, 141, 249",
+            "fact": "hands that contain a ten write it as 10 followed by the suit"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "1-7",
+            "fact": "\"Pick the best hand(s) from a list of poker hands.\" with a link to Wikipedia; no card or hand format"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [],
+        "not_reported": "Not reported yet; a follow-up to Aider-AI/polyglot-benchmark#26, which fixes the same kind of gap in other exercises."
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_java_poker/aider-polyglot-java-poker-r1.patch",
+        "sha256": "6f18bf6dd5d8b662ac4875a8ce293944bbb82773b37fee07986bdfaffd3f8f31",
+        "origin": "Written for this erratum: a .docs/instructions.append.md for the exercise in the style of Aider-AI/polyglot-benchmark#26, materialized by the same adapter."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "8d9dd93cc3d95f2b4d8eaf925ba00994566529b791c7c4a318f9080d40a85927",
+          "after": "774dac5f707db7f0f7f07c50304ecd4ea9cfdae28162d5a013b69a0851534568"
+        }
+      },
+      "depends_on": {
+        "tests/src/test/java/PokerTest.java": "4a6c6cd8b9e50f9f19961e127cb1ddc20e2c64f4decbaaa11c65e3bf49fe9818"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 7e0611e7 four tests use hands whose ten is written 10 (tests/src/test/java/PokerTest.java 21, 31, 141, 249) and the instruction gives no card notation; after the patch it states the hand and card format. In our runs, 5 of the 7 failing results on this task fail exactly those four tests."
+        }
+      }
+    },
+    {
       "id": "harbor-index-algotune-simplex-projection-speedup-r1",
       "benchmark": "harbor-index",
       "task_id": "algotune-simplex-projection-speedup",
