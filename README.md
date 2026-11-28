@@ -51,6 +51,7 @@ Only defects of the task or dataset itself are accepted. A fault of the evaluati
 | `aider-polyglot-rust-fizzy-r1` | Aider polyglot `polyglot_rust_fizzy` | The tests pass the element to the matcher by value; the stub gives Matcher::new no bound | not yet | active |
 | `aider-polyglot-python-bottle-song-r1` | Aider polyglot `polyglot_python_bottle-song` | The return format of the verses is not stated | not yet | active |
 | `aider-polyglot-java-poker-r1` | Aider polyglot `polyglot_java_poker` | The card notation (ten written as 10) is not stated | not yet | active |
+| `harbor-index-bix-diff-expr-mirna-r1` | Harbor Index `bix-diff-expr-mirna` | How missing Ct values are handled decides the answer and is not stated | not yet | candidate |
 
 The records are in [`errata/registry.json`](errata/registry.json) and the patches under [`errata/patches/`](errata/patches/); a record whose patch would carry hidden test content or a reference patch keeps only the patch's SHA256 and construction (`patch.storage: "external"`). Releases are published as the Hugging Face dataset [`mike-7777777/benchmark-errata`](https://huggingface.co/datasets/mike-7777777/benchmark-errata), one tag per version.
 

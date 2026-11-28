@@ -3403,6 +3403,72 @@
       }
     },
     {
+      "id": "harbor-index-bix-diff-expr-mirna-r1",
+      "benchmark": "harbor-index",
+      "task_id": "bix-diff-expr-mirna",
+      "status": "candidate",
+      "source": {
+        "url": "https://github.com/harbor-framework/harbor-index",
+        "revision": "5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+        "materializer": "tasks/bix-diff-expr-mirna/ at this commit, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "harbor-index: no license file",
+          "BixBench: see its dataset card"
+        ],
+        "redistribution": "unspecified",
+        "basis": [
+          "https://github.com/harbor-framework/harbor-index/tree/5399ea1026fb2c7fc384cf8acd91a7d10fc943f3",
+          "https://huggingface.co/datasets/futurehouse/BixBench"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "The repository grants no license, so the task files are not published. The patch changes only instruction.md, but no matching change has been proposed upstream yet, so it stays out of this repository until it is; the record keeps its SHA256 and its construction."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The analysis constraints pin the samples, the scale, the test and the cut-off but not how missing Ct values are handled. After the two exclusions 12 of the 175 miRNAs have a missing Ct; a test that propagates missing values (SciPy's default) gives 48 significant miRNAs (27.4%), one that drops them (R's t.test, which the source notebook uses) gives 49 (28%), and the grader accepts only 28%.",
+        "evidence": [
+          {
+            "path": "tests/ground_truth.json",
+            "lines": "4",
+            "fact": "the ideal answer is a single percentage"
+          },
+          {
+            "path": "tests/verify.py",
+            "lines": "77",
+            "fact": "a percentage answer scores 1 only when it equals the ideal exactly (method percentage_exact)"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "8-12",
+            "fact": "the analysis constraints do not say what to do with missing Ct values"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [],
+        "not_reported": "Not reported yet. harbor-framework/harbor-index#97 (closed by #142) pinned the other analysis choices in the instruction but not the missing-value rule."
+      },
+      "patch": {
+        "storage": "external",
+        "sha256": "e612a5e985ea795e931eebe3967b42fb4ea350b2100e495661cd6557e3057b28",
+        "origin": "Written for this erratum: one more analysis constraint in instruction.md, the missing-value rule of the source capsule's notebook (R's t.test drops missing values).",
+        "construction": "In instruction.md, after the constraint line that starts \"- Use a two-sample Welch t-test\", add the line: \"- A miRNA with missing Ct values in some samples is still tested: drop only its missing values and run the test on the samples that have a value (as R's `t.test` does). Every miRNA in the file counts in the denominator.\" The patch is that diff of instruction.md."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "7bfcea9ff893de4c47e4ef7c8fff9201cee8f3d3564d32b7aa46eae3a6bb9d85",
+          "after": "b1190e6b633fca99c680bddc7ecea871607a9fcb8f3b42ad0d3fb725d6df6d14"
+        }
+      },
+      "depends_on": {
+        "tests/verify.py": "6d0bb7cb4e737038881764ddc000fcf76325b18ba8c957d36e6c97a1befaf7da",
+        "tests/ground_truth.json": "f7af41b0a3c245911d5db14b8ab79a2db30b246eb485b76b3a7b2db35bd6efeb"
+      }
+    },
+    {
       "id": "swe-live-xroche__httrack-482-r1",
       "benchmark": "swe-bench-live-multilang",
       "task_id": "xroche__httrack-482",
