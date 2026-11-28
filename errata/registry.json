@@ -342,6 +342,88 @@
       }
     },
     {
+      "id": "tb2-query-optimize-r1",
+      "benchmark": "terminal-bench-2.0",
+      "task_id": "query-optimize",
+      "status": "upstream_fixed",
+      "source": {
+        "url": "https://huggingface.co/datasets/harborframework/terminal-bench-2.0",
+        "revision": "f2e8c75e23add71613117eecc9498f53bcd7e04e",
+        "materializer": "The dataset's query-optimize/ directory, copied byte for byte"
+      },
+      "license": {
+        "upstream": [
+          "Apache-2.0"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://huggingface.co/datasets/harborframework/terminal-bench-2.0",
+          "https://github.com/harbor-framework/terminal-bench-2/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "Apache-2.0 allows redistribution and modification. Only the patch is published: the task directory also carries the reference solution, which stays out."
+      },
+      "defect": {
+        "class": "instruction_gap",
+        "summary": "The tests fail a solution that changes the database file in any way (they compare its SHA256 with the shipped file's), but the instruction never says the database must stay unmodified, so an agent that adds an index or rewrites the file to speed up the query fails a requirement it was not given.",
+        "evidence": [
+          {
+            "path": "tests/test_outputs.py",
+            "lines": "69-78",
+            "fact": "test_check_for_db_modifications compares the SHA256 of /app/oewn.sqlite with a fixed hash of the shipped file"
+          },
+          {
+            "path": "instruction.md",
+            "lines": "7",
+            "fact": "asks for the optimized query in /app/sol.sql; says nothing about leaving the database file unchanged"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [],
+        "not_reported": "Terminal-Bench 2.1 already adds the requirement to this task's instruction; its tests/ are byte-identical to this revision's.",
+        "fixed_in": {
+          "url": "https://github.com/harbor-framework/terminal-bench-2-1/tree/12b7565679ce5006230b820666353673a133db93/tasks/query-optimize",
+          "revision": "12b7565679ce5006230b820666353673a133db93"
+        }
+      },
+      "patch": {
+        "path": "patches/terminal-bench-2.0/query-optimize/tb2-query-optimize-r1.patch",
+        "sha256": "e374fd1a2abf8a03db7cd68ff3d67a6a4a9413a156efc8883ddee911746cd888",
+        "origin": "Line 7 of tasks/query-optimize/instruction.md in harbor-framework/terminal-bench-2-1 at 12b7565679ce5006230b820666353673a133db93, which adds the requirement; the patched instruction.md is byte-identical to that file."
+      },
+      "files": {
+        "instruction.md": {
+          "before": "d25a6de62832a1732c2d3aee10fb0308df1bef5f9aba5234f7a04ceb7442a91d",
+          "after": "473e12d320d2732f679fb631c2a4dab4a01deea6775686718ae0c417b8a39447"
+        }
+      },
+      "depends_on": {
+        "tests/test_outputs.py": "2068ae80c57af8d52a7ae510f0666732c057806e556b480970f36f14bae683f6",
+        "tests/test.sh": "4770437ea96c3cc84684b4f99d55fb148fcac09f9ea1e8ef49de487716e6c334"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At f2e8c75e, tests/test_outputs.py:69-78 fail any change to /app/oewn.sqlite (they compare its SHA256 with the shipped file's) and instruction.md line 7 says nothing about the database; after the patch line 7 states it, as in Terminal-Bench 2.1, whose tests/ are byte-identical. One further reference run ended in the grader's 900-second verifier time limit while the host ran other jobs (Terminal-Bench 2.1 raises that limit to 1800 seconds; the limit belongs to the runner)."
+        }
+      }
+    },
+    {
       "id": "tb2-raman-fitting-r1",
       "benchmark": "terminal-bench-2.0",
       "task_id": "raman-fitting",
