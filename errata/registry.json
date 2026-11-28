@@ -2991,6 +2991,87 @@
       }
     },
     {
+      "id": "aider-polyglot-rust-fizzy-r1",
+      "benchmark": "aider-polyglot",
+      "task_id": "polyglot_rust_fizzy",
+      "status": "active",
+      "source": {
+        "url": "https://github.com/Aider-AI/polyglot-benchmark",
+        "revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+        "materializer": "The aider_polyglot Harbor adapter's task directory for rust/exercises/practice/fizzy"
+      },
+      "license": {
+        "upstream": [
+          "Exercism Rust track: MIT"
+        ],
+        "redistribution": "allowed",
+        "basis": [
+          "https://github.com/Aider-AI/polyglot-benchmark/blob/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/README.md",
+          "https://github.com/exercism/rust/blob/main/LICENSE"
+        ],
+        "checked_on": "2026-11-28",
+        "published": "patch",
+        "conclusion": "polyglot-benchmark has no license file of its own and states that its exercises come from Exercism's tracks under their open source licenses; the Rust track is MIT. Only the patch is published: the task directory carries reference solutions (tests/.meta and the oracle), which stay out."
+      },
+      "defect": {
+        "class": "starter_mismatch",
+        "summary": "The tests build matchers from closures that take the element by value, but the stub's Matcher::new<F, S> puts no bound on F and the instruction does not give one, so an implementation that takes the element by reference (Fn(&T)) does not compile against the tests.",
+        "evidence": [
+          {
+            "path": "tests/tests/fizzy.rs",
+            "lines": "56-58",
+            "fact": "Matcher::new is called with closures whose parameter is the element itself (an i32), not a reference"
+          },
+          {
+            "path": "environment/workspace/src/lib.rs",
+            "lines": "8-12",
+            "fact": "pub fn new<F, S>(_matcher: F, _subs: S) -> Matcher<T> with no bound on F or S"
+          }
+        ]
+      },
+      "upstream": {
+        "reports": [],
+        "not_reported": "Not reported yet; a follow-up to Aider-AI/polyglot-benchmark#26, which fixes the same kind of gap in other exercises."
+      },
+      "patch": {
+        "path": "patches/aider-polyglot/polyglot_rust_fizzy/aider-polyglot-rust-fizzy-r1.patch",
+        "sha256": "fc9712f18295d816d1aec4cfeadb1d9e5ec351b1756c402f90e024440a2b73a8",
+        "origin": "Written for this erratum: a .docs/instructions.append.md for the exercise in the style of Aider-AI/polyglot-benchmark#26 and the bounds of Matcher::new on the stub, as the exercise's own .meta/example.rs declares them, materialized by the same adapter."
+      },
+      "files": {
+        "environment/workspace/src/lib.rs": {
+          "before": "4b546a05a3fb47a754168337dfae51cfb6f62a1f343cf438f5b4e83f9b10e9ef",
+          "after": "e0c045e61f397a6fff7cb289dffef981a94413818b3e83fd7fcc3faeb6d96270"
+        },
+        "instruction.md": {
+          "before": "699206d4502cdd445d5a7018b6d7a5a1544f4d57e0fd9dac922322f5b829a7cb",
+          "after": "e4bd59fa1f2a87eb7b7e77c2446a8de31f361241236d81a125955d9e1b0fd51e"
+        }
+      },
+      "depends_on": {
+        "tests/tests/fizzy.rs": "52295cad7859176e02ec3dcde561f5b20a1a3cb41625ff8d0b6655f8641f0a30"
+      },
+      "gates": {
+        "oracle": {
+          "rewards": [
+            1.0,
+            1.0
+          ]
+        },
+        "nop": {
+          "rewards": [
+            0.0,
+            0.0
+          ]
+        },
+        "runtime": "Harbor task format, run with a Harbor-compatible runner (oracle and nop agents, no model call); the patched task's images built from its Dockerfiles",
+        "date": "2026-11-28",
+        "witness": {
+          "summary": "At 7e0611e7 the stub puts no bound on Matcher::new's F while tests/tests/fizzy.rs:56-58 pass closures that take the element by value; after the patch the stub and the instruction state F: Fn(T) -> bool + 'static, as the exercise's .meta/example.rs declares it. In our runs, 22 of the 23 failing results on this task stopped at E0631 (closure argument type mismatch): their Matcher::new took Fn(&T)."
+        }
+      }
+    },
+    {
       "id": "harbor-index-algotune-simplex-projection-speedup-r1",
       "benchmark": "harbor-index",
       "task_id": "algotune-simplex-projection-speedup",

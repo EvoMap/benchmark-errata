@@ -1,0 +1,35 @@
+diff --git a/environment/workspace/src/lib.rs b/environment/workspace/src/lib.rs
+index 03b50ae..5de5ed4 100644
+--- a/environment/workspace/src/lib.rs
++++ b/environment/workspace/src/lib.rs
+@@ -6,7 +6,11 @@
+ pub struct Matcher<T>(std::marker::PhantomData<T>);
+ 
+ impl<T> Matcher<T> {
+-    pub fn new<F, S>(_matcher: F, _subs: S) -> Matcher<T> {
++    pub fn new<F, S>(_matcher: F, _subs: S) -> Matcher<T>
++    where
++        F: Fn(T) -> bool + 'static,
++        S: AsRef<str>,
++    {
+         todo!()
+     }
+ }
+diff --git a/instruction.md b/instruction.md
+index 6b5a505..24ce464 100644
+--- a/instruction.md
++++ b/instruction.md
+@@ -11,6 +11,13 @@ We're going to do something more interesting than the basics: your task in this
+ - such that it works just as well for the Collatz Sequence as for steadily increasing numbers
+ - with convenient helpers to make its use ergonomic
+ 
++# Instructions append
++
++## Matcher interface
++
++`Matcher::new(matcher, subs)` takes the rule as a function that receives the element by value, `F: Fn(T) -> bool + 'static`, and the word to substitute as anything that can be viewed as a string, `S: AsRef<str>`.
++The tests build matchers from closures such as `|n: u32| n % 4 == 0`, so a matcher that expects a reference (`Fn(&T) -> bool`) does not compile against them.
++
+ ----
+ Use the instructions above to modify the supplied files: lib.rs, Cargo.toml
+ Don't change the names of existing functions or classes, as they may be referenced from other code like unit tests.
