@@ -159,6 +159,28 @@
         "tb2-query-optimize-r1": "e374fd1a2abf8a03db7cd68ff3d67a6a4a9413a156efc8883ddee911746cd888",
         "tb2-raman-fitting-r1": "6b76f528afb45a681b0fb2bef748f0fd7d0ac5927c118f5a117614b5027e269d"
       }
+    },
+    {
+      "name": "harbor-index_emcv",
+      "version": "emcv-5399ea10-r2",
+      "benchmark": "harbor-index",
+      "upstream": {
+        "url": "https://github.com/harbor-framework/harbor-index",
+        "revision": "5399ea1026fb2c7fc384cf8acd91a7d10fc943f3"
+      },
+      "released": "2026-11-29",
+      "distribution": "patches",
+      "basis": "harbor-index has no license file, so only the patches and the way to build the version are distributed.",
+      "errata": {
+        "harbor-index-algotune-optimize-matrix-sqrt-r1": "36e4d434edcd1f9640be969aa309654a6b5c7646a368a00c7d16235f41ecbe0e",
+        "harbor-index-algotune-simplex-projection-speedup-r1": "b07839bbeb65393020c9074db250d30d7264349afce1c32b83f6be9fa129849b",
+        "harbor-index-dacode-predict-essay-scores-r1": "73d623de157ca7ec8602ed562ad0552180c07b310d9535a77b8a5ddae14b9eeb",
+        "harbor-index-scicode-dna-binding-site-scanner-r1": "9a40e240658418dfe31e4287a09196dd899bfcc77bf022bf8b15530df16dfa53",
+        "harbor-index-sldbench-discover-vocab-scaling-law-r1": "4d81593955d5147cd0e0a2b769ed179859b4d9b7b4b8d226f0c02eed400f42e7",
+        "harbor-index-swebenchverified-fix-annotate-xy-array-copy-r1": "83f017ed620738b0ab94e1f7f96b0f6f148bee5162ae6f7d038eebecb1aaad2a",
+        "harbor-index-swebenchverified-fix-span-selector-axes-limits-r1": "252bf2329adcf6744d0002f18ad11b2b99d2ee8f93569616f499280dea04887e",
+        "harbor-index-swebenchverified-fix-sphinx-literal-nitpick-r2": "c39eec90221370aefa42931909a5606942f360eb6771b84e5141a2cac847d18b"
+      }
     }
   ]
 }
